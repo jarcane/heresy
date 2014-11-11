@@ -6,7 +6,8 @@
 
 ;; Provides
 (provide (all-defined-out)
-         + - / *
+         + - / * =
+         list? null? zero? eq?
          and or not
          let
          (rename-out (lambda fn)
@@ -128,18 +129,23 @@
 ; Provided by Racket cdr
 
 ;; Predicates
+; Provided by racket
+; LIST? l 
+; NULL? l
+; ZERO? n
+; EQ? a b ...
+; = a b ...
 
-; LIST?
+; ATOM? a
+; Tests a given item to see if it is an atom (ie. not a list)
+(define (atom? a)
+  (and (not (pair? a)) (not (null? a))))
 
-; ATOM? 
-
-; NULL?
-
-; ZERO?
-
-; EQ?
-
-; =
+(define (lat? l)
+  (cond 
+    [(null? l) #t]
+    [(atom? (car l)) (lat? (cdr l))]
+    [else #f]))
 
 ;; Functions/Macros
 
