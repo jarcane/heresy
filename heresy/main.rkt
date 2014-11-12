@@ -47,8 +47,8 @@
 ; Defines new variables and functions (with help from FN)
 (define-syntax def
   (syntax-rules (fn)
-    [(_ name contents) (define name contents)]
-    [(_ fn name (args) body) (define (name args) body)]))
+    [(_ fn name (args) body) (define (name args) body)]
+    [(_ name contents) (define name contents)]))
 
 ;; Flow Control
 
@@ -91,15 +91,32 @@
 
 ;; Math
 
-; # (infix operator)
+; ^
+(define-syntax ^
+  (syntax-rules ()
+    [(_ a b) (expt a b)]))
+
+; + (overloaded)
+
+; = (overloaded)
+
+; ! (infix operator)
+(define-syntax !
+  (syntax-rules ()
+    [(! a fun b ...) (fun a b ...)]))
 
 ; RND
 
 ;; Miscellaneous
 
 ; REM
+(define-syntax rem
+  (syntax-rules ()
+    [(rem a ...) (void)]))
 
-
+(define-syntax :
+  (syntax-rules ()
+    [(: a ...) (rem a ...)]))
 ;                                  
 ;                                  
 ;                                  
