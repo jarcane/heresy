@@ -19,23 +19,6 @@
 
 ; REPL
 
-;                                                    
-;                                                    
-;                                                    
-;   ;;;;;;       ;;       ;;;;      ;;;;      ;;;;   
-;     ;   ;;    ;  ;    ;;    ;;     ;;     ;;    ;; 
-;     ;   ;;    ;  ;    ;;    ;;     ;;     ;;    ;; 
-;     ;   ;;  ;;    ;;    ;          ;;     ;;       
-;     ;;;;    ;;    ;;     ;;        ;;     ;;       
-;     ;;;;    ;;    ;;     ;;        ;;     ;;       
-;     ;   ;;  ;;;;;;;;       ;       ;;     ;;       
-;     ;   ;;  ;;    ;;  ;;    ;;     ;;     ;;    ;; 
-;     ;   ;;  ;;    ;;  ;;    ;;     ;;     ;;    ;; 
-;   ;;;;;;    ;;    ;;    ;;;;      ;;;;      ;;;;   
-;                                                    
-;                                                    
-;                                                    
-
 ;; Declarations
 
 ; (LET ([name value] ...) ...)
@@ -85,9 +68,28 @@
 
 ;; I/O
 
-; PRINT
+; PRINT -> print
 
-; INPUT
+; PRINT$ -> display+sugar
+
+; WRITE -> write
+
+; INPUT -> read-line (current-input-port)
+
+; READ -> read
+
+;; Strings
+
+; & str ... (string concat)
+; Concats strings
+(define-syntax &
+  (syntax-rules ()
+    [(& a ...) (string-append a ...)]))
+
+; LIST$ list 
+; Converts a string into a list of single character strings
+(define (list$ l)
+  (map string (string->list l)))
 
 ;; Math
 
@@ -95,10 +97,6 @@
 (define-syntax ^
   (syntax-rules ()
     [(_ a b) (expt a b)]))
-
-; + (overloaded)
-
-; = (overloaded)
 
 ; ! (infix operator)
 (define-syntax !
@@ -117,22 +115,6 @@
 (define-syntax :
   (syntax-rules ()
     [(: a ...) (rem a ...)]))
-;                                  
-;                                  
-;                                  
-;                                  
-;   ;;;      ;;;;;   ;;; ;  ;;;;;  
-;    ;         ;    ;   ;;   ;   ; 
-;    ;         ;    ;        ;   ; 
-;    ;         ;     ;;;;    ;   ; 
-;    ;         ;         ;   ;;;;  
-;    ;   ;     ;         ;   ;     
-;    ;   ;     ;    ;;   ;   ;     
-;   ;;;;;;   ;;;;;  ; ;;;   ;;;    
-;                                  
-;                                  
-;                                  
-;                                  
 
 ;; Lists
 
