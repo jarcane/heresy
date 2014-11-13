@@ -4,6 +4,9 @@
 ; Copyright (C) 2014 John S. Berry III
 ; Licensed with the LGPL v.3.0
 
+;; Requires
+(require racket/stxparam)
+
 ;; Provides
 (provide (all-defined-out)
          + - / * =
@@ -46,7 +49,20 @@
 ; FOR
 
 
-; DO
+; (DO body ...)
+; (DO LOOP body ... [BREAK])
+; executes a block of code, looping with LOOP until it encounters a BREAK
+(define-syntax-parameter break
+  (lambda (stx)
+    (raise-syntax-error (syntax-e stx) "break can only be used inside do")))
+
+(define-syntax do
+  (syntax-rules (loop)
+    [(_ loop body ...) (let/ec break-k
+                         (syntax-parameterize 
+                          ((break (syntax-rules () [(_) (break-k)]))) 
+                          (let loop () body ... (loop))))]
+    [(_ body ...) (begin body ...)]))
 
 ; (SELECT [test op1] ... [ELSE opn])
 ; (SELECT CASE test [test-result op1] ... [else opn])
