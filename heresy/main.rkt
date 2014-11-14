@@ -46,26 +46,36 @@
     [(_ test then do1 else do2) (cond [test do1] [else do2])]
     [(_ test then do) (when test do)]))
 
-; (FOR (var OVER list) body... [CARRY acc value]
-; Loops over range in val, CARRYing value assigned from accumulator to next loop
+; (FOR (var OVER list) body... [CARRY value] [BREAK [value]]
+; Iterates over list in val, CARRYing value assigned from accumulator to next loop
+; CRY contains the accumulator, initialized to '()
+; thanks to chandler in #racket for the assistance
+(define-syntax-parameter carry 
+  (lambda (stx)
+    (raise-syntax-error (syntax-e stx) "carry can only be used inside for")))
+(define-syntax-parameter cry 
+  (lambda (stx)
+    (raise-syntax-error (syntax-e stx) "cry can only be used inside for")))
 (define-syntax for
   (syntax-rules (in)
-    [(_ (var in lst) body ...) (let/ec break-k
-                                       (syntax-parameterize 
-                                        ((break (syntax-rules () [(_) (break-k)])))
-                                        (let loop ((itr lst)
-                                                   (cry (void)))
-                                          (let ([var (car itr)])
-                                            body ...
-                                            (cond 
-                                              [(null? (cdr itr)) cry]
-                                              [else (loop (cdr itr) cry)])))))]))
-
-(define-syntax carry
-  (syntax-rules ()
-    [(_ val) (cond
-               [(null? (cdr itr)) cry]
-               [else (loop (cdr itr) val)])]))
+    [(_ (var in lst) body ...) 
+     (let/ec break-k
+       (syntax-parameterize 
+        ((break (syntax-rules () [(_) (break-k)])))
+        (let loop ((cry-v '())
+                   (l lst))
+          (syntax-parameterize
+           ([cry (make-rename-transformer #'cry-v)])
+           (cond [(null? l) cry-v]
+                 [else (let ([var (car l)])
+                         (loop
+                          (call/ec
+                           (lambda (k)
+                             (syntax-parameterize
+                              ([carry (make-rename-transformer #'k)])
+                              body ...)
+                             cry-v))
+                          (cdr l)))])))))]))
 
 ; (DO body ...)
 ; (DO LOOP body ... [BREAK])
@@ -145,10 +155,6 @@
 (define-syntax rem
   (syntax-rules ()
     [(rem a ...) (void)]))
-
-(define-syntax :
-  (syntax-rules ()
-    [(: a ...) (rem a ...)]))
 
 ;; Lists
 
