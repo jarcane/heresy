@@ -50,16 +50,22 @@
 ; Loops over range in val, CARRYing value assigned from accumulator to next loop
 (define-syntax for
   (syntax-rules (in)
-    [(_ (var in lst) body ...) (let loop ((itr lst)
-                                          (cry (void)))
-                                 (let ([var (car itr)])
-                                   body ...
-                                   (cond 
-                                     [(null? (cdr itr)) cry]
-                                     [else (loop (cdr itr) cry)])))]))
+    [(_ (var in lst) body ...) (let/ec break-k
+                                       (syntax-parameterize 
+                                        ((break (syntax-rules () [(_) (break-k)])))
+                                        (let loop ((itr lst)
+                                                   (cry (void)))
+                                          (let ([var (car itr)])
+                                            body ...
+                                            (cond 
+                                              [(null? (cdr itr)) cry]
+                                              [else (loop (cdr itr) cry)])))))]))
 
 (define-syntax carry
-  (syntax-rules ()))
+  (syntax-rules ()
+    [(_ val) (cond
+               [(null? (cdr itr)) cry]
+               [else (loop (cdr itr) val)])]))
 
 ; (DO body ...)
 ; (DO LOOP body ... [BREAK])
