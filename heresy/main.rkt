@@ -46,15 +46,27 @@
     [(_ test then do1 else do2) (cond [test do1] [else do2])]
     [(_ test then do) (when test do)]))
 
-; FOR
+; (FOR (var OVER list) body... [CARRY acc value]
+; Loops over range in val, CARRYing value assigned from accumulator to next loop
+(define-syntax for
+  (syntax-rules (in)
+    [(_ (var in lst) body ...) (let loop ((itr lst)
+                                          (cry (void)))
+                                 (let ([var (car itr)])
+                                   body ...
+                                   (cond 
+                                     [(null? (cdr itr)) cry]
+                                     [else (loop (cdr itr) cry)])))]))
 
+(define-syntax carry
+  (syntax-rules ()))
 
 ; (DO body ...)
 ; (DO LOOP body ... [BREAK])
 ; executes a block of code, looping with LOOP until it encounters a BREAK
 (define-syntax-parameter break
   (lambda (stx)
-    (raise-syntax-error (syntax-e stx) "break can only be used inside do")))
+    (raise-syntax-error (syntax-e stx) "break can only be used inside loops")))
 
 (define-syntax do
   (syntax-rules (loop)
