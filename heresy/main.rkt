@@ -15,7 +15,9 @@
          (rename-out (lambda fn)
                      (cons join)
                      (car head)
-                     (cdr tail)))
+                     (cdr tail)
+                     (require include)
+                     (provide share)))
 
 ;; Support Functions/macros
 
@@ -118,15 +120,27 @@
 
 ;; I/O
 
-; PRINT -> print
+; PRINT LIT -> print
+; PRINT & -> display
+; PRINT -> displayln
+(define-syntax print
+  (syntax-rules (lit &)
+    [(_ lit datum) (begin (print datum) (newline))]
+    [(_ & datum) (display datum)]
+    [(_ datum) (displayln datum)]))
 
-; PRINT$ -> display+sugar
-
-; WRITE -> write
+; ? (shortcut for print)
+(define-syntax ?
+  (syntax-rules ()
+    [(_ datum) (print datum)]))
 
 ; INPUT -> read-line (current-input-port)
-
-; READ -> read
+; INPUT STX -> read
+(define-syntax input
+  (syntax-rules (stx)
+    [(_) (read-line)]
+    [(_ str) (begin (display str) (read-line))]
+    [(_ stx) (read)]))
 
 ;; Strings
 
