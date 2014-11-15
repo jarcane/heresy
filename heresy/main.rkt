@@ -24,16 +24,20 @@
 
 ;; Declarations
 
-; (LET ([name value] ...) ...)
+; (LET ((name value) ...) ...)
 ; Defines a variable in the local context. 
 ; *Provided by Racket*
 
 ; (DEF name contents)
 ; (DEF FN name (args) body)
+; (DEF MACRO name (pattern-vars) pattern)
 ; Defines new variables and functions (with help from FN)
 (define-syntax def
-  (syntax-rules (fn)
-    [(_ fn name (args) body) (define (name args) body)]
+  (syntax-rules (macro fn)
+    [(_ macro name (args ...) body0 bodyn ...) 
+     (define-syntax-rule (name args ...) body0 bodyn ...)]
+    [(_ fn name (args ...) body0 bodyn ...) 
+     (define (name args ...) body0 bodyn ...)]
     [(_ name contents) (define name contents)]))
 
 ;; Flow Control
@@ -124,11 +128,17 @@
 
 ;; Strings
 
+; (=$ str ...)
+; Compares strings for equality
+(define-syntax =$
+  (syntax-rules ()
+    [(_ a b ...) (string=? a b ...)]))
+
 ; & str ... (string concat)
 ; Concats strings
 (define-syntax &
   (syntax-rules ()
-    [(& a ...) (string-append a ...)]))
+    [(& a b ...) (string-append a b ...)]))
 
 ; LIST$ list 
 ; Converts a string into a list of single character strings
@@ -189,9 +199,7 @@
 ;; Functions/Macros
 
 ; FN
-; Provided by Racket lambda
-
-; MACRO 
+; Provided by Racket lambda 
 
 ; EVAL
 
