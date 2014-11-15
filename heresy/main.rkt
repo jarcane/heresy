@@ -12,7 +12,6 @@
          + - / * =
          list? null? zero? eq?
          and or not
-         let
          (rename-out (lambda fn)
                      (cons join)
                      (car head)
@@ -26,7 +25,10 @@
 
 ; (LET ((name value) ...) ...)
 ; Defines a variable in the local context. 
-; *Provided by Racket*
+(define-syntax let
+  (syntax-rules ()
+    [(_ ((name value) ...) body0 bodyn ...) 
+     (let ([name value] ...) body0 bodyn ...)]))
 
 ; (DEF name contents)
 ; (DEF FN name (args) body)
@@ -208,5 +210,10 @@
 ;; Boolean
 
 ; True
+(define-syntax True (syntax-id-rules (True) (True #t)))
 
 ; False
+(define-syntax False (syntax-id-rules (False) (False #f)))
+
+; Null
+(define-syntax Null (syntax-id-rules (Null) (Null '())))
