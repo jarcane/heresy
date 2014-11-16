@@ -54,8 +54,10 @@ Iterates over list in val, CARRYing value assigned from accumulator to next loop
 *cry* contains the accumulator, initialized to '()
 
 (do *body* ...)
+Executes its body in order (eqv. to begin)
+
 (do loop *body* ... [break])
-executes a block of code, looping with LOOP until it encounters a BREAK
+executes a block of code, looping continuously, until it encounters a BREAK
 ```
 
 ### I/O ###
