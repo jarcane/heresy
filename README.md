@@ -9,8 +9,19 @@ This has primarily also served as a learning exercise for practicing Racket macr
 
 The code Copyright 2014 by John S. Berry III, and is licensed via the LGPL v3.
 
+Installation
+------------
+
+To install:
+
+``raco pkg install git//github.com/jarcane/heresy``
+
+To use, append this to the start of your file in DrRacket or your favorite text-editor:
+
+``#lang s-exp heresy``
+
 Quick Reference
-===============
+---------------
 
 ### Declarations ###
 
