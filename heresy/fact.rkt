@@ -1,6 +1,4 @@
-#lang racket
-
-(require "main.rkt")
+#lang s-exp "main.rkt"
 
 (def fn fact (n)
   (select

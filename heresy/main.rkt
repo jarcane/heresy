@@ -8,11 +8,22 @@
 (require racket/stxparam)
 
 ;; Provides
-(provide (for-syntax (all-defined-out))
-         ;(all-defined-out)
+(provide ;(for-syntax (all-defined-out))
+         ; required
          #%module-begin
          #%top-interaction
          #%app #%datum #%top
+         ; From Heresy
+         let def if 
+         select select-cond select-case
+         for do break carry cry
+         print ? input
+         =$ & list$
+         ^ !
+         rem
+         atom? lat?
+         True False Null
+         ; From Racket
          + - / * =
          list? null? zero? eq?
          and or not
