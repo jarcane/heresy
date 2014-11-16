@@ -8,10 +8,15 @@
 (require racket/stxparam)
 
 ;; Provides
-(provide (all-defined-out)
+(provide (for-syntax (all-defined-out))
+         ;(all-defined-out)
+         #%module-begin
+         #%top-interaction
+         #%app #%datum #%top
          + - / * =
          list? null? zero? eq?
          and or not
+         eval quote
          (rename-out (lambda fn)
                      (cons join)
                      (car head)
@@ -171,7 +176,7 @@
 ; ! (infix operator)
 (define-syntax !
   (syntax-rules ()
-    [(! a fun b ...) (fun a b ...)]))
+    [(! a fun b) (fun a b)]))
 
 ; RND
 
@@ -212,14 +217,16 @@
     [(atom? (car l)) (lat? (cdr l))]
     [else #f]))
 
-;; Functions/Macros
+;; Misc. Functions
 
 ; FN
 ; Provided by Racket lambda 
 
 ; EVAL
+; Provided by Racket eval
 
 ; QUOTE
+; Provided by Racket quote
 
 ;; Boolean
 
