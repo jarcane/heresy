@@ -83,6 +83,9 @@ Takes input as syntax and returns it (akin to read)
 ### Lists and Atoms ###
 
 ```
+(list a ...)
+Returns a list containing a ...
+
 (join *a b*)
 Joins two atoms into a pair, creating a list of second atom is another pair or null
 
@@ -118,7 +121,9 @@ Alternate alias for the empty list '()
 Returns true if zero
 
 (= *a b* ...)
-Returns true if all provided values are equal
+(< a b ...)
+(> a b ...)
+Returns true if all provided values pass test
 
 (+ *a b* ...)
 (- *a b* ...)
@@ -129,6 +134,10 @@ Math operators
 
 (! *a fun b*)
 Infix operator, allows *fun* to be used infix in this level only 
+
+(range x to y [step s])
+Returns a list of numbers from x to y, stepping by step (defaults to 1)
+Note: Descending lists must be created with negative step value, otherwise it will return an empty list
 ```
 
 ### Strings ###
