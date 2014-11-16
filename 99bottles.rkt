@@ -9,9 +9,9 @@
 
 (def fn bottles (n)
   (for (x in (makenumlist n))
-    (print & x)
+    (? & x)
     (? " bottles of beer on the wall")
-    (print & x)
+    (? & x)
     (? " bottles of beer")
     (? "Take one down pass it around")
     (if (zero? n) then
