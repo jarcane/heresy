@@ -2,5 +2,5 @@
 
 (def fn fact (n)
   (select
-   ((= n 1) 1)
+   ((zero? n) 1)
    (else (* n (fact (- n 1))))))
