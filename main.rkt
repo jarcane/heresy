@@ -15,10 +15,10 @@
          #%app #%datum #%top
 
          ; From Racket
-         + - / * =
+         + - / * = < >
          list? null? zero? eq?
          and or not else
-         quote let
+         quote let list
          (rename-out (cons join)
                      (car head)
                      (cdr tail)
@@ -207,13 +207,6 @@
   (syntax-rules ()
     [(! a fun b) (fun a b)]))
 
-;; Miscellaneous
-
-; REM
-(define-syntax rem
-  (syntax-rules ()
-    [(rem a ...) (void)]))
-
 ;; Lists
 
 ; JOIN a b
@@ -244,16 +237,34 @@
     [(atom? (car l)) (lat? (cdr l))]
     [else #f]))
 
-;; Misc. Functions
+; (range x to y [step s])
+; Generates a list of numbers from x to y by step
+(define (gen-range x y (step 1) (lst '()))
+  (cond
+    [(= step 0) (error 'range "infinite loop detected")]
+    [(or (and (> x y) (> step -1))
+         (and (< x y) (< step 1))) lst]
+    [(= x y) (cons x lst)]
+    [else (cons x (gen-range (+ x step) y step lst))]))
 
-; FN
-; Provided by Racket lambda 
+(define-syntax range
+  (syntax-rules (to step)
+    [(_ x to y step s) (gen-range x y s)]
+    [(_ x to y) (gen-range x y)]
+    [(_) (error 'range "malformed range")]))
+
+;; Meta Functions
 
 ; RUN
 ; Provided by Racket eval
 
 ; QUOTE
 ; Provided by Racket quote
+
+; REM
+(define-syntax rem
+  (syntax-rules ()
+    [(rem a ...) (void)]))
 
 ;; Boolean
 
