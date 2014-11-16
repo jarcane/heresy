@@ -18,26 +18,17 @@
          + - / * =
          list? null? zero? eq?
          and or not else
-         eval quote 
+         quote let
          (rename-out (cons join)
                      (car head)
                      (cdr tail)
-                     ))
-
-;; Support Functions/macros
-
-; REPL
+                     (eval run)))
 
 ;; Declarations
 
 ; (LET ((name value) ...) ...)
 ; Defines a variable in the local context. 
-(define-syntax let
-  (syntax-rules ()
-    [(_ ((name value) ...) body0 bodyn ...) 
-     (let ([name value] ...) body0 bodyn ...)]
-    [(_ proc ((name value) ...) body0 bodyn ...)
-     (let proc ([name value] ...) body0 bodyn ...)]))
+; provided by Racket
 
 ; (DEF name contents)
 ; (DEF FN name (args) body)
@@ -176,9 +167,9 @@
 ; INPUT STX -> read
 (define-syntax input
   (syntax-rules (stx)
-    [(_) (read-line)]
+    [(_ stx) (read)]
     [(_ str) (begin (display str) (read-line))]
-    [(_ stx) (read)]))
+    [(_) (read-line)]))
 
 (define-syntax-parameter stx 
   (lambda (stx)
@@ -214,8 +205,6 @@
 (define-syntax !
   (syntax-rules ()
     [(! a fun b) (fun a b)]))
-
-; RND
 
 ;; Miscellaneous
 
@@ -259,7 +248,7 @@
 ; FN
 ; Provided by Racket lambda 
 
-; EVAL
+; RUN
 ; Provided by Racket eval
 
 ; QUOTE
