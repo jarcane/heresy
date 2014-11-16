@@ -162,4 +162,7 @@ Returns datum as data instead of evaluating (can be shortened to ')
 
 (run *form*)
 Evaluates and executes the given form.
+
+(rem ...)
+Ignores its contents, evaluates to void
 ```
