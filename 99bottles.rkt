@@ -1,0 +1,23 @@
+#lang s-exp heresy
+
+(def bot 99)
+
+(def fn makenumlist (n (l '()))
+  (select
+   ((zero? n) l)
+   (else (join n (makenumlist (- n 1))))))
+
+(def fn bottles (n)
+  (for (x in (makenumlist n))
+    (print & x)
+    (? " bottles of beer on the wall")
+    (print & x)
+    (? " bottles of beer")
+    (? "Take one down pass it around")
+    (if (zero? n) then
+        (? "No more bottles of beer on the wall")
+        else
+        (do (print & (- x 1))
+          (? " bottles of beer on the wall")))))
+
+(bottles bot)

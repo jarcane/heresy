@@ -152,7 +152,8 @@
   (syntax-rules (lit &)
     [(_ lit datum) (write datum)]
     [(_ & datum) (display datum)]
-    [(_ datum) (displayln datum)]))
+    [(_ datum) (displayln datum)]
+    [(_) (newline)]))
 
 (define-syntax-parameter lit 
   (lambda (stx)
@@ -161,7 +162,7 @@
 ; ? (shortcut for print)
 (define-syntax ?
   (syntax-rules ()
-    [(_ datum) (print datum)]))
+    [(_ a ...) (print a ...)]))
 
 ; INPUT -> read-line (current-input-port)
 ; INPUT STX -> read

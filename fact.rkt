@@ -1,4 +1,4 @@
-#lang s-exp "main.rkt"
+#lang s-exp heresy
 
 (def fn fact (n)
   (select
