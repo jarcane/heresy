@@ -8,32 +8,21 @@
 (require racket/stxparam)
 
 ;; Provides
-(provide ;(for-syntax (all-defined-out))
+(provide (all-defined-out)
          ; required
          #%module-begin
          #%top-interaction
          #%app #%datum #%top
-         ; From Heresy
-         let def if 
-         select select-cond select-case
-         for do break carry cry
-         print ? input
-         =$ & list$
-         ^ !
-         rem
-         atom? lat?
-         True False Null
+
          ; From Racket
          + - / * =
          list? null? zero? eq?
-         and or not
-         eval quote
-         (rename-out (lambda fn)
-                     (cons join)
+         and or not else
+         eval quote 
+         (rename-out (cons join)
                      (car head)
                      (cdr tail)
-                     (require include)
-                     (provide share)))
+                     ))
 
 ;; Support Functions/macros
 
@@ -46,7 +35,9 @@
 (define-syntax let
   (syntax-rules ()
     [(_ ((name value) ...) body0 bodyn ...) 
-     (let ([name value] ...) body0 bodyn ...)]))
+     (let ([name value] ...) body0 bodyn ...)]
+    [(_ proc ((name value) ...) body0 bodyn ...)
+     (let proc ([name value] ...) body0 bodyn ...)]))
 
 ; (DEF name contents)
 ; (DEF FN name (args) body)
@@ -60,6 +51,22 @@
      (define (name args ...) body0 bodyn ...)]
     [(_ name contents) (define name contents)]))
 
+; DEF literals
+(define-syntax-parameter macro 
+  (lambda (stx)
+    (raise-syntax-error (syntax-e stx) "macro must be used with def")))
+;(define-syntax-parameter fn 
+;  (lambda (stx)
+;    (raise-syntax-error (syntax-e stx) 
+;                        "fn must be used with def; use lambda for anonymous functions")))
+
+; (FN (args) body ...)
+; The anonymous function 
+(define-syntax fn
+  (syntax-rules ()
+    [(_ (args ...) body ...) (lambda (args ...) body ...)]
+    [(_) (error 'fn "Missing syntax")]))
+
 ;; Flow Control
 
 ; (IF test THEN do1 ELSE do2)
@@ -69,6 +76,10 @@
   (syntax-rules (then else)
     [(_ test then do1 else do2) (cond [test do1] [else do2])]
     [(_ test then do) (when test do)]))
+
+(define-syntax-parameter then 
+  (lambda (stx)
+    (raise-syntax-error (syntax-e stx) "then can only be used inside if")))
 
 ; (FOR (var OVER list) body... [CARRY value] [BREAK [value]]
 ; Iterates over list in val, CARRYing value assigned from accumulator to next loop
@@ -80,6 +91,9 @@
 (define-syntax-parameter cry 
   (lambda (stx)
     (raise-syntax-error (syntax-e stx) "cry can only be used inside for")))
+(define-syntax-parameter in 
+  (lambda (stx)
+    (raise-syntax-error (syntax-e stx) "in can only be used inside for")))
 (define-syntax for
   (syntax-rules (in)
     [(_ (var in lst) body ...) 
@@ -134,6 +148,10 @@
     [(select-case expr ((result1 ...) op1) ... (else opn))
      (case expr [(result1 ...) op1] ... (else opn))]))
 
+(define-syntax-parameter case 
+  (lambda (stx)
+    (raise-syntax-error (syntax-e stx) "case can only be used with select")))
+
 ;; I/O
 
 ; PRINT LIT -> print
@@ -141,9 +159,13 @@
 ; PRINT -> displayln
 (define-syntax print
   (syntax-rules (lit &)
-    [(_ lit datum) (begin (print datum) (newline))]
+    [(_ lit datum) (write datum)]
     [(_ & datum) (display datum)]
     [(_ datum) (displayln datum)]))
+
+(define-syntax-parameter lit 
+  (lambda (stx)
+    (raise-syntax-error (syntax-e stx) "lit can only be used with print")))
 
 ; ? (shortcut for print)
 (define-syntax ?
@@ -157,6 +179,10 @@
     [(_) (read-line)]
     [(_ str) (begin (display str) (read-line))]
     [(_ stx) (read)]))
+
+(define-syntax-parameter stx 
+  (lambda (stx)
+    (raise-syntax-error (syntax-e stx) "stx can only be used with input")))
 
 ;; Strings
 
