@@ -253,6 +253,13 @@
     [(_ x to y) (gen-range x y)]
     [(_) (error 'range "malformed range")]))
 
+(define-syntax-parameter to 
+  (lambda (stx)
+    (raise-syntax-error (syntax-e stx) "to can only be used in range")))
+(define-syntax-parameter step 
+  (lambda (stx)
+    (raise-syntax-error (syntax-e stx) "step can only be used in range")))
+
 ;; Meta Functions
 
 ; RUN
