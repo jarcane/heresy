@@ -13,7 +13,7 @@
          #%module-begin
          #%top-interaction
          #%app #%datum #%top
-
+         
          ; From Racket
          + - / * = < >
          list? null? zero? eq?
@@ -90,7 +90,9 @@
     [(_ (var in lst) body ...) 
      (let/ec break-k
        (syntax-parameterize 
-        ((break (syntax-rules () [(_) (break-k)])))
+        ((break (syntax-rules () 
+                  [(_ ret) (break-k ret)]
+                  [(_) (break-k)])))
         (let loop ((cry-v '())
                    (l lst))
           (syntax-parameterize
@@ -117,8 +119,19 @@
   (syntax-rules (loop)
     [(_ loop body ...) (let/ec break-k
                          (syntax-parameterize 
-                          ((break (syntax-rules () [(_) (break-k)]))) 
-                          (let loop () body ... (loop))))]
+                          ((break (syntax-rules () 
+                                    [(_ ret) (break-k ret)]
+                                    [(_) (break-k)]))) 
+                          (let loop ([cry-v '()])
+                            (syntax-parameterize
+                             ((cry (make-rename-transformer #'cry-v)))
+                             (loop
+                              (call/ec
+                               (lambda (k)
+                                 (syntax-parameterize
+                                  ((carry (make-rename-transformer #'k)))
+                                  body ...)
+                                 cry-v)))))))]
     [(_ body ...) (begin body ...)]))
 
 ; (SELECT [test op1] ... [ELSE opn])

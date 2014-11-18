@@ -51,15 +51,26 @@ Basic conditional execution block
 (select case *test* [*test-result* *op1*] ... [else *opn*])
 Multiple conditional block: COND-style, or CASE style with CASE.
 
-(for (*var* over *list*) *body* ... [carry *value*] [break [*value*]])
-Iterates over list in val, CARRYing value assigned from accumulator to next loop
-*cry* contains the accumulator, initialized to '()
-
 (do *body* ...)
-Executes its body in order (eqv. to begin)
+Executes its body in order (eqv. to begin). Returns result of last function evaluated.
 
-(do loop *body* ... [break])
-executes a block of code, looping continuously, until it encounters a BREAK
+(do loop *body* ...)
+executes a block of code, looping continuously, or until it encounters a BREAK. 
+Returns last value of cry (see below).
+
+(for (*var* over *list*) *body* ...)
+Iterates over list, holding current item in var. Exits once it reaches the end of the list.
+Returns last value of cry (see below).
+
+cry
+do and for contain a "hidden" argument which is passed at each iteration named cry.
+This can be used with carry to pass a value on to the next iteration.
+
+(carry *value*)
+Passes the value to cry for the next iteration of the loop. Supported by do and for.
+
+(break [value])
+Breaks execution of the current loop, optionally returning a single value
 ```
 
 ### I/O ###
