@@ -26,6 +26,15 @@
 
 ;; Declarations
 
+; (IMPORT name)
+; (IMPORT RKT name)
+; requires the given file, importing it's names
+(define-syntax import
+  (syntax-rules (rkt)
+    [(_ rkt name) (require (prefix-in rkt: name))]
+    [(_ name) (error "Not yet implemented")]))
+(define-syntax-parameter rkt (λ (stx) (error "rkt is an import keyword only")))
+
 ; (LET ((name value) ...) ...)
 ; Defines a variable in the local context. 
 ; provided by Racket
