@@ -1,0 +1,19 @@
+#lang s-exp heresy
+
+; (map *fun* *lst*)
+; Takes a single-argument function and applies it to each item on the list.
+(def fn map (fun lst)
+  (select
+   ((null? lst) lst)
+   (else (join (fun (head lst))
+               (map fun (tail lst))))))
+
+; (filter *pred* *lst*)
+; Returns a new list, containing only those items which are True according to pred
+(def fn filter (pred lst)
+  (select
+   ((null? lst) lst)
+   ((pred (head lst))
+    (join (head lst)
+          (filter pred (tail lst))))
+    (else (filter pred (tail lst)))))

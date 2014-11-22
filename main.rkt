@@ -22,7 +22,8 @@
          (rename-out (cons join)
                      (car head)
                      (cdr tail)
-                     (eval run)))
+                     (eval run)
+                     ))
 
 ;; Declarations
 
@@ -147,23 +148,25 @@
 ; (SELECT CASE test [test-result op1] ... [else opn])
 ; Multiple conditional block: COND-style, or CASE style with CASE.
 (define-syntax select
-  (syntax-rules (case)   
-    [(select case body ...) (select-case body ...)]
-    [(select body ...) (select-cond body ...)]))
-
-(define-syntax select-cond
-  (syntax-rules (else)
-    [(select-cond (test op1) ... (else opn)) 
+  (syntax-rules (cse)   
+;    [(select cse expr ((result1 ...) op1) ... (else opn)) 
+;     (case expr [(result1 ...) op1] ... (else opn))]
+    [(select (test op1) ... (else opn)) 
      (cond [test op1] ... (else opn))]))
 
-(define-syntax select-case
-  (syntax-rules (else)
-    [(select-case expr ((result1 ...) op1) ... (else opn))
-     (case expr [(result1 ...) op1] ... (else opn))]))
+;(define-syntax select-cond
+;  (syntax-rules (else)
+;    [(select-cond (test op1) ... (else opn)) 
+;     (cond [test op1] ... (else opn))]))
+;
+;(define-syntax select-case
+;  (syntax-rules (else)
+;    [(select-case expr ((result1 ...) op1) ... (else opn))
+;     (case expr [(result1 ...) op1] ... (else opn))]))
 
-(define-syntax-parameter case 
-  (lambda (stx)
-    (raise-syntax-error (syntax-e stx) "case can only be used with select")))
+;(define-syntax-parameter cse
+;  (lambda (stx)
+;    (raise-syntax-error (syntax-e stx) "case can only be used with select")))
 
 ;; I/O
 
