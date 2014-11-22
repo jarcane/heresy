@@ -18,7 +18,8 @@
          + - / * = < >
          list? null? zero? eq?
          and or not else
-         quote let list
+         quote let list apply
+         require provide all-defined-out
          (rename-out (cons join)
                      (car head)
                      (cdr tail)
@@ -33,7 +34,7 @@
 (define-syntax import
   (syntax-rules (rkt)
     [(_ rkt name) (require (prefix-in rkt: name))]
-    [(_ name) (error "Not yet implemented")]))
+    [(_ name) (require name)]))
 (define-syntax-parameter rkt (λ (stx) (error "rkt is an import keyword only")))
 
 ; (LET ((name value) ...) ...)
@@ -149,8 +150,8 @@
 ; Multiple conditional block: COND-style, or CASE style with CASE.
 (define-syntax select
   (syntax-rules (cse)   
-;    [(select cse expr ((result1 ...) op1) ... (else opn)) 
-;     (case expr [(result1 ...) op1] ... (else opn))]
+    ;    [(select cse expr ((result1 ...) op1) ... (else opn)) 
+    ;     (case expr [(result1 ...) op1] ... (else opn))]
     [(select (test op1) ... (else opn)) 
      (cond [test op1] ... (else opn))]))
 
@@ -219,6 +220,11 @@
 ; Converts a string into a list of single character strings
 (define (list$ l)
   (map string (string->list l)))
+
+; (str$ *num*) 
+; Converts a number into a string
+(define (str$ n)
+  (number->string n))
 
 ;; Math
 

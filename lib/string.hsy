@@ -1,0 +1,8 @@
+#lang s-exp heresy
+
+(require "list.hsy")
+
+; (len$ *str*)
+; Returns the length of the given str
+(def fn len$ (str)
+  (len (list$ str)))

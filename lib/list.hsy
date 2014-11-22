@@ -1,7 +1,10 @@
 #lang s-exp heresy
 
+(provide (all-defined-out))
+
 ; (map *fun* *lst*)
-; Takes a single-argument function and applies it to each item on the list.
+; Takes a single-argument function and list,
+; returning a new list with the function applied to each entry.
 (def fn map (fun lst)
   (select
    ((null? lst) lst)
@@ -17,3 +20,10 @@
     (join (head lst)
           (filter pred (tail lst))))
     (else (filter pred (tail lst)))))
+
+; (len *lst*)
+; Returns the number of items in the list
+(def fn len (lst)
+  (select
+   ((null? lst) 0)
+   (else (+ 1 (len (tail lst))))))
