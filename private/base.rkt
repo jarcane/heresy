@@ -20,6 +20,7 @@
          and or not else
          quote let list apply
          require provide all-defined-out
+         error
          (rename-out (cons join)
                      (car head)
                      (cdr tail)

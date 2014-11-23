@@ -7,9 +7,11 @@
 ;; Requires
 (require "./private/base.rkt"
          "./lib/list.rkt"
-         "./lib/string.rkt")
+         "./lib/string.rkt"
+         "./lib/math.rkt")
 
 ;; Provides
 (provide (all-from-out "./private/base.rkt"
                        "./lib/list.rkt"
-                       "./lib/string.rkt"))
+                       "./lib/string.rkt"
+                       "./lib/math.rkt"))
