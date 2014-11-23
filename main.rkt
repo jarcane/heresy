@@ -207,14 +207,16 @@
 ; (=$ str ...)
 ; Compares strings for equality
 (define-syntax =$
-  (syntax-rules ()
-    [(_ a b ...) (string=? a b ...)]))
+  (syntax-id-rules ()
+    [(_ a b ...) (string=? a b ...)]
+    [=$ string=?]))
 
 ; & str ... (string concat)
 ; Concats strings
 (define-syntax &
-  (syntax-rules ()
-    [(& a b ...) (string-append a b ...)]))
+  (syntax-id-rules ()
+    [(& a b ...) (string-append a b ...)]
+    [& string-append]))
 
 ; LIST$ list 
 ; Converts a string into a list of single character strings

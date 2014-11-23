@@ -27,3 +27,22 @@
   (select
    ((null? lst) 0)
    (else (+ 1 (len (tail lst))))))
+
+; (foldr *fun* *base* *lst*)
+; Folds a list from the right, combining pairs with fun, and returns the result
+(def fn foldr (fun base lst)
+  (select
+   ((null? lst) base)
+   (else (fun (head lst) (foldr fun base (tail lst))))))
+
+; (foldl *fun* *base* *lst*)
+; Folds a list from the left
+(def fn foldl (fun base lst)
+  (select
+   ((null? lst) base)
+   (else (foldl fun (fun (head lst) base) (tail lst)))))
+
+; (reverse *lst*)
+; Returns list with items in reverse order
+(def fn reverse (lst)
+  (foldl join Null lst))
