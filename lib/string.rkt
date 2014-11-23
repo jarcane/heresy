@@ -1,6 +1,6 @@
-#lang s-exp heresy
+#lang s-exp "../private/base.rkt"
 
-(require "list.hsy")
+(require "list.rkt")
 
 ; (len$ *str*)
 ; Returns the length of the given str

@@ -1,4 +1,4 @@
-#lang s-exp heresy
+#lang s-exp "../private/base.rkt"
 
 (provide (all-defined-out))
 
