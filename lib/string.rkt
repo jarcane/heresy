@@ -12,13 +12,17 @@
 (def fn list& (lst)
   (apply & lst))
 
-; (mid$ *str* *idx* *len*)
-; Returns a slice of str, len long, starting at idx
+; (left$ *str* *n* )
+; Returns a slice of str, length long, starting at idx
+(def fn left$ (str n)
+  (list& (left (list$ str) n)))
+
+; (right$ *str* *n*)
+; Returns a slice of str, length long, starting at idx
+(def fn right$ (str n)
+  (list& (right (list$ str) n)))
+
+; (mid$ *str* *idx* *length*)
+; Returns a slice of str, length long, starting at idx
 (def fn mid$ (str idx length)
-  (select
-   ((> idx (len$ str)) (error 'mid$ "out of index"))
-   ((> (+ idx length) (len$ str)) (error 'mid$ "slice too long"))
-   (else (list& 
-          (reverse 
-           (for (x in (range idx to (+ idx length -1)))
-             (carry (join (index x (list$ str)) cry))))))))
+  (list& (mid (list$ str) idx length)))

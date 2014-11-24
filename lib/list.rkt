@@ -49,7 +49,7 @@
   (foldl join Null lst))
 
 ; (index *nth* *lst*)
-; Returns the nth entry in lst
+; Returns the nth entry in lst. 1-indexed.
 (def fn index (nth lst)
   (select
    ((> nth (len lst)) (error 'index "out of index"))
@@ -63,3 +63,22 @@
    ((null? lst) False)
    ((eq? (head lst) item) idx)
    (else (inlst (tail lst) item (+ 1 idx)))))
+
+; (left *lst* *n*)
+; Returns the first n elements of the list.
+(def fn left (lst n)
+  (select
+   ((zero? n) Null)
+   (else (join (head lst) (left (tail lst) (- n 1))))))
+
+; (right *lst* *n*)
+; Returns last n entries from the list
+(def fn right (lst n)
+  (reverse (left (reverse lst) n)))
+
+; (mid *lst* *pos* *n*)
+; Returns n entries from lst starting at pos
+(def fn mid (lst pos n)
+  (select
+   ((one? pos) (left lst n))
+   (else (mid (tail lst) (- pos 1) n))))
