@@ -82,3 +82,8 @@
   (select
    ((one? pos) (left lst n))
    (else (mid (tail lst) (- pos 1) n))))
+
+; (slice *lst* *first* *last*)
+; Returns a slice of the list from first and last positions, inclusive.
+(def fn slice (lst (first 0) (last (len lst)))
+  (mid lst first (- last first -1)))

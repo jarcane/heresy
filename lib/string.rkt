@@ -26,3 +26,8 @@
 ; Returns a slice of str, length long, starting at idx
 (def fn mid$ (str idx length)
   (list& (mid (list$ str) idx length)))
+
+; (slice$ *str* *start* *finish*)
+; Returns a slice of the string from start to finish, inclusive
+(def fn slice$ (str (start 0) (finish (len$ str)))
+  (list& (slice (list$ str) start finish)))
