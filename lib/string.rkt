@@ -4,7 +4,7 @@
 
 ; (empty? str)
 ; Returns true if string is empty)
-(def fn empty? (str)
+(def fn empty$? (str)
   (=$ str ""))
 
 ; (len$ *str*)
@@ -54,7 +54,7 @@
 ; Returns the index of the first instance given search string within str, or #f
 (def fn instr (str search (idx 1))
   (select 
-   ((empty? str) False)
+   ((empty$? str) False)
    ((> (len$ search) (len$ str)) False)
    ((=$ search (left$ str (len$ search))) idx)
    (else (instr (tail$ str) search (+ 1 idx)))))
