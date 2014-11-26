@@ -48,10 +48,10 @@
 ; Defines new variables and functions (with help from FN)
 (define-syntax def
   (syntax-rules (macro fn)
-    [(_ macro name (args ...) body0 bodyn ...) 
-     (define-syntax-rule (name args ...) body0 bodyn ...)]
-    [(_ fn name (args ...) body0 bodyn ...) 
-     (define (name args ...) body0 bodyn ...)]
+    [(_ macro name (args ... . rest) body0 bodyn ...) 
+     (define-syntax-rule (name args ... . rest) body0 bodyn ...)]
+    [(_ fn name (args ... . rest) body0 bodyn ...) 
+     (define (name args ... . rest) body0 bodyn ...)]
     [(_ name contents) (define name contents)]))
 
 ; DEF literals
@@ -67,7 +67,7 @@
 ; The anonymous function 
 (define-syntax fn
   (syntax-rules ()
-    [(_ (args ...) body ...) (lambda (args ...) body ...)]
+    [(_ (args ... . rest) body ...) (lambda (args ... . rest) body ...)]
     [(_) (error 'fn "Missing syntax")]))
 
 ;; Flow Control

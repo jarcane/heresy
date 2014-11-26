@@ -87,3 +87,10 @@
 ; Returns a slice of the list from first and last positions, inclusive.
 (def fn slice (lst (first 0) (last (len lst)))
   (mid lst first (- last first -1)))
+
+; (append *lst* *lst2*)
+; Returns a list with the contents of lst2 appended to the end of lst1
+(def fn append (lst lst2)
+  (select
+   ((null? lst) lst2)
+   (else (join (head lst) (append (tail lst) lst2)))))
