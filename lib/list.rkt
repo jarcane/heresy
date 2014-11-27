@@ -94,3 +94,12 @@
   (select
    ((null? lst) lst2)
    (else (join (head lst) (append (tail lst) lst2)))))
+
+; (assoc *target* *lst*)
+; Searches the heads of a list of lists/pairs, and returns the first matching list or #f
+(def fn assoc (target lst)
+  (select
+   ((null? lst) False)
+   ((eq? target
+         (head (head lst))) (head lst))
+   (else (assoc (tail lst) target))))
