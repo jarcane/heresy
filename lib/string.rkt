@@ -58,3 +58,11 @@
    ((> (len$ search) (len$ str)) False)
    ((=$ search (left$ str (len$ search))) idx)
    (else (instr (tail$ str) search (+ 1 idx)))))
+
+; (split *str* [*delimiters*])
+; Returns a list of strings split from str at the given list of delimiters
+; default delimiter is " "
+;(def fn split (str (delims '(" ")))
+;  (select
+;   ((empty$? str) '())
+;   (else (join ))))
