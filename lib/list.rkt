@@ -88,12 +88,17 @@
 (def fn slice (lst (first 0) (last (len lst)))
   (mid lst first (- last first -1)))
 
-; (append *lst* *lst2*)
+; (append1 *lst* *lst2*)
 ; Returns a list with the contents of lst2 appended to the end of lst1
-(def fn append (lst lst2)
+(def fn append1 (lst lst2)
   (select
    ((null? lst) lst2)
    (else (join (head lst) (append (tail lst) lst2)))))
+
+; (append *lst1* ...)
+; Returns a list with the given lists appended one after the other
+(def fn append (lst . rest)
+  (foldr append1 '() (join lst rest)))
 
 ; (assoc *target* *lst*)
 ; Searches the heads of a list of lists/pairs, and returns the first matching list or #f
@@ -110,6 +115,5 @@
   (select 
    ((null? lst) lst)
    (else (append (sort fun (filter (fn (x) (not (fun (head lst) x))) (tail lst)))
-                 (append 
-                  (list (head lst))
-                  (sort fun (filter (fn (x) (fun (head lst) x)) (tail lst))))))))
+                 (list (head lst))
+                 (sort fun (filter (fn (x) (fun (head lst) x)) (tail lst)))))))
