@@ -20,7 +20,7 @@
    ((pred (head lst))
     (join (head lst)
           (filter pred (tail lst))))
-    (else (filter pred (tail lst)))))
+   (else (filter pred (tail lst)))))
 
 ; (len *lst*)
 ; Returns the number of items in the list
@@ -103,3 +103,13 @@
    ((eq? target
          (head (head lst))) (head lst))
    (else (assoc (tail lst) target))))
+
+; (sort *fun* *lst*)
+; Sorts list according to comparator fun
+(def fn sort (fun lst)
+  (select 
+   ((null? lst) lst)
+   (else (append (sort fun (filter (fn (x) (not (fun (head lst) x))) (tail lst)))
+                 (append 
+                  (list (head lst))
+                  (sort fun (filter (fn (x) (fun (head lst) x)) (tail lst))))))))

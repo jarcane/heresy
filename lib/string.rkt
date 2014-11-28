@@ -2,7 +2,7 @@
 
 (require "list.rkt")
 
-; (empty? str)
+; (empty$? str)
 ; Returns true if string is empty)
 (def fn empty$? (str)
   (=$ str ""))
@@ -31,12 +31,12 @@
         else (list& (tail tl)))))
 
 ; (left$ *str* *n* )
-; Returns a slice of str, length long, starting at idx
+; Returns the leftmost n characters of the string
 (def fn left$ (str n)
   (list& (left (list$ str) n)))
 
 ; (right$ *str* *n*)
-; Returns a slice of str, length long, starting at idx
+; Returns the rightmost n characters of the string
 (def fn right$ (str n)
   (list& (right (list$ str) n)))
 
@@ -62,7 +62,14 @@
 ; (split *str* [*delimiters*])
 ; Returns a list of strings split from str at the given list of delimiters
 ; default delimiter is " "
-;(def fn split (str (delims '(" ")))
-;  (select
-;   ((empty$? str) '())
-;   (else (join ))))
+(def fn split (str (delims '(" ")))
+  (let ([s (sort < (for (x in delims)
+                     (let ([sx (instr str x)])
+                       (if (not sx) then (carry cry) else (carry (join sx cry))))))])
+    (select
+     ((empty$? str) '())
+     ((null? s) (join str Null))
+     (else (let ([s2 (head s)])
+             (join (left$ str (- s2 1)) 
+                   (join (mid$ str s2 1)
+                         (split (slice$ str (+ 1 s2)) delims))))))))
