@@ -56,13 +56,13 @@
    ((one? nth) (head lst))
    (else (index (- nth 1) (tail lst)))))
 
-; (inlst *lst* *item*)
+; (inlst *item* *lst*)
 ; Searches lst for item, returns index of item if found, False if not
-(def fn inlst (lst item (idx 1))
+(def fn inlst (item lst (idx 1))
   (select
    ((null? lst) False)
    ((eq? (head lst) item) idx)
-   (else (inlst (tail lst) item (+ 1 idx)))))
+   (else (inlst item (tail lst) (+ 1 idx)))))
 
 ; (left *lst* *n*)
 ; Returns the first n elements of the list.
@@ -97,17 +97,24 @@
 
 ; (append *lst1* ...)
 ; Returns a list with the given lists appended one after the other
-(def fn append (lst . rest)
-  (foldr append1 '() (join lst rest)))
+(def fn append *args
+  (foldr append1 '() *args))
 
 ; (assoc *target* *lst*)
 ; Searches the heads of a list of lists/pairs, and returns the first matching list or #f
-(def fn assoc (target lst)
+(def fn assoc (tgt lst)
   (select
    ((null? lst) False)
-   ((eq? target
-         (head (head lst))) (head lst))
-   (else (assoc (tail lst) target))))
+   ((eq? tgt (head (head lst))) (head lst))
+   (else (assoc tgt (tail lst)))))
+
+; (subst *tgt* *new* *lst*)
+; returns a new list of lists with assoc of tgt's tail replaced with new
+(def fn subst (tgt new lst)
+  (select 
+   ((null? lst) False)
+   ((eq? tgt (head (head lst))) (join (join tgt new) (tail lst)))
+   (else (join (head lst) (subst tgt new (tail lst))))))
 
 ; (sort *fun* *lst*)
 ; Sorts list according to comparator fun
