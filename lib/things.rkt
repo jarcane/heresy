@@ -1,20 +1,45 @@
 #lang s-exp "../private/base.rkt"
 
-(import "list.rkt")
+(require "list.rkt")
+(provide (all-defined-out))
 
 ; (describe *thing* (*field* *value*) ...)
 ; Declare a new kind of Thing, with the given fields and default values.
-(def macro describe (name (field . value) ...)
+(def macro describe (name (field value) . (fieldn valuen))
   (def name
-    (fn args*
-        (let ([alst '((field . value) ...)])
-          (select
-           ((symbol? (head args*)) (tail (assoc (head args*) alst)))
-           ((list? (head args*)) (rem Do Stuff Here))
-           (else (error "Thing expected a symbol or a pattern")))))))
+    (thing '((field value) . (fieldn valuen)))))
 
-(describe dave (weight 100 200 300)
-          (status 'fat))
+(def fn thing (lst)
+  (fn args*
+      (let ([alst lst])
+        (select
+         ((null? args*) alst)
+         ((symbol? (head args*)) (tail (assoc (head args*) alst)))
+         ((list? (head args*)) 
+          (let recur ([al alst]
+                      [pat (head args*)]
+                      [c 1])
+            (select
+             ((null? pat) (thing al))
+             ((eq? (head pat) '*) (recur alst (tail pat) (+ 1 c)))
+             (else (recur (subst (head (index c al))
+                                 (join (head pat) Null)
+                                 al)
+                     (tail pat)
+                     (+ 1 c))))))
+         (else (error "Thing expected a symbol or a pattern"))))))
 
-(dave 'weight)
-(dave 'status)
+
+;(describe cthulhu 
+;          (size massive)
+;          (type squamous)
+;          (status sleeping))
+;
+;(def great-baalthogua (cthulhu '(* * awake)))
+;
+;(cthulhu)
+;(great-baalthogua)
+
+; Outputs:
+; '((size massive) (type squamous) (status sleeping))
+; '((size massive) (type squamous) (status awake))

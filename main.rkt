@@ -9,11 +9,13 @@
          "./lib/list.rkt"
          "./lib/string.rkt"
          "./lib/math.rkt"
-         "./lib/theory.rkt")
+         "./lib/theory.rkt"
+         "./lib/things.rkt")
 
 ;; Provides
 (provide (all-from-out "./private/base.rkt"
                        "./lib/list.rkt"
                        "./lib/string.rkt"
                        "./lib/math.rkt"
-                       "./lib/theory.rkt"))
+                       "./lib/theory.rkt"
+                       "./lib/things.rkt"))
