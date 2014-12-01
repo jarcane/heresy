@@ -17,6 +17,7 @@
          ; From Racket
          + - / * = < >
          list? null? zero? eq?
+         symbol?
          and or not else
          quote let list apply
          require provide all-defined-out
