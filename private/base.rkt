@@ -19,9 +19,12 @@
          list? null? zero? eq?
          symbol?
          and or not else
-         quote let list apply
+         quote quasiquote 
+         unquote unquote-splicing
+         let list apply
          require provide all-defined-out
          error
+         (for-syntax ...)
          (rename-out (cons join)
                      (car head)
                      (cdr tail)

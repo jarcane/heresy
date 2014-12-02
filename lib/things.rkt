@@ -1,13 +1,14 @@
 #lang s-exp "../private/base.rkt"
 
 (require "list.rkt")
+
 (provide (all-defined-out))
 
 ; (describe *thing* (*field* *value*) ...)
 ; Declare a new kind of Thing, with the given fields and default values.
-(def macro describe (name (field value) . (fieldn valuen))
+(def macro describe (name (field value) ...)
   (def name
-    (thing '((field value) . (fieldn valuen)))))
+    (thing '((field value) ...))))
 
 (def fn thing (lst)
   (fn args*
@@ -30,16 +31,19 @@
          (else (error "Thing expected a symbol or a pattern"))))))
 
 
-;(describe cthulhu 
-;          (size massive)
-;          (type squamous)
-;          (status sleeping))
-;
-;(def great-baalthogua (cthulhu '(* * awake)))
-;
-;(cthulhu)
-;(great-baalthogua)
+(describe cthulhu 
+          (size massive)
+          (type squamous)
+          (status sleeping))
 
-; Outputs:
+(def great-baalthogua (cthulhu '(* * awake)))
+
+(cthulhu)
+(great-baalthogua)
+
+; expected Outputs:
 ; '((size massive) (type squamous) (status sleeping))
 ; '((size massive) (type squamous) (status awake))
+
+; Actual Output
+; describe: use does not match pattern: (describe name (field value) ...) in: (describe cthulhu (size massive) (type squamous) (status sleeping))
