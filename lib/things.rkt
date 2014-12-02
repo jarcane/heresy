@@ -29,21 +29,3 @@
                      (tail pat)
                      (+ 1 c))))))
          (else (error "Thing expected a symbol or a pattern"))))))
-
-
-(describe cthulhu 
-          (size massive)
-          (type squamous)
-          (status sleeping))
-
-(def great-baalthogua (cthulhu '(* * awake)))
-
-(cthulhu)
-(great-baalthogua)
-
-; expected Outputs:
-; '((size massive) (type squamous) (status sleeping))
-; '((size massive) (type squamous) (status awake))
-
-; Actual Output
-; describe: use does not match pattern: (describe name (field value) ...) in: (describe cthulhu (size massive) (type squamous) (status sleeping))
