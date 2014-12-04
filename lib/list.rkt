@@ -134,3 +134,26 @@
    (else (append (sort fun (filter (fn (x) (not (fun (head lst) x))) (tail lst)))
                  (list (head lst))
                  (sort fun (filter (fn (x) (fun (head lst) x)) (tail lst)))))))
+
+; (zip *lst1* *lst2*)
+; Combines two lists into a single list of lists. Excess length is lost.
+(def fn zip (lst1 lst2)
+  (select
+   ((or (null? lst1)
+        (null? lst2)) Null)
+   (else (join (list (head lst1)
+                     (head lst2))
+               (zip (tail lst1)
+                    (tail lst2))))))
+
+; (zipwith *fun* *lst1* *lst*)
+; Returns a new list containing the result of applying fun to matching entries in lsts
+(def fn zipwith (fun lst1 lst2)
+  (select
+   ((or (null? lst1)
+        (null? lst2)) Null)
+   (else (join (fun (head lst1)
+                    (head lst2))
+               (zipwith fun 
+                        (tail lst1)
+                        (tail lst2))))))
