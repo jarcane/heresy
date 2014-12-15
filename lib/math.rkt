@@ -11,6 +11,36 @@
 (def fn one? (n)
   (= n 1))
 
+; (even? n)
+; returns True if n is even
+(def fn even? (n)
+  (select
+   ((not (rkt:integer? n)) 
+    (error 'even? "expected integer"))
+   ((zero? n) True)
+   ((< n 0) (odd? (inc n)))
+   (else (odd? (dec n)))))
+
+; (odd? n)
+; return True if n is odd
+(def fn odd? (n)
+  (select
+   ((not (rkt:integer? n)) 
+    (error 'odd? "expected integer"))
+   ((zero? n) False)
+   ((< n 0) (even? (inc n)))
+   (else (even? (dec n)))))
+
+; (inc n)
+; increments n by 1
+(def fn inc (n)
+  (+ 1 n))
+
+; (dec n)
+; decrements n by 1
+(def fn dec (n)
+  (- n 1))
+
 ; (sin x)
 ; Sine of x
 (def fn sin (x)
