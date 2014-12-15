@@ -269,6 +269,12 @@
   (syntax-rules ()
     [(_ a b) (expt a b)]))
 
+; (mod x y)
+; returns the modulo of x over y
+(define-syntax mod
+  (syntax-rules ()
+    [(_ x y) (modulo x y)]))
+
 ; ! (infix operator)
 (define-syntax !
   (syntax-rules ()
