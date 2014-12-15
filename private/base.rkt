@@ -105,48 +105,34 @@
 (define-syntax-parameter with 
   (lambda (stx)
     (raise-syntax-error (syntax-e stx) "with can only be used inside for")))
+
 (define-syntax for
   (syntax-rules (in with)
     [(_ (var in lst with x) body ...) 
-     (let/ec break-k
-       (syntax-parameterize 
-        ((break (syntax-rules () 
-                  [(_ ret) (break-k ret)]
-                  [(_) (break-k)])))
-        (let loop ((cry-v x)
-                   (l lst))
-          (syntax-parameterize
-           ([cry (make-rename-transformer #'cry-v)])
-           (cond [(null? l) cry-v]
-                 [else (let ([var (car l)])
-                         (loop
-                          (call/ec
-                           (lambda (k)
-                             (syntax-parameterize
-                              ([carry (make-rename-transformer #'k)])
-                              body ...)
-                             cry-v))
-                          (cdr l)))])))))]
+     (for-loop var lst x body ...)]
     [(_ (var in lst) body ...) 
-     (let/ec break-k
-       (syntax-parameterize 
-        ((break (syntax-rules () 
-                  [(_ ret) (break-k ret)]
-                  [(_) (break-k)])))
-        (let loop ((cry-v '())
-                   (l lst))
-          (syntax-parameterize
-           ([cry (make-rename-transformer #'cry-v)])
-           (cond [(null? l) cry-v]
-                 [else (let ([var (car l)])
-                         (loop
-                          (call/ec
-                           (lambda (k)
-                             (syntax-parameterize
-                              ([carry (make-rename-transformer #'k)])
-                              body ...)
-                             cry-v))
-                          (cdr l)))])))))]))
+     (for-loop var lst '() body ...)]))
+
+(define-syntax-rule (for-loop var lst x body ...)
+  (let/ec break-k
+    (syntax-parameterize 
+     ((break (syntax-rules () 
+               [(_ ret) (break-k ret)]
+               [(_) (break-k)])))
+     (let loop ((cry-v x)
+                (l lst))
+       (syntax-parameterize
+        ([cry (make-rename-transformer #'cry-v)])
+        (cond [(null? l) cry-v]
+              [else (let ([var (car l)])
+                      (loop
+                       (call/ec
+                        (lambda (k)
+                          (syntax-parameterize
+                           ([carry (make-rename-transformer #'k)])
+                           body ...)
+                          cry-v))
+                       (cdr l)))]))))))
 
 ; (DO body ...)
 ; (DO LOOP body ... [BREAK])
@@ -157,37 +143,28 @@
 
 (define-syntax do
   (syntax-rules (loop with)
-    [(_ loop with x body ...) (let/ec break-k
-                                (syntax-parameterize 
-                                 ((break (syntax-rules () 
-                                           [(_ ret) (break-k ret)]
-                                           [(_) (break-k)]))) 
-                                 (let loop ([cry-v x])
-                                   (syntax-parameterize
-                                    ((cry (make-rename-transformer #'cry-v)))
-                                    (loop
-                                     (call/ec
-                                      (lambda (k)
-                                        (syntax-parameterize
-                                         ((carry (make-rename-transformer #'k)))
-                                         body ...)
-                                        cry-v)))))))]
-    [(_ loop body ...) (let/ec break-k
-                         (syntax-parameterize 
-                          ((break (syntax-rules () 
-                                    [(_ ret) (break-k ret)]
-                                    [(_) (break-k)]))) 
-                          (let loop ([cry-v '()])
-                            (syntax-parameterize
-                             ((cry (make-rename-transformer #'cry-v)))
-                             (loop
-                              (call/ec
-                               (lambda (k)
-                                 (syntax-parameterize
-                                  ((carry (make-rename-transformer #'k)))
-                                  body ...)
-                                 cry-v)))))))]
+    [(_ loop with x body ...) 
+     (do-loop x body ...)]
+    [(_ loop body ...) 
+     (do-loop '() body ...)]
     [(_ body ...) (begin body ...)]))
+
+(define-syntax-rule (do-loop x body ...)
+  (let/ec break-k
+    (syntax-parameterize 
+     ((break (syntax-rules () 
+               [(_ ret) (break-k ret)]
+               [(_) (break-k)]))) 
+     (let loop ([cry-v x])
+       (syntax-parameterize
+        ((cry (make-rename-transformer #'cry-v)))
+        (loop
+         (call/ec
+          (lambda (k)
+            (syntax-parameterize
+             ((carry (make-rename-transformer #'k)))
+             body ...)
+            cry-v))))))))
 
 ; (SELECT [test op1] ... [ELSE opn])
 ; (SELECT CASE test [test-result op1] ... [else opn])
