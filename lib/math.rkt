@@ -6,6 +6,11 @@
 (def pi 3.141592653589793)
 (def e  2.718281828459045)
 
+; (abs n)
+; returns the absolute value of n
+(def fn abs (n)
+  (if (< n 0) then (* n -1) else n))
+
 ; (one? n)
 ; Returns True if number is 1.
 (def fn one? (n)
@@ -31,6 +36,14 @@
    ((< n 0) (even? (inc n)))
    (else (even? (dec n)))))
 
+; (sgn n)
+; Returns the "sign" of n, -1 if neg, 0 if zero?, or 1 if positive
+(def fn sgn (n)
+  (select 
+   ((< n 0) -1)
+   ((> n 0) 1)
+   (else 0)))
+
 ; (inc n)
 ; increments n by 1
 (def fn inc (n)
@@ -40,6 +53,11 @@
 ; decrements n by 1
 (def fn dec (n)
   (- n 1))
+
+; (exp n)
+; Returns the value of e^n
+(def fn exp (n)
+  (^ e n))
 
 ; (sin x)
 ; Sine of x

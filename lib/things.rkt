@@ -35,10 +35,13 @@
   (let ()
     (def this
       (fn args*
-        (let ([alst lst])
+        (let ([alst lst]
+              [fields (heads lst)])
           (select
            [(null? args*) (map (fn (p) (list (head p) ((head (tail p)) this))) alst)]
-           [(symbol? (head args*)) ((alist-ref alst (head args*)) this)]
+           [(and (symbol? (head args*))
+                 (assoc (head args*) alst)) ((alist-ref alst (head args*)) this)]
+           [(eq? 'fields (head args*)) fields]
            [(list? (head args*)) 
             (let recur ([al alst]
                         [pat (head args*)]
@@ -60,7 +63,7 @@
                                      al)
                          (tail pat)
                          (+ 1 c)))]))]
-           [else (error "Thing expected a symbol or a pattern")]))))
+           [else (error "Thing expected a valid symbol or a pattern")]))))
     this))
 
 (def (send thing method . args)

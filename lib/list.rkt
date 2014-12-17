@@ -126,6 +126,15 @@
    ((eq? tgt (head (head lst))) (join (join tgt new) (tail lst)))
    (else (join (head lst) (subst tgt new (tail lst))))))
 
+; (heads *lst*)
+; Returns the heads of a list of lists
+(def fn heads (lst)
+  (select
+   ((null? lst) Null)
+   ((atom? (head lst)) (error 'heads "expected list"))
+   (else (join (head (head lst))
+               (heads (tail lst))))))
+
 ; (sort *fun* *lst*)
 ; Sorts list according to comparator fun
 (def fn sort (fun lst)
