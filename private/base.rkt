@@ -6,10 +6,12 @@
 
 ;; Requires
 (require racket/stxparam
-         (only-in racket/base [case rkt:case]))
+         (only-in racket/base [case rkt:case])
+         "io.rkt")
 
 ;; Provides
 (provide (all-defined-out)
+         (all-from-out "io.rkt")
          ; required
          #%module-begin
          #%top-interaction

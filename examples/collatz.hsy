@@ -1,0 +1,7 @@
+#lang s-exp heresy
+
+(def fn collatz (n)
+  (select
+   ((one? n) '(1))
+   ((even? n) (join n (collatz (/ n 2))))
+   ((odd? n) (join n (collatz (+ (* 3 n) 1))))))
