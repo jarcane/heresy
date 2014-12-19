@@ -20,11 +20,9 @@
 ; returns True if n is even
 (def fn even? (n)
   (select
-   ((not (rkt:integer? n)) 
-    (error 'even? "expected integer"))
+   ((not (rkt:integer? n)) (error 'even? "expected integer"))
    ((zero? n) True)
-   ((< n 0) (odd? (inc n)))
-   (else (odd? (dec n)))))
+   (else (= (mod n 2) 0))))
 
 ; (odd? n)
 ; return True if n is odd
@@ -32,9 +30,7 @@
   (select
    ((not (rkt:integer? n)) 
     (error 'odd? "expected integer"))
-   ((zero? n) False)
-   ((< n 0) (even? (inc n)))
-   (else (even? (dec n)))))
+   (else (not (even? n)))))
 
 ; (sgn n)
 ; Returns the "sign" of n, -1 if neg, 0 if zero?, or 1 if positive
