@@ -11,7 +11,7 @@
               [c 0])
     (select
      ((one? x) `(,n ,c))
-     ((= (mod x 2) 0)
+     ((even? x)
       (recur (/ x 2) (inc c)))
      (else (recur (+ (* 3 x) 1) (inc c))))))
 
