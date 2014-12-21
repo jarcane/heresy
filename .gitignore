@@ -2,3 +2,5 @@
 *.zo
 *.dep
 private/hello.txt
+*.lyx#
+*.lyx~

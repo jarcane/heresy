@@ -219,123 +219,676 @@ Heresy Reference
 Declarations
 \end_layout
 
-\begin_layout Standard
-def [fn] 
+\begin_layout LyX-Code
+(def 
+\emph on
+name value
+\emph default
+)
 \end_layout
 
 \begin_layout Standard
-let 
+Defines a new variable of 
+\emph on
+name
+\emph default
+ with the given 
+\emph on
+value.
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
+(def
+\series bold
+ 
+\series default
 fn 
+\emph on
+name 
+\emph default
+([
+\emph on
+arg
+\emph default
+ ...]) 
+\emph on
+body
+\emph default
+ ...)
 \end_layout
 
 \begin_layout Standard
-import rkt 
+Defines a function of 
+\emph on
+name
+\emph default
+, which when called evaluates its body expressions with the given list of
+ arguments bound to local variables for use in the body of the function's
+ definition.
+ Note that there are a number of additional options here for defining arguments.
+ Default values can be ascribed to an argument by enclosing it in additional
+ parentheses:
 \end_layout
 
 \begin_layout Standard
-require/provide
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+> (define foo (x (y 1)) (+ x y))
+\end_layout
+
+\begin_layout Plain Layout
+
+> (foo 3 4)
+\end_layout
+
+\begin_layout Plain Layout
+
+7
+\end_layout
+
+\begin_layout Plain Layout
+
+> (foo 5)
+\end_layout
+
+\begin_layout Plain Layout
+
+6
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Two patterns as well exist for taking an arbitrary number of values.
+ The argument names list can be forgone entirely and substituted with a
+ single name (generally
+\emph on
+ args*
+\family typewriter
+\emph default
+ 
+\family default
+by convention), which will then contain a list of any and all values passed
+ to the function.
+ The second method is the use of the dot (.) in the body of the arguments
+ list followed by a single variable (usually called 
+\emph on
+rest
+\emph default
+).
+\end_layout
+
+\begin_layout LyX-Code
+(let ((
+\emph on
+name value
+\emph default
+) ...) 
+\emph on
+body
+\emph default
+ ...)
+\end_layout
+
+\begin_layout Standard
+Binds the given name-value pairs for use in the local context created by
+ the body of the expression.
+ This is used to define local variables, such as are needed within a function.
+ Note that local functions can potentially be assigned this way by storing
+ anonymous functions, but there is a built-in syntax for defining a single
+ such function, like so:
+\end_layout
+
+\begin_layout LyX-Code
+(let 
+\emph on
+proc
+\emph default
+ ((
+\emph on
+name value) ...
+\emph default
+) 
+\emph on
+body ...
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+When 
+\emph on
+let
+\emph default
+ is called this way, it defines a local function 
+\emph on
+proc
+\emph default
+ (conventionally called 
+\emph on
+recur
+\emph default
+), which can then be called from within the body of the 
+\emph on
+let
+\emph default
+ in order to perform local recursion; the name-value pairs thus act as arguments
+ to the function 
+\emph on
+proc
+\emph default
+.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+(fn ([
+\emph on
+arg ...
+\emph default
+]) 
+\emph on
+body ...
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Creates an anonymous function with the given arguments, that evaluates its
+ body when called.
+ This is the 
+\emph on
+lambda
+\emph default
+ expression from other Lisps and functional languages, and a given 
+\emph on
+fn
+\emph default
+ can be passed as a value (as can named functions, for that matter) wherever
+ called for.
+ An anonymous function can also be evaluated directly in place by using
+ it as the operator in an expression, like so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+> ((fn (x y) (* x y)) 4 5)
+\end_layout
+
+\begin_layout Plain Layout
+
+20
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
 Conditionals and Loops
 \end_layout
 
-\begin_layout Standard
-if 
+\begin_layout LyX-Code
+(if 
+\emph on
+test
+\emph default
+ then 
+\emph on
+texpr 
+\emph default
+else 
+\emph on
+fexpr
+\emph default
+)
 \end_layout
 
 \begin_layout Standard
-select 
+Evalutes 
+\emph on
+test
+\emph default
+ and, if 
+\emph on
+test 
+\emph default
+is True, evaluates 
+\emph on
+texpr
+\emph default
+, otherwise it evaluates 
+\emph on
+fexpr.
+
+\emph default
+ Note that only a single expression can be placed in each 
+\begin_inset Quotes eld
+\end_inset
+
+slot
+\begin_inset Quotes erd
+\end_inset
+
+ in the syntax; if you need to do multiple things, use a 
+\emph on
+do
+\emph default
+ block.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+(select (
+\emph on
+test1 expr1) ...
+ 
+\emph default
+[(else 
+\emph on
+fexpr
+\emph default
+)])
 \end_layout
 
 \begin_layout Standard
+Given a list of test-expression pairs, evaluates the tests in order until
+ it finds one which is True, and evaluates the matching expression.
+ The 
+\emph on
+else
+\emph default
+ expression is always true: if an else is found at the end of the 
+\emph on
+select
+\emph default
+ statement, its matching 
+\emph on
+fexpr
+\emph default
+ will be evaluated.
+ If no test in 
+\emph on
+select
+\emph default
+ is true, returns 
+\emph on
+#<void>.
+\end_layout
+
+\begin_layout LyX-Code
+(select case 
+\emph on
+texpr 
+\emph default
+((
+\emph on
+val ...
+\emph default
+) 
+\emph on
+rexpr
+\emph default
+) ...
+ [(else 
+\emph on
+fexpr
+\emph default
+)])
+\end_layout
+
+\begin_layout Standard
+Evaluates 
+\emph on
+texpr 
+\emph default
+and compares it to 
+\emph on
+vals
+\emph default
+ in turn until it finds a value that is 
+\emph on
+eq?
+\emph default
+ to the result of 
+\emph on
+texpr.
+ 
+\emph default
+If one is found, it evaluates the matching 
+\emph on
+rexpr
+\emph default
+.
+ Like with 
+\emph on
+select
+\emph default
+, 
+\emph on
+else
+\emph default
+ is always considered True, and will therefore always evaluate its 
+\emph on
+fexpr.
+ 
+\emph default
+If no matching 
+\emph on
+val
+\emph default
+ is found, 
+\emph on
 select case
+\emph default
+ evaluates to 
+\emph on
+#<void>.
+
+\emph default
+ Not also that the 
+\emph on
+(val ...) 
+\emph default
+is a list, and can contain as many values as is needed, such as in the following
+ example: 
 \end_layout
 
 \begin_layout Standard
-for 
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+> (select case (* 2 3)
 \end_layout
 
-\begin_layout Standard
-do 
+\begin_layout Plain Layout
+
+    ((2 3 4) (print "Nope."))
 \end_layout
 
-\begin_layout Standard
-do loop 
+\begin_layout Plain Layout
+
+    ((5 6 7) (print "Yup."))
 \end_layout
 
-\begin_layout Standard
-break 
+\begin_layout Plain Layout
+
+    (else (print "something is horribly wrong.")))
 \end_layout
 
-\begin_layout Standard
-carry 
+\begin_layout Plain Layout
+
+Yup.
 \end_layout
 
-\begin_layout Standard
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+(for (
+\emph on
+var 
+\emph default
+in 
+\emph on
+list
+\emph default
+ [with 
+\emph on
 cry
+\emph default
+]) 
+\emph on
+body ...
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Iterates over 
+\emph on
+list
+\emph default
+ evaluating it's body with the 
+\emph on
+head
+\emph default
+ of 
+\emph on
+list 
+\emph default
+assigned to 
+\emph on
+var
+\emph default
+, then recurs with the 
+\emph on
+tail
+\emph default
+ of 
+\emph on
+list
+\emph default
+ until it returns Null.
+ 
+\emph on
+for 
+\emph default
+loops declare an implicit variable 
+\emph on
+cry 
+\emph default
+which can be passed a value with 
+\emph on
+carry.
+ 
+\emph default
+They may also be interrupted with 
+\emph on
+break.
+ 
+\emph default
+See below for more details.
+\end_layout
+
+\begin_layout LyX-Code
+(do 
+\emph on
+body ...
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Evaluates its body in order, returning the result of the final body expression.
+\end_layout
+
+\begin_layout LyX-Code
+(do loop [with 
+\emph on
+cry
+\emph default
+] 
+\emph on
+body ...
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Evaluates 
+\emph on
+body
+\emph default
+ repeatedly until a 
+\emph on
+break
+\emph default
+ statement is encountered.
+ Declares the implicit variable 
+\emph on
+cry, 
+\emph default
+which can be reassigned with the 
+\emph on
+carry 
+\emph default
+operator
+\emph on
+.
+\end_layout
+
+\begin_layout LyX-Code
+(break [
+\emph on
+value
+\emph default
+])
+\end_layout
+
+\begin_layout Standard
+Breaks the continuation of a 
+\emph on
+for 
+\emph default
+or 
+\emph on
+do loop
+\emph default
+ evaluation.
+ If provided a value, returns that value as the result of the loop.
+\end_layout
+
+\begin_layout LyX-Code
+(carry 
+\emph on
+value
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+When called in the body of a 
+\emph on
+for 
+\emph default
+or 
+\emph on
+do loop
+\emph default
+ expression, immediately begins the next iteration of the loop, and passes
+ the given value to the implicit variable 
+\emph on
+cry
+\emph default
+.
+\end_layout
+
+\begin_layout LyX-Code
+cry
+\end_layout
+
+\begin_layout Standard
+Loops declare an internal variable called 
+\emph on
+cry, 
+\emph default
+which defaults to Null, and which is passed automatically to the next iteration
+ of the loop, and is returned when the loop concludes.
+ The value of 
+\emph on
+cry
+\emph default
+ can be specified at the beginning of the loop with the optional 
+\emph on
+with 
+\emph default
+parameter, and 
+\emph on
+carry 
+\emph default
+can be used to pass a new value of 
+\emph on
+cry 
+\emph default
+to the next iteration.
 \end_layout
 
 \begin_layout Subsection
 Predicates and Logic
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 list?
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 null? 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 zero? 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 eq? 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 symbol? 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 atom? 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 lat? 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 and 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 or
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 not
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 else 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 True 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 False
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 Null
 \end_layout
 
@@ -343,39 +896,39 @@ Null
 Syntax and Evaluation
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 quote 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 quasiquote 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 unquote
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 unquote-splicing 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 error
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 run 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 rem 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 def macro 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 apply
 \end_layout
 
@@ -383,19 +936,19 @@ apply
 Input and Output
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 print (& lit)
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 ? 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 input (stx) 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 using
 \end_layout
 
@@ -403,99 +956,99 @@ using
 Lists
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 list
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 join 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 head 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 tail 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 map 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 filter 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 len 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 foldr 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 foldl 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 reverse 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 index 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 index*
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 inlst 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 left 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 right 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 mid 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 slice 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 append1 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 append 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 subst 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 heads 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 sort 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 zip 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 zipwith
 \end_layout
 
@@ -503,63 +1056,63 @@ zipwith
 Strings
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 =$
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 &
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 list$
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 str$
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 empty$?
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 len$ 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 list& 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 head$ 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 tail$ 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 left$
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 right$ 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 mid$
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 slice$
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 instr 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 split
 \end_layout
 
@@ -567,83 +1120,83 @@ split
 Math
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 + 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 -
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 / 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 * 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 =
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 <
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 > 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 ^ 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 mod 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 abs
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 one?
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 even? 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 odd?
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 sgn 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 inc 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 dec 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 exp 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 sin 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 cos 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 tan
 \end_layout
 
@@ -651,15 +1204,15 @@ tan
 Things
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 describe
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 send 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 Self
 \end_layout
 
@@ -667,15 +1220,15 @@ Self
 Theory
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 Y 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 partial 
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
 compose
 \end_layout
 
