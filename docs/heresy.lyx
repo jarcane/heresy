@@ -1038,6 +1038,8 @@ True
 \begin_layout Standard
 The boolean truth value.
  Actually an alias for #t in the Racket implementation.
+ Note that, in Heresy, as in Racket, anything not explicitly False is considered
+ True.
 \end_layout
 
 \begin_layout LyX-Code
@@ -1512,99 +1514,560 @@ Lists
 \end_layout
 
 \begin_layout LyX-Code
-list
+(list 
+\emph on
+v ...
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns a list containing the given values.
 \end_layout
 
 \begin_layout LyX-Code
-join 
+(join 
+\emph on
+a b
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Joins 
+\emph on
+a 
+\emph default
+and 
+\emph on
+b
+\emph default
+ into a pair.
+ If 
+\emph on
+b
+\emph default
+ is Null, a list is created containing 
+\emph on
+a
+\emph default
+.
+ If 
+\emph on
+b
+\emph default
+ is a list, 
+\emph on
+a 
+\emph default
+is joined to the head of the list.
+ 
 \end_layout
 
 \begin_layout LyX-Code
-head 
+(head 
+\emph on
+l
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns the head (first element) of the list 
+\emph on
+l
+\emph default
+.
+ 
 \end_layout
 
 \begin_layout LyX-Code
-tail 
+(tail 
+\emph on
+l
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns the remainder of list 
+\emph on
+l
+\emph default
+ after the 
+\emph on
+head.
+
+\emph default
+ If the list has only one element, returns Null.
 \end_layout
 
 \begin_layout LyX-Code
-map 
+(map 
+\emph on
+fun l
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Given a single-argument function 
+\emph on
+fun, 
+\emph default
+returns a list with 
+\emph on
+fun 
+\emph default
+applied to each item in 
+\emph on
+l.
 \end_layout
 
 \begin_layout LyX-Code
-filter 
+(filter 
+\emph on
+fun
+\emph default
+ 
+\emph on
+l
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Given a predicate 
+\emph on
+fun
+\emph default
+, returns a new list containing only those elements of 
+\emph on
+l 
+\emph default
+for which 
+\emph on
+fun
+\emph default
+ returns True.
 \end_layout
 
 \begin_layout LyX-Code
-len 
+(len 
+\emph on
+l
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns the number of items in 
+\emph on
+l.
 \end_layout
 
 \begin_layout LyX-Code
-foldr 
+(foldr 
+\emph on
+fun base l
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Given a function 
+\emph on
+fun
+\emph default
+ with two arguments, returns the cumulative result of 
+\emph on
+fun 
+\emph default
+being applied to consecutive pairs, starting from 
+\emph on
+base
+\emph default
+ and the rightmost element of 
+\emph on
+l.
 \end_layout
 
 \begin_layout LyX-Code
-foldl 
+(foldl 
+\emph on
+fun base l
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Similar to 
+\emph on
+foldr, 
+\emph default
+except that it combines pairs from the left, starting with the head of 
+\emph on
+l 
+\emph default
+and 
+\emph on
+base.
 \end_layout
 
 \begin_layout LyX-Code
-reverse 
+(reverse 
+\emph on
+l
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns a list with the order of 
+\emph on
+l 
+\emph default
+reversed.
 \end_layout
 
 \begin_layout LyX-Code
-index 
+(index 
+\emph on
+n l
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns the 
+\emph on
+n
+\emph default
+th entry of 
+\emph on
+l, 
+\emph default
+indexed from 1.
 \end_layout
 
 \begin_layout LyX-Code
-index*
+(index* 
+\emph on
+l dims ...
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Walks through nested lists according to the given 
+\emph on
+dims
+\emph default
+, essentially finding 
+\emph on
+index
+\emph default
+ recursively for an arbitrary number of dimensions.
+ For example, given a nested list three lists deep, 
+\emph on
+(index* l 2 3 1) 
+\emph default
+would return the 1st element of the third element of the 2nd lst, like so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+> (def dave '(1 (2 3 (4 5)) 6))
+\end_layout
+
+\begin_layout Plain Layout
+
+> (index* dave 2 3 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+4
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout LyX-Code
-inlst 
+(inlst 
+\emph on
+item
+\emph default
+ 
+\emph on
+l
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Searches 
+\emph on
+l
+\emph default
+ for 
+\emph on
+item
+\emph default
+, returning the index of 
+\emph on
+item
+\emph default
+ if found, or False if not.
 \end_layout
 
 \begin_layout LyX-Code
-left 
+(left 
+\emph on
+l n
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns a list of the leftmost 
+\emph on
+n
+\emph default
+ elements of 
+\emph on
+l.
 \end_layout
 
 \begin_layout LyX-Code
-right 
+(right 
+\emph on
+l n)
+\end_layout
+
+\begin_layout Standard
+Returns a list of the rightmost 
+\emph on
+n 
+\emph default
+elements of 
+\emph on
+l.
 \end_layout
 
 \begin_layout LyX-Code
-mid 
+(mid 
+\emph on
+l idx n
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns 
+\emph on
+n 
+\emph default
+entries of 
+\emph on
+l
+\emph default
+ starting from index 
+\emph on
+idx
+\emph default
+.
 \end_layout
 
 \begin_layout LyX-Code
-slice 
+(slice 
+\emph on
+l first
+\emph default
+ [
+\emph on
+last
+\emph default
+])
+\end_layout
+
+\begin_layout Standard
+Returns a slice of 
+\emph on
+l
+\emph default
+, starting at 
+\emph on
+first
+\emph default
+ and ending at 
+\emph on
+last
+\emph default
+.
+ If 
+\emph on
+last
+\emph default
+ is not provided, it defaults to the end of the list.
 \end_layout
 
 \begin_layout LyX-Code
-append1 
+(append1 
+\emph on
+l1 l2
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns a list with 
+\emph on
+l2 
+\emph default
+appended to the end of 
+\emph on
+l1.
 \end_layout
 
 \begin_layout LyX-Code
-append 
+(append 
+\emph on
+l
+\emph default
+ ...)
+\end_layout
+
+\begin_layout Standard
+Returns a list of the given 
+\emph on
+l
+\emph default
+s appended together in order.
+ 
 \end_layout
 
 \begin_layout LyX-Code
-subst 
+(assoc 
+\emph on
+tgt l
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Searches the heads of a list of lists 
+\emph on
+l
+\emph default
+ and returns the first matching list or False.
 \end_layout
 
 \begin_layout LyX-Code
-heads 
+(subst 
+\emph on
+tgt new l
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Searches the heads of a list of lists 
+\emph on
+l, 
+\emph default
+and if it finds 
+\emph on
+tgt
+\emph default
+, returns a new list with the tail of 
+\emph on
+tgt
+\emph default
+ substituted for 
+\emph on
+new
+\emph default
+.
+ Otherwise, returns False.
 \end_layout
 
 \begin_layout LyX-Code
-sort 
+(heads 
+\emph on
+l
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns a list of the heads of a list of lists.
+ 
 \end_layout
 
 \begin_layout LyX-Code
-zip 
+(sort 
+\emph on
+fun l
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Sorts list 
+\emph on
+l 
+\emph default
+according to the comparison function 
+\emph on
+fun
+\emph default
+.
 \end_layout
 
 \begin_layout LyX-Code
-zipwith
+(zip 
+\emph on
+l1 l2
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns a new list of lists combining 
+\emph on
+l1 
+\emph default
+and 
+\emph on
+l2.
+ 
+\emph default
+Excess length of either list is dropped.
+\end_layout
+
+\begin_layout LyX-Code
+(zipwith 
+\emph on
+fun l1 l2
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns a new list, combining the matching pairs of each list with 
+\emph on
+fun.
+ 
+\emph default
+Excess length of either list is dropped.
 \end_layout
 
 \begin_layout Subsection
