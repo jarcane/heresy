@@ -1,0 +1,683 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+The Heresy Programming Language
+\end_layout
+
+\begin_layout Author
+John S.
+ Berry III
+\end_layout
+
+\begin_layout Abstract
+The Heresy language is a functional Lisp/Scheme dialect implemented in Racket,
+ with syntax inspired by the BASIC family of programming languages.
+ It's principle goals are to provide a simple core language for BASIC and
+ other programmers to experiment with and learn how to program functionally.
+ This document will detail the general philosophy of the Heresy language,
+ such as exists, as well as the language syntax and functions.
+ 
+\begin_inset Newline newline
+\end_inset
+
+The Heresy language was created by John S.
+ Berry III with additional contributions from many others in the Racket
+ community.
+ 
+\begin_inset Newline newline
+\end_inset
+
+Heresy and this documentation are Copyright (c) 2014 John S.
+ Berry III and released under the terms of the GNU LGPL.
+\end_layout
+
+\begin_layout Section
+The Heresy Rules
+\end_layout
+
+\begin_layout Standard
+The Heresy language is developed according to a few basic "ground rules,"
+ which the author and contributors attempt to follow in developing new features
+ and functions for the language.
+ These are as follows:
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Heresy is BASIC
+\series default
+ - Heresy is inspired by BASIC, and aims to be at least somewhat easy for
+ BASIC programmers to learn.
+ Mostly this means we prefer BASIC names for functions over the Lisp name,
+ and naming conventions like the $ for string functions.
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Heresy is a Lisp
+\series default
+ - Heresy is still a Lisp, and loves simple syntax and s-expressions.
+ While it makes use of some sugaring like literal keywords for certain common
+ primitives, these are best used sparingly.
+ Heresy is the Diet Coke of Evil, just one calorie, not quite evil enough.
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Heresy is functional 
+\series default
+- Functional, but not Haskell.
+ It is not intended solely as a vehicle for absolute functional purity.
+ I love Haskell.
+ You love Haskell.
+ We don’t need to write another Haskell.
+ Think more in terms of a lower-calorie, more intelligible Clojure.
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Heresy is for learning
+\series default
+ - Heresy started as a learning project, a chance to learn how Lisp and
+ functional programming really work on a practical level.
+ I hope that, in time, it can be that for others as well, especially those
+ who grew up with BASIC like myself and still sometimes struggle to get
+ their head around the functional style.
+ In particular, this means the Heresy-written portions of the source are
+ generally written in as clear a manner as possible, as they are intended
+ to be self-teaching.
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Heresy is an experiment
+\series default
+ - Heresy is an experimental language.
+ It’s very DNA is as a mad idea that came to life, and it’s development
+ should be ready and willing to embrace new mad ideas and run with them.
+ This is where carry came from, and I hope to have more mad ideas in the
+ future.
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Heresy is for everyone
+\series default
+ - As a statement of culture, the Heresy community welcomes the contribution
+ of all people, who taste equally delicious to the jaws of mighty Cthulhu.
+ No discrimination, harassment, or any other mistreatment of contributors
+ on the basis of age, race, sexuality, or gender will 
+\series bold
+ever
+\series default
+ be tolerated by myself or anyone else who wishes to be part of this project.
+\end_layout
+
+\begin_layout Section
+Heresy Syntax and Conventions
+\end_layout
+
+\begin_layout Standard
+Generally speaking, Heresy follows standard s-expression syntax as expected
+ from any Lisp, being composed of parenthesized sequences of terms in Polish
+ notation.
+ Each sequence thus begins with an operator or function, and any number
+ of arguments or additional s-expressions as needed.
+\end_layout
+
+\begin_layout Standard
+There are however a few exceptions to usual expectations in the case of
+ certain special forms like for, def, and if.
+ These make use of additional literal terms as part of their syntax, to
+ provide more clarity and similarity to BASIC-style syntax.
+\end_layout
+
+\begin_layout Standard
+In accordance with that goal, Heresy also follows certain naming conventions
+ as a matter of style.
+ Functions which produce a string value are appended with $, and in general
+ where a naming conflict between two similar functions in Racket/Scheme
+ and BASIC exists, prefer BASIC.
+\end_layout
+
+\begin_layout Standard
+When borrowing BASIC syntax and naming for use in Heresy, the author has
+ generally relied chiefly on QBASIC and ECMA BASIC for reference.
+\end_layout
+
+\begin_layout Section
+Heresy Reference
+\end_layout
+
+\begin_layout Subsection
+Declarations
+\end_layout
+
+\begin_layout Standard
+def [fn] 
+\end_layout
+
+\begin_layout Standard
+let 
+\end_layout
+
+\begin_layout Standard
+fn 
+\end_layout
+
+\begin_layout Standard
+import rkt 
+\end_layout
+
+\begin_layout Standard
+require/provide
+\end_layout
+
+\begin_layout Subsection
+Conditionals and Loops
+\end_layout
+
+\begin_layout Standard
+if 
+\end_layout
+
+\begin_layout Standard
+select 
+\end_layout
+
+\begin_layout Standard
+select case
+\end_layout
+
+\begin_layout Standard
+for 
+\end_layout
+
+\begin_layout Standard
+do 
+\end_layout
+
+\begin_layout Standard
+do loop 
+\end_layout
+
+\begin_layout Standard
+break 
+\end_layout
+
+\begin_layout Standard
+carry 
+\end_layout
+
+\begin_layout Standard
+cry
+\end_layout
+
+\begin_layout Subsection
+Predicates and Logic
+\end_layout
+
+\begin_layout Standard
+list?
+\end_layout
+
+\begin_layout Standard
+null? 
+\end_layout
+
+\begin_layout Standard
+zero? 
+\end_layout
+
+\begin_layout Standard
+eq? 
+\end_layout
+
+\begin_layout Standard
+symbol? 
+\end_layout
+
+\begin_layout Standard
+atom? 
+\end_layout
+
+\begin_layout Standard
+lat? 
+\end_layout
+
+\begin_layout Standard
+and 
+\end_layout
+
+\begin_layout Standard
+or
+\end_layout
+
+\begin_layout Standard
+not
+\end_layout
+
+\begin_layout Standard
+else 
+\end_layout
+
+\begin_layout Standard
+True 
+\end_layout
+
+\begin_layout Standard
+False
+\end_layout
+
+\begin_layout Standard
+Null
+\end_layout
+
+\begin_layout Subsection
+Syntax and Evaluation
+\end_layout
+
+\begin_layout Standard
+quote 
+\end_layout
+
+\begin_layout Standard
+quasiquote 
+\end_layout
+
+\begin_layout Standard
+unquote
+\end_layout
+
+\begin_layout Standard
+unquote-splicing 
+\end_layout
+
+\begin_layout Standard
+error
+\end_layout
+
+\begin_layout Standard
+run 
+\end_layout
+
+\begin_layout Standard
+rem 
+\end_layout
+
+\begin_layout Standard
+def macro 
+\end_layout
+
+\begin_layout Standard
+apply
+\end_layout
+
+\begin_layout Subsection
+Input and Output
+\end_layout
+
+\begin_layout Standard
+print (& lit)
+\end_layout
+
+\begin_layout Standard
+? 
+\end_layout
+
+\begin_layout Standard
+input (stx) 
+\end_layout
+
+\begin_layout Standard
+using
+\end_layout
+
+\begin_layout Subsection
+Lists
+\end_layout
+
+\begin_layout Standard
+list
+\end_layout
+
+\begin_layout Standard
+join 
+\end_layout
+
+\begin_layout Standard
+head 
+\end_layout
+
+\begin_layout Standard
+tail 
+\end_layout
+
+\begin_layout Standard
+map 
+\end_layout
+
+\begin_layout Standard
+filter 
+\end_layout
+
+\begin_layout Standard
+len 
+\end_layout
+
+\begin_layout Standard
+foldr 
+\end_layout
+
+\begin_layout Standard
+foldl 
+\end_layout
+
+\begin_layout Standard
+reverse 
+\end_layout
+
+\begin_layout Standard
+index 
+\end_layout
+
+\begin_layout Standard
+index*
+\end_layout
+
+\begin_layout Standard
+inlst 
+\end_layout
+
+\begin_layout Standard
+left 
+\end_layout
+
+\begin_layout Standard
+right 
+\end_layout
+
+\begin_layout Standard
+mid 
+\end_layout
+
+\begin_layout Standard
+slice 
+\end_layout
+
+\begin_layout Standard
+append1 
+\end_layout
+
+\begin_layout Standard
+append 
+\end_layout
+
+\begin_layout Standard
+subst 
+\end_layout
+
+\begin_layout Standard
+heads 
+\end_layout
+
+\begin_layout Standard
+sort 
+\end_layout
+
+\begin_layout Standard
+zip 
+\end_layout
+
+\begin_layout Standard
+zipwith
+\end_layout
+
+\begin_layout Subsection
+Strings
+\end_layout
+
+\begin_layout Standard
+=$
+\end_layout
+
+\begin_layout Standard
+&
+\end_layout
+
+\begin_layout Standard
+list$
+\end_layout
+
+\begin_layout Standard
+str$
+\end_layout
+
+\begin_layout Standard
+empty$?
+\end_layout
+
+\begin_layout Standard
+len$ 
+\end_layout
+
+\begin_layout Standard
+list& 
+\end_layout
+
+\begin_layout Standard
+head$ 
+\end_layout
+
+\begin_layout Standard
+tail$ 
+\end_layout
+
+\begin_layout Standard
+left$
+\end_layout
+
+\begin_layout Standard
+right$ 
+\end_layout
+
+\begin_layout Standard
+mid$
+\end_layout
+
+\begin_layout Standard
+slice$
+\end_layout
+
+\begin_layout Standard
+instr 
+\end_layout
+
+\begin_layout Standard
+split
+\end_layout
+
+\begin_layout Subsection
+Math
+\end_layout
+
+\begin_layout Standard
++ 
+\end_layout
+
+\begin_layout Standard
+-
+\end_layout
+
+\begin_layout Standard
+/ 
+\end_layout
+
+\begin_layout Standard
+* 
+\end_layout
+
+\begin_layout Standard
+=
+\end_layout
+
+\begin_layout Standard
+<
+\end_layout
+
+\begin_layout Standard
+> 
+\end_layout
+
+\begin_layout Standard
+^ 
+\end_layout
+
+\begin_layout Standard
+mod 
+\end_layout
+
+\begin_layout Standard
+abs
+\end_layout
+
+\begin_layout Standard
+one?
+\end_layout
+
+\begin_layout Standard
+even? 
+\end_layout
+
+\begin_layout Standard
+odd?
+\end_layout
+
+\begin_layout Standard
+sgn 
+\end_layout
+
+\begin_layout Standard
+inc 
+\end_layout
+
+\begin_layout Standard
+dec 
+\end_layout
+
+\begin_layout Standard
+exp 
+\end_layout
+
+\begin_layout Standard
+sin 
+\end_layout
+
+\begin_layout Standard
+cos 
+\end_layout
+
+\begin_layout Standard
+tan
+\end_layout
+
+\begin_layout Subsection
+Things
+\end_layout
+
+\begin_layout Standard
+describe
+\end_layout
+
+\begin_layout Standard
+send 
+\end_layout
+
+\begin_layout Standard
+Self
+\end_layout
+
+\begin_layout Subsection
+Theory
+\end_layout
+
+\begin_layout Standard
+Y 
+\end_layout
+
+\begin_layout Standard
+partial 
+\end_layout
+
+\begin_layout Standard
+compose
+\end_layout
+
+\end_body
+\end_document
