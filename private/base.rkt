@@ -207,6 +207,7 @@
 ; INPUT STX -> read
 (define-syntax input
   (syntax-rules (stx)
+    [(_ stx str) (begin (display str) (read))]
     [(_ stx) (read)]
     [(_ str) (begin (display str) (read-line))]
     [(_) (read-line)]))

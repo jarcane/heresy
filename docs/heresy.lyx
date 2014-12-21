@@ -1350,19 +1350,161 @@ Input and Output
 \end_layout
 
 \begin_layout LyX-Code
-print (& lit)
+(print [&|lit] [
+\emph on
+v
+\emph default
+])
+\end_layout
+
+\begin_layout Standard
+Prints the given 
+\emph on
+v
+\emph default
+ to the current output, or stdout if not otherwise specified, followed by
+ a newline.
+ 
+\emph on
+(print & v)
+\emph default
+ outputs without a newline, while 
+\emph on
+(print lit v)
+\emph default
+ outputs as a literal form that can be directly read back by 
+\emph on
+(input stx ...)
+\emph default
+ as code.
+ A bare 
+\emph on
+(print)
+\emph default
+ merely prints a newline to the current output.
+ 
 \end_layout
 
 \begin_layout LyX-Code
-? 
+(? ...)
+\end_layout
+
+\begin_layout Standard
+A shortened macro for 
+\emph on
+print.
 \end_layout
 
 \begin_layout LyX-Code
-input (stx) 
+(input [stx] [
+\emph on
+string
+\emph default
+])
+\end_layout
+
+\begin_layout Standard
+Reads a line of input from the current input, or stdin if not otherwise
+ specified, and returns the value read as a string.
+ 
+\emph on
+(input stx ...)
+\emph default
+ instead reads a value using the standard reader, thus providing syntax
+ which can be evaluated with 
+\emph on
+run
+\emph default
+.
+ If additionally provided with a 
+\emph on
+string,
+\emph default
+ this will be output as a prompt to the current output.
 \end_layout
 
 \begin_layout LyX-Code
-using
+(using 
+\emph on
+io-port body ...
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Evaluates the body, with input/ouptut redirected to the given 
+\emph on
+io-port.
+ 
+\emph default
+Only the 
+\emph on
+file
+\emph default
+ port is supported at this time.
+\end_layout
+
+\begin_layout LyX-Code
+(file 
+\emph on
+name
+\emph default
+ as 
+\emph on
+mode
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Opens the file 
+\emph on
+name 
+\emph default
+as the new target for input or output, depending on the 
+\emph on
+mode
+\emph default
+ provided
+\emph on
+.
+
+\emph default
+ 
+\emph on
+mode 
+\emph default
+is a symbol, of one of the following:
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+
+\family typewriter
+'output
+\family default
+ Opens file as the current output port.
+ Will fail if file already exists.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+
+\family typewriter
+'rewrite
+\family default
+ Opens file as the current output port, rewriting its contents if the file
+ exists.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+
+\family typewriter
+'input
+\family default
+ Opens file as the current input port.
+ 
 \end_layout
 
 \begin_layout Subsection
