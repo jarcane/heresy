@@ -837,59 +837,228 @@ Predicates and Logic
 \end_layout
 
 \begin_layout LyX-Code
-list?
+(list? 
+\emph on
+v
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns True if 
+\emph on
+v
+\emph default
+ is a list.
 \end_layout
 
 \begin_layout LyX-Code
-null? 
+(null? 
+\emph on
+v
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns True if 
+\emph on
+v
+\emph default
+ is Null, where Null is defined as the empty list 
+\family typewriter
+'()
+\family default
+.
 \end_layout
 
 \begin_layout LyX-Code
-zero? 
+(zero? 
+\emph on
+v
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns True if 
+\emph on
+v
+\emph default
+ = 0.
 \end_layout
 
 \begin_layout LyX-Code
-eq? 
+(one? 
+\emph on
+v
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns True if 
+\emph on
+v = 1.
 \end_layout
 
 \begin_layout LyX-Code
-symbol? 
+(eq? 
+\emph on
+x y
+\emph default
+)
 \end_layout
 
-\begin_layout LyX-Code
-atom? 
-\end_layout
-
-\begin_layout LyX-Code
-lat? 
-\end_layout
-
-\begin_layout LyX-Code
+\begin_layout Standard
+Returns True if 
+\emph on
+x 
+\emph default
 and 
+\emph on
+y
+\emph default
+ are the same object.
 \end_layout
 
 \begin_layout LyX-Code
-or
+(symbol? 
+\emph on
+v
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns True if 
+\emph on
+v
+\emph default
+ is a symbol: ie.
+ a quoted name such as 
+\emph on
+'foo.
+
+\emph default
+ See 
+\emph on
+quote
+\emph default
+ in 3.4.
 \end_layout
 
 \begin_layout LyX-Code
-not
+(atom? 
+\emph on
+v
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns True if 
+\emph on
+v
+\emph default
+ is an atom: ie.
+ a number, symbol, or procedure, rather than another list or Null.
+\end_layout
+
+\begin_layout LyX-Code
+(lat? 
+\emph on
+l
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns True if 
+\emph on
+l
+\emph default
+ is a list composed solely of atoms.
+\end_layout
+
+\begin_layout LyX-Code
+(and 
+\emph on
+expr ...
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns True only if all given expressions are True.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+(or 
+\emph on
+expr
+\emph default
+ ...)
+\end_layout
+
+\begin_layout Standard
+Returns True if any given expression is True.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+(not 
+\emph on
+v
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns True if 
+\emph on
+v
+\emph default
+ is False, else returns False.
 \end_layout
 
 \begin_layout LyX-Code
 else 
 \end_layout
 
+\begin_layout Standard
+A special keyword for True, used as a literal in conditional statements.
+\end_layout
+
 \begin_layout LyX-Code
 True 
+\end_layout
+
+\begin_layout Standard
+The boolean truth value.
+ Actually an alias for #t in the Racket implementation.
 \end_layout
 
 \begin_layout LyX-Code
 False
 \end_layout
 
+\begin_layout Standard
+The boolean false value.
+ Actually an alias for #f in the Racket implementation.
+\end_layout
+
 \begin_layout LyX-Code
 Null
+\end_layout
+
+\begin_layout Standard
+An alias for the empty list
+\family typewriter
+ '()
+\family default
+.
 \end_layout
 
 \begin_layout Subsection
