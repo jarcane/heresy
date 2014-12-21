@@ -1066,39 +1066,283 @@ Syntax and Evaluation
 \end_layout
 
 \begin_layout LyX-Code
-quote 
+(quote 
+\emph on
+v
+\emph default
+)
 \end_layout
 
 \begin_layout LyX-Code
-quasiquote 
+'
+\emph on
+v
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+Quotes
+\begin_inset Quotes erd
+\end_inset
+
+ the given 
+\emph on
+v, 
+\emph default
+without evaluating it's contents.
+ A quoted list is passed merely as data, a quoted atom is a 
+\begin_inset Quotes eld
+\end_inset
+
+symbol
+\begin_inset Quotes erd
+\end_inset
+
+ as per 
+\emph on
+symbol?.
+ 
+\emph default
+Can be shortened to 
+\family typewriter
+'
+\family default
+.
+ 
 \end_layout
 
 \begin_layout LyX-Code
+(quasiquote 
+\emph on
+v
+\emph default
+)
+\end_layout
+
+\begin_layout LyX-Code
+`
+\emph on
+v
+\end_layout
+
+\begin_layout Standard
+Same as 
+\emph on
+quote,
+\emph default
+ but can be 
+\begin_inset Quotes eld
+\end_inset
+
+escaped
+\begin_inset Quotes erd
+\end_inset
+
+ with the 
+\emph on
 unquote
+\emph default
+ and 
+\emph on
+unquote-splicing
+\emph default
+ syntax.
+ Can be shortened to 
+\family typewriter
+`
+\family default
+.
 \end_layout
 
 \begin_layout LyX-Code
-unquote-splicing 
+(unquote 
+\emph on
+v
+\emph default
+)
 \end_layout
 
 \begin_layout LyX-Code
-error
+,
+\emph on
+v
+\end_layout
+
+\begin_layout Standard
+When encountered within a a quasiquoted block, evaluates 
+\emph on
+v 
+\emph default
+and quotes its value instead.
+ Can be shortened to 
+\family typewriter
+,
+\family default
+.
 \end_layout
 
 \begin_layout LyX-Code
-run 
+(unquote-splicing 
+\emph on
+v
+\emph default
+)
 \end_layout
 
 \begin_layout LyX-Code
-rem 
+,@
+\emph on
+v
+\end_layout
+
+\begin_layout Standard
+Similar to 
+\emph on
+unquote,
+\emph default
+ but splices the result of evaluating 
+\emph on
+v
+\emph default
+ in place.
+ Can be shortened to 
+\family typewriter
+,@
+\family default
+.
 \end_layout
 
 \begin_layout LyX-Code
-def macro 
+(error [
+\emph on
+symbol
+\emph default
+] 
+\emph on
+message
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Halts the program, returning an error of 
+\emph on
+symbol: message
+\emph default
+ where 
+\emph on
+symbol 
+\emph default
+is a quoted value (customarily the name of the current function) and 
+\emph on
+message 
+\emph default
+is a string.
+ 
 \end_layout
 
 \begin_layout LyX-Code
-apply
+(run 
+\emph on
+form
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Evaluates the given form.
+ Usage is not recommended.
+\end_layout
+
+\begin_layout LyX-Code
+(rem 
+\emph on
+any ...
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Ignores its arguments and returns void.
+ Useful for block comments.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+(def macro 
+\emph on
+name 
+\emph default
+([
+\emph on
+pattern ...
+\emph default
+]) 
+\emph on
+template ...
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Defines a new macro with 
+\emph on
+name
+\emph default
+.
+ A macro can best be thought of as a function which is not evaluated, but
+ rather returns syntax to be evaluated in the form of a template.
+ Each name described in the 
+\emph on
+pattern
+\emph default
+ defines a 
+\begin_inset Quotes eld
+\end_inset
+
+pattern variable
+\begin_inset Quotes erd
+\end_inset
+
+ which can then be used in the body of the 
+\emph on
+template
+\emph default
+ and will pass any syntax contained in that portion of the 
+\emph on
+pattern 
+\emph default
+in the appropriate location matched in the 
+\emph on
+template.
+
+\emph default
+ The elipsis ...
+ can be used in a pattern to indicate repeatable values.
+\end_layout
+
+\begin_layout LyX-Code
+(apply 
+\emph on
+fun v ...
+ lst
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Applies 
+\emph on
+fun
+\emph default
+ to the given arguments, as if it had been called with 
+\family typewriter
+(fun v ...
+ lst)
+\family default
+.
 \end_layout
 
 \begin_layout Subsection
