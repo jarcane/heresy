@@ -923,6 +923,26 @@ y
 \end_layout
 
 \begin_layout LyX-Code
+(equal? 
+\emph on
+x y
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns True if 
+\emph on
+x
+\emph default
+ and 
+\emph on
+y
+\emph default
+ are equal.
+\end_layout
+
+\begin_layout LyX-Code
 (symbol? 
 \emph on
 v

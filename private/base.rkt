@@ -20,7 +20,7 @@
          ; From Racket
          + - / * = < >
          list? null? zero? eq?
-         symbol?
+         symbol? equal?
          and or not else
          quote quasiquote 
          unquote unquote-splicing
