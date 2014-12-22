@@ -2095,63 +2095,280 @@ Strings
 \end_layout
 
 \begin_layout LyX-Code
-=$
+(=$ 
+\emph on
+x y
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns True if the two strings are equal.
 \end_layout
 
 \begin_layout LyX-Code
-&
+(& 
+\emph on
+str ...
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Concatenates its arguments into a single string.
 \end_layout
 
 \begin_layout LyX-Code
-list$
+(list$ 
+\emph on
+str
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns a list of one-character strings from the given string.
 \end_layout
 
 \begin_layout LyX-Code
-str$
+(str$ 
+\emph on
+n
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Converts a number 
+\emph on
+n
+\emph default
+ to a string.
 \end_layout
 
 \begin_layout LyX-Code
-empty$?
+(empty$? 
+\emph on
+str
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns True if the string is empty (
+\family typewriter
+
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+
+\family default
+).
 \end_layout
 
 \begin_layout LyX-Code
-len$ 
+(len$ 
+\emph on
+str
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns the length of the string, indexed from 1.
 \end_layout
 
 \begin_layout LyX-Code
-list& 
+(list& 
+\emph on
+l
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Given a list of strings, returns a single concatenated string.
 \end_layout
 
 \begin_layout LyX-Code
-head$ 
+(head$ 
+\emph on
+str
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns the head (first character) of the string.
 \end_layout
 
 \begin_layout LyX-Code
-tail$ 
+(tail$ 
+\emph on
+str
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns the tail (remaining characters) of the string, unless 
+\emph on
+str
+\emph default
+ is empty, in which case it returns the empty string.
 \end_layout
 
 \begin_layout LyX-Code
-left$
+(left$ 
+\emph on
+str
+\emph default
+ 
+\emph on
+n
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns a string of the leftmost 
+\emph on
+n
+\emph default
+ characters of 
+\emph on
+str.
 \end_layout
 
 \begin_layout LyX-Code
-right$ 
+(right$ 
+\emph on
+str n
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns a string of the rightmost 
+\emph on
+n 
+\emph default
+characters of 
+\emph on
+str.
 \end_layout
 
 \begin_layout LyX-Code
-mid$
+(mid$ 
+\emph on
+str idx len
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns a section of 
+\emph on
+str, len 
+\emph default
+characters long, beginning at 
+\emph on
+idx.
 \end_layout
 
 \begin_layout LyX-Code
-slice$
+(slice$ 
+\emph on
+str start 
+\emph default
+[
+\emph on
+finish
+\emph default
+])
+\end_layout
+
+\begin_layout Standard
+Returns a slice of 
+\emph on
+str 
+\emph default
+beginning at 
+\emph on
+start
+\emph default
+ and ending at 
+\emph on
+finish
+\emph default
+.
+ If not specified, 
+\emph on
+finish
+\emph default
+ defaults to the length of the string.
+ 
 \end_layout
 
 \begin_layout LyX-Code
-instr 
+(instr 
+\emph on
+str
+\emph default
+ 
+\emph on
+search
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns the index of the first instance of 
+\emph on
+search
+\emph default
+ in 
+\emph on
+str
+\emph default
+, or False if not found.
 \end_layout
 
 \begin_layout LyX-Code
-split
+(split 
+\emph on
+str 
+\emph default
+[
+\emph on
+delimiters
+\emph default
+])
+\end_layout
+
+\begin_layout Standard
+Returns a list of string sections split at the given delimiters.
+ If 
+\emph on
+delimiters 
+\emph default
+is not specified, defaults to space (
+\family typewriter
+
+\begin_inset Quotes eld
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family default
+).
 \end_layout
 
 \begin_layout Subsection
