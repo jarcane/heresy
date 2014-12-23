@@ -5,6 +5,8 @@ Heresy is a BASIC-inspired functional dialect of Lisp, currently implemented as 
 
 Heresy aims to provide a simple, semi-pure functional Lisp language that is nevertheless familiar to programmers of BASIC, by providing a combination of familiar control structures and features with purely functional execution.
 
+The official documentation and reference can be found here: http://jarcane.github.io/heresy/heresy.html
+
 The code Copyright 2014 by John S. Berry III, and is licensed via the LGPL v3.
 
 Installation
