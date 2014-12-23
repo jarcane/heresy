@@ -39,10 +39,10 @@
               [fields (heads lst)])
           (select
            [(null? args*) (map (fn (p) (list (head p) ((head (tail p)) this))) alst)]
+           [(eq? 'fields (head args*)) fields]
            [(and (symbol? (head args*))
                  (assoc (head args*) alst)) ((alist-ref alst (head args*)) this)]
-           [(eq? 'fields (head args*)) fields]
-           [(list? (head args*)) 
+                      [(list? (head args*)) 
             (let recur ([al alst]
                         [pat (head args*)]
                         [c 1])

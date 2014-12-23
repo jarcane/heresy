@@ -2376,99 +2376,597 @@ Math
 \end_layout
 
 \begin_layout LyX-Code
-+ 
+(+ [
+\emph on
+x y ...
+\emph default
+])
+\end_layout
+
+\begin_layout Standard
+Adds the given numbers left to right and returns the result.
+ If only one argument is given, returns the argument.
+ If no arguments are provided, returns 0.
 \end_layout
 
 \begin_layout LyX-Code
--
+(- 
+\emph on
+x 
+\emph default
+[
+\emph on
+y ...
+\emph default
+]) 
+\end_layout
+
+\begin_layout Standard
+Subtracts the given numbers left to right and returns the result.
+ If only one argument is given, returns 
+\emph on
+(- 0 x).
+ 
 \end_layout
 
 \begin_layout LyX-Code
-/ 
+(/ 
+\emph on
+x 
+\emph default
+[
+\emph on
+y ...
+\emph default
+])
+\end_layout
+
+\begin_layout Standard
+Divides the numbers from left to right and returns the result.
+ If only one argument is given, returns 
+\emph on
+(/ 1 x)
+\emph default
+.
+ 
 \end_layout
 
 \begin_layout LyX-Code
-* 
+(* [
+\emph on
+x y ...
+\emph default
+])
+\end_layout
+
+\begin_layout Standard
+Multiplies the numbers given from left to right and returns the result.
+ If no argument is given, returns one.
+ If one argument is given, returns the argument.
+ 
 \end_layout
 
 \begin_layout LyX-Code
-=
+(= 
+\emph on
+x y ...
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns True if all the numbers are numerically equal.
 \end_layout
 
 \begin_layout LyX-Code
-<
+(< 
+\emph on
+x y ...
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns True if all arguments are greater than the one previous going right
+ (ie, 
+\emph on
+x < y < z, etc.
+\emph default
+)
 \end_layout
 
 \begin_layout LyX-Code
-> 
+(> 
+\emph on
+x y ...
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns True if all arguments are less than the one previous going right
+ (ie, 
+\emph on
+x > y > z, etc.
+\emph default
+)
 \end_layout
 
 \begin_layout LyX-Code
-^ 
+pi
+\end_layout
+
+\begin_layout Standard
+A bound variable containing the 64-bit floating point value of pi.
 \end_layout
 
 \begin_layout LyX-Code
-mod 
+e
+\end_layout
+
+\begin_layout Standard
+A bound variable containing the 64-bit floating point value of Euler's number.
+ 
 \end_layout
 
 \begin_layout LyX-Code
-abs
+(mod 
+\emph on
+x y
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns the modulus of 
+\emph on
+x
+\emph default
+ divided by 
+\emph on
+y
+\emph default
+.
 \end_layout
 
 \begin_layout LyX-Code
-one?
+(abs 
+\emph on
+n
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns the absolute value of 
+\emph on
+n.
 \end_layout
 
 \begin_layout LyX-Code
-even? 
+(even? 
+\emph on
+n
+\emph default
+) 
+\end_layout
+
+\begin_layout Standard
+Returns True if 
+\emph on
+n
+\emph default
+ is even.
 \end_layout
 
 \begin_layout LyX-Code
-odd?
+(odd?
+\emph on
+ n
+\emph default
+) 
+\end_layout
+
+\begin_layout Standard
+Returns True if 
+\emph on
+n
+\emph default
+ is odd.
 \end_layout
 
 \begin_layout LyX-Code
-sgn 
+(sgn 
+\emph on
+n
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns -1 if 
+\emph on
+n 
+\emph default
+is negative, 0 if 
+\emph on
+n
+\emph default
+ is zero, and 1 if 
+\emph on
+n
+\emph default
+ is positive.
 \end_layout
 
 \begin_layout LyX-Code
-inc 
+(inc 
+\emph on
+n
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns the value of 
+\emph on
+(+ n 1).
 \end_layout
 
 \begin_layout LyX-Code
-dec 
+(dec 
+\emph on
+n
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns the value of 
+\emph on
+(- n 1)
+\emph default
+.
 \end_layout
 
 \begin_layout LyX-Code
-exp 
+(exp 
+\emph on
+x
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns the value of 
+\emph on
+e
+\begin_inset script superscript
+
+\begin_layout Plain Layout
+x
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout LyX-Code
-sin 
+(sin 
+\emph on
+x
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns the sine of 
+\emph on
+x
+\emph default
+ as a floating point value.
 \end_layout
 
 \begin_layout LyX-Code
-cos 
+(cos 
+\emph on
+x
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns the cosine of 
+\emph on
+x
+\emph default
+ as a floating point value.
 \end_layout
 
 \begin_layout LyX-Code
-tan
+(tan
+\emph on
+ x
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns the tangent of 
+\emph on
+x
+\emph default
+ as a floating point value.
 \end_layout
 
 \begin_layout Subsection
 Things
 \end_layout
 
-\begin_layout LyX-Code
-describe
+\begin_layout Standard
+Things are Heresy's definable data structures.
+ Unlike the objects of most object-oriented languages, which often exist
+ to hold and carry mutable state and actions with which to change that state,
+ Things are immutable.
+ A Thing, once sprung to life, cannot itself be altered, but can be called
+ with the correct syntax to return a new Thing with different internal values
+ for its internal data fields.
+\end_layout
+
+\begin_layout Standard
+Things are essentially functions, lambdas specifically, with predefined
+ syntax arguments.
+ They are first class values, and can be passed freely just as any other
+ data, but can also be passed arguments to either return the values of their
+ fields, return a new Thing, or to employ any functions contained within
+ the thing.
+ 
 \end_layout
 
 \begin_layout LyX-Code
+(describe 
+\emph on
+Name 
+\emph default
+(
+\emph on
+field value
+\emph default
+) ...)
+\end_layout
+
+\begin_layout Standard
+Defines a new type of Thing, given 
+\emph on
+Name
+\emph default
+.
+ By convention, Things are generally named in uppercase, though this is
+ not required by the syntax.
+ Each 
+\emph on
+field
+\emph default
+ is an internal name and external symbol, which is mapped to the given 
+\emph on
+value.
+ 
+\emph default
+Anonymous functions (
+\emph on
+fn
+\emph default
+) can be assigned as values to Thing fields, and those functions can access
+ the fields of the Thing by name.
+\end_layout
+
+\begin_layout LyX-Code
+({Name} [
+\emph on
+'symbol
+\emph default
+|'fields|
+\emph on
+pattern
+\emph default
+])
+\end_layout
+
+\begin_layout Standard
+Once a Thing has been described or bound to a name by other means, that
+ 
+\emph on
+Name 
+\emph default
+is bound locally as a function, and can thus be called with special syntax
+ to return its contents or to return a new copied Thing.
+ In more detail, these syntaxes are as follows:
+\end_layout
+
+\begin_layout LyX-Code
+(Name)
+\end_layout
+
+\begin_layout Standard
+Returns an association list containing the contents of the Thing, ie.
+ a list in the form of: 
+\emph on
+'((field value) ...)
+\end_layout
+
+\begin_layout LyX-Code
+(Name 'fields)
+\end_layout
+
+\begin_layout Standard
+Returns a list of symbols for the fields contained within the Thing.
+ Note that the symbol 
+\emph on
+'fields
+\emph default
+ takes precedent over the field names within, in order to prevent overwriting
+ this syntax.
+ 
+\end_layout
+
+\begin_layout LyX-Code
+(Name 
+\emph on
+'symbol
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns the value of the field associated with 
+\emph on
+'symbol,
+\emph default
+ the quoted form of the field name described when the Thing type was first
+ declared.
+ Will return an error if no such named field is found.
+ If the value associated with symbol is a function, this expression can
+ be used as the operating function of a further expression like so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+> (describe Lord-Cthulhu (eat (fn (x) (print (& "Devours " x)))))
+\end_layout
+
+\begin_layout Plain Layout
+
+> ((Lord-Cthulhu 'eat) "Dave")
+\end_layout
+
+\begin_layout Plain Layout
+
+Devours Dave
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+(Name 
+\emph on
+pattern
+\emph default
+)
+\end_layout
+
+\begin_layout LyX-Code
+pattern = '([*|
+\emph on
+value
+\emph default
+] ...)
+\end_layout
+
+\begin_layout Standard
+Returns a copy of the Thing, with new values according to the 
+\emph on
+pattern
+\emph default
+ passed to the original Thing.
+ 
+\emph on
+Pattern
+\emph default
+ must be a quoted list of either *'s or values, in order according to the
+ fields of the Thing as originally defined (so the first *|value matches
+ the first field, the second to the second field, and so on).
+ A * in a field indicates that the value is copied in-tact, while a 
+\emph on
+value
+\emph default
+ becomes the new value of the field in that position.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+> (describe Santa (size 'fat)
+\end_layout
+
+\begin_layout Plain Layout
+
+				  (sleigh 'ready)
+\end_layout
+
+\begin_layout Plain Layout
+
+				  (sack 'full))
+\end_layout
+
+\begin_layout Plain Layout
+
+> (describe Santa-after-Christmas (Santa '(* * 'empty)))
+\end_layout
+
+\begin_layout Plain Layout
+
+> (Santa-after-Christmas)
+\end_layout
+
+\begin_layout Plain Layout
+
+((size 'fat) (sleigh 'ready) (sack 'empty))
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+(send 
+\emph on
+Thing 'symbol args ...
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+An alternate syntax for accessing functions within Things, 
+\emph on
 send 
+\emph default
+calls the function named by 
+\emph on
+(Thing 'symbol)
+\emph default
+ with the given arguments and returns the result.
+ 
 \end_layout
 
 \begin_layout LyX-Code
-Self
+(Self ...)
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Self 
+\emph default
+is the self-referring identifier for a Thing, allowing for functions within
+ Things to call the Thing itself.
+ Note that if it is only the values of the other fields, this is not necessary,
+ as fields are defined as local names within the context of the Thing, and
+ thus can be referred to simply by name.
 \end_layout
 
 \begin_layout Subsection
@@ -2476,15 +2974,189 @@ Theory
 \end_layout
 
 \begin_layout LyX-Code
-Y 
+(Y 
+\emph on
+fn
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+The strict Y fixed-point combinator.
+ Allows for recursion of anonymous functions.
+ Given a 
+\emph on
+fn1 
+\emph default
+which contains a single named argument, and within which is an additional
+ single-argument 
+\emph on
+fn
+\emph default
+2, the innermost 
+\emph on
+fn2
+\emph default
+ can call the named argument of 
+\emph on
+fn1
+\emph default
+ as if it were a function name in order to recur on itself.
+ For example, the factorial function can be defined thusly, using the Y-combinat
+or:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+(define Fact   
+\end_layout
+
+\begin_layout Plain Layout
+
+  (Y     
+\end_layout
+
+\begin_layout Plain Layout
+
+    (fn (fact)       
+\end_layout
+
+\begin_layout Plain Layout
+
+      (fn (n)         
+\end_layout
+
+\begin_layout Plain Layout
+
+		(if (zero? n)            
+\end_layout
+
+\begin_layout Plain Layout
+
+			then 1             
+\end_layout
+
+\begin_layout Plain Layout
+
+			else (* n (fact (- n 1))))))))
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note however that usage of the Y-combinator for recursion is not especially
+ efficient, and the more traditional recursive approach is generally recommended
+ whenever possible (which is most of the time).
 \end_layout
 
 \begin_layout LyX-Code
-partial 
+(partial 
+\emph on
+fun args ...
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns a function with 
+\emph on
+args
+\emph default
+ partially applied to 
+\emph on
+fun, 
+\emph default
+which can then be passed the remaining arguments, as many as needed to complete
+ the calculation.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+> (map (partial + 2) (range 1 to 4))
+\end_layout
+
+\begin_layout Plain Layout
+
+(3 4 5 6)
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout LyX-Code
-compose
+(compose 
+\emph on
+fn1 fn2
+\emph default
+)
+\end_layout
+
+\begin_layout Standard
+Returns a new function which is a composition of 
+\emph on
+fn1 
+\emph default
+and 
+\emph on
+fn2.
+ 
+\emph default
+This function evaluates 
+\emph on
+fn2 
+\emph default
+with its arguments
+\emph on
+, 
+\emph default
+and then applies 
+\emph on
+fn1
+\emph default
+ to the result of 
+\emph on
+fn2.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+> (define abs-sub (compose abs -))
+\end_layout
+
+\begin_layout Plain Layout
+
+> (abs-sub 4 5)
+\end_layout
+
+\begin_layout Plain Layout
+
+1
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_body
