@@ -1623,6 +1623,62 @@ head.
 \end_layout
 
 \begin_layout LyX-Code
+(range 
+\emph on
+start
+\emph default
+ to 
+\emph on
+finish
+\emph default
+ [step 
+\emph on
+n
+\emph default
+])
+\end_layout
+
+\begin_layout Standard
+Generates a list of numbers, incrementing from 
+\emph on
+start
+\emph default
+ to 
+\emph on
+finish
+\emph default
+ by 
+\emph on
+n.
+ 
+\emph default
+If no 
+\emph on
+n 
+\emph default
+is provided, defaults to 1.
+ Note that, unlike BASIC's 
+\emph on
+for x = y to z, 
+\emph default
+descending sequences where 
+\emph on
+start
+\emph default
+ is greater than 
+\emph on
+finish 
+\emph default
+can only be declared by including a negative 
+\emph on
+n.
+ 
+\emph default
+Otherwise only Null will be returned.
+ 
+\end_layout
+
+\begin_layout LyX-Code
 (map 
 \emph on
 fun l
