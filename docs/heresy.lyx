@@ -3157,27 +3157,27 @@ status open
 
 \begin_layout Plain Layout
 
-    (fn (fact)       
+   (fn (fact)       
 \end_layout
 
 \begin_layout Plain Layout
 
-      (fn (n)         
+    (fn (n)         
 \end_layout
 
 \begin_layout Plain Layout
 
-		(if (zero? n)            
+      (if (zero? n)            
 \end_layout
 
 \begin_layout Plain Layout
 
-			then 1             
+          then 1             
 \end_layout
 
 \begin_layout Plain Layout
 
-			else (* n (fact (- n 1))))))))
+          else (* n (fact (- n 1))))))))
 \end_layout
 
 \end_inset
