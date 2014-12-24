@@ -2778,22 +2778,8 @@ generator
 
  function with a given seed, allowing one to name and seed as many generators
  as one needs, though for practical purposes a default RND is still provided
- which is automatically created and seeded with the current time in milliseconds.
-\end_layout
-
-\begin_layout Standard
-Heresy's pseudorandom number generator is implemented with a version of
- the xorshift* algorithm, which should not be expected to be cryptographically
- secure, and generates a period of 2
-\begin_inset script superscript
-
-\begin_layout Plain Layout
-64
-\end_layout
-
-\end_inset
-
--1.
+ which is automatically created and seeded with a derivation of the current
+ time in milliseconds..
 \end_layout
 
 \begin_layout LyX-Code

@@ -7,7 +7,8 @@
 ;; Requires
 (require racket/stxparam
          (only-in racket/base [case rkt:case])
-         "io.rkt")
+         "io.rkt"
+         "random.rkt")
 
 ;; Provides
 (provide (all-defined-out)

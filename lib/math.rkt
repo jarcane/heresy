@@ -1,6 +1,7 @@
 #lang s-exp "../private/base.rkt"
 
 (import rkt racket)
+(require racket/flonum)
 (provide (all-defined-out))
 
 (def pi 3.141592653589793)

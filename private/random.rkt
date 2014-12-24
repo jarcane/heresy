@@ -1,16 +1,10 @@
 #lang racket
 
-(require racket/unsafe/ops
-         racket/generator)
+(require racket/generator)
 
 (provide timer
          randomize
          rnd)
-
-(define fxxor unsafe-fxxor)
-(define fxrshift unsafe-fxrshift)
-(define fxlshift unsafe-fxlshift)
-(define fx* unsafe-fx*)
 
 ; timer
 ; a special internal variable that returns the current time in ms
@@ -20,23 +14,17 @@
 ; (randomize [seed])
 ; returns a new pseudorandom number generator function
 ; Numbers are between 0 and 1 exclusive
-; method is the xorshift* algorithm
-; if seed is not provided, defaults to the current time in ms
+; if seed is not provided, defaults to the last 32-bits of current time in ms
 (define-syntax randomize
   (syntax-rules ()
     [(_ seed) 
      (generator 
       ()
-      (let loop ([x seed]
-                 [f (λ (x dir y) 
-                      (fxxor x (if (eq? dir 'l) 
-                                   (fxlshift x y)
-                                   (fxrshift x y))))])
-        (begin
-          (let ([new-x (f (f (f x 'r 12) 'l 25) 'r 27)])
-            (yield (/ 1.0 (unsafe-fxabs (fx* 2685821657736338717
-                                      new-x))))
-            (loop new-x f)))))]
+      (parameterize ([current-pseudo-random-generator (make-pseudo-random-generator)])
+        (random-seed (modulo seed (sub1 (expt 2 31))))
+        (let loop ()
+          (yield (random))
+          (loop))))]
     [(_) (randomize timer)]))
 
 ; (rnd)
