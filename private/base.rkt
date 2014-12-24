@@ -11,7 +11,8 @@
 
 ;; Provides
 (provide (all-defined-out)
-         (all-from-out "io.rkt")
+         (all-from-out "io.rkt"
+                       "random.rkt")
          ; required
          #%module-begin
          #%top-interaction

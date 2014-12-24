@@ -2757,6 +2757,84 @@ x
 \end_layout
 
 \begin_layout Subsection
+Random Numbers
+\end_layout
+
+\begin_layout Standard
+Heresy's random number generator operates slightly differently to traditional
+ BASIC's, in order to offer a more functional approach.
+ Rather than defining a single global seed which the RND function then refers
+ to, Heresy's 
+\emph on
+randomize
+\emph default
+ returns a 
+\begin_inset Quotes eld
+\end_inset
+
+generator
+\begin_inset Quotes erd
+\end_inset
+
+ function with a given seed, allowing one to name and seed as many generators
+ as one needs, though for practical purposes a default RND is still provided
+ which is automatically created and seeded with the current time in milliseconds.
+\end_layout
+
+\begin_layout Standard
+Heresy's pseudorandom number generator is implemented with a version of
+ the xorshift* algorithm, which should not be expected to be cryptographically
+ secure, and generates a period of 2
+\begin_inset script superscript
+
+\begin_layout Plain Layout
+64
+\end_layout
+
+\end_inset
+
+-1.
+\end_layout
+
+\begin_layout LyX-Code
+(randomize [
+\emph on
+seed
+\emph default
+])
+\end_layout
+
+\begin_layout Standard
+Returns a new generator function initialized with seed.
+ If no seed is provided, defaults to 
+\emph on
+timer
+\emph default
+.
+\end_layout
+
+\begin_layout LyX-Code
+(rnd)
+\end_layout
+
+\begin_layout Standard
+A pre-defined generator which returns a random number between 0 and 1, exclusive
+, seeded by 
+\emph on
+timer
+\emph default
+.
+\end_layout
+
+\begin_layout LyX-Code
+timer
+\end_layout
+
+\begin_layout Standard
+A special internal variable which contains the current time in milliseconds.
+\end_layout
+
+\begin_layout Subsection
 Things
 \end_layout
 
