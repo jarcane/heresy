@@ -23,7 +23,8 @@
 (def fn heading (str (char "="))
   (& str "\n"
      (list& (for (x in (range 1 to (len$ str)))
-              (carry (join char cry))))))
+              (carry (join char cry))))
+     "\n"))
 
 ; String -> String
 ; Returns a string with "* " attached, for building bulleted lists
@@ -36,7 +37,7 @@
   (let ([spl (rember$ (split str '(",")) ",")])
     (& (for (x in spl with "")
          (carry (& cry "\n" (bullet x))))
-       "\n")))
+       "\n\n")))
 
 ; String -> String
 ; Wraps the string in the given character (defaults to "*" for italics)
@@ -45,7 +46,7 @@
 
 ; List -> String
 ; Generates newline-delimited string from list of strings
-(def fn prep (x y) (& x "\n" y))
+(def fn prep (x y) (& x "\n\n" y))
 
 ;; Data
 (def details 
