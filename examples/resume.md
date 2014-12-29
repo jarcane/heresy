@@ -1,8 +1,8 @@
-John Berry
-Multisillankatu 7 k 109
-33850 Tampere, Finland
-+358 45 156 5156
-jarcane@gmail.com
+John Berry  
+Multisillankatu 7 k 109  
+33850 Tampere, Finland  
++358 45 156 5156  
+jarcane@gmail.com  
 http://github.com/jarcane
 
 Languages
@@ -24,7 +24,9 @@ Familiar With
 Learning
 --------
 
-  * F#,Haskell,C
+  * F#
+  * Haskell
+  * C
 
 
 Projects

@@ -54,18 +54,18 @@
 
 ;; Data
 (def details 
-  '("John Berry" 
-    "Multisillankatu 7 k 109"
-    "33850 Tampere, Finland"
-    "+358 45 156 5156"
-    "jarcane@gmail.com"
+  '("John Berry  " 
+    "Multisillankatu 7 k 109  "
+    "33850 Tampere, Finland  "
+    "+358 45 156 5156  "
+    "jarcane@gmail.com  "
     "http://github.com/jarcane"))
 
 (def github "jarcane")
 
 (def languages '("Languages" ("Projects In" "Racket;Python")
                              ("Familiar With" "Clojure;ClojureScript;Common Lisp")
-                             ("Learning" "F#,Haskell,C")))
+                             ("Learning" "F#;Haskell;C")))
 (def projects '("Projects" 
                 ("Heresy"
                  "Racket"
