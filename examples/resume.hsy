@@ -1,0 +1,129 @@
+#lang s-exp heresy
+
+;; Helper Functions
+
+; List Str -> List
+; Given a list of strings and a string,
+; returns that list with all instances of string removed
+(def fn rember$ (lst str)
+  (select
+   ((null? lst) Null)
+   ((=$ (head lst) str) (rember$ (tail lst) str))
+   (else (join (head lst)
+               (rember$ (tail lst) str)))))
+
+; String -> String
+; given a string containing the name of a GH project, returns a MD link to project
+(def fn gh-link (str)
+  (& "[" str "](http://github.com/" github "/" str ")"))
+
+; String String -> String
+; Given a string and optional alternate character,
+; returns multi-line string with a matching header line of eq. length
+(def fn heading (str (char "="))
+  (& str "\n"
+     (list& (for (x in (range 1 to (len$ str)))
+              (carry (join char cry))))))
+
+; String -> String
+; Returns a string with "* " attached, for building bulleted lists
+(def fn bullet (str)
+  (& "  * " str))
+
+; String -> String
+; Given comma-delimited string list, returns bulleted multi-line list
+(def fn bullet-list (str)
+  (let ([spl (rember$ (split str '(",")) ",")])
+    (& (for (x in spl with "")
+         (carry (& cry "\n" (bullet x))))
+       "\n")))
+
+; String -> String
+; Wraps the string in the given character (defaults to "*" for italics)
+(def fn ** (str (c "*"))
+  (& c str c))
+
+; List -> String
+; Generates newline-delimited string from list of strings
+(def fn prep (x y) (& x "\n" y))
+
+;; Data
+(def details 
+  '("John Berry" 
+    "Multisillankatu 7 k 109"
+    "33850 Tampere, Finland"
+    "+358 45 156 5156"
+    "jarcane@gmail.com"
+    "http://github.com/jarcane"))
+
+(def github "jarcane")
+
+(def languages '("Languages" ("Projects In" "Racket,Python")
+                             ("Familiar With" "Clojure,ClojureScript,Common Lisp")
+                             ("Learning" "F#,Haskell,C")))
+(def projects '("Projects" 
+                ("Heresy"
+                 "Racket"
+                 "A functional, pedagogical dialect of Lisp")
+                ("try-racket"
+                 "Racket"
+                 "An online REPL for the Racket programming language (maintainer)")
+                ("RantStack"
+                 "Racket"
+                 "Stateless web application for temporary public rant bin")
+                ("MicroMini"
+                 "Racket"
+                 "An 8-bit stack-based virtual machine")
+                ("handhRL"
+                 "Python"
+                 "Science-fiction roguelike game built with libtcod")
+                ("BlueBox"
+                 "Python"
+                 "Simple retro console interface with VIOLET esoteric programming language")))
+(def experiences `("Experiences"
+                   ,(& "Two years as a small-press RPG publisher "
+                       "(books at " (gh-link "bedroom-wall-press") ")")
+                   "Three years college studies in acting, literature, and film"
+                   "Five+ years experience as a cook, including senior/supervisory positions"
+                   "Lifelong experience with computers and programming from age 6"))
+
+(def footer (& "Generated in " (gh-link "Heresy")))
+
+;; Rendering
+
+; Renders the personal details section
+(def dets
+  (foldr prep "" details))
+
+; Render language list
+(def langs
+  (& (heading (head languages))
+     "\n"
+     (list& (map (fn (x) 
+                     (& (heading (head x) "-")
+                        (bullet-list (head (tail x))))) 
+                 (tail languages)))))
+
+; Render projects
+(def projs 
+  (& (heading (head projects))
+     "\n"
+     (list& (map (fn (x) (foldr prep "" (list (** (index 1 x) "**")
+                                              (** (index 2 x))
+                                              (index 3 x))))
+                 (tail projects)))))
+
+; Render experiences
+(def exps
+  (& (heading (head experiences))
+     "\n"
+     (foldr prep "" (tail experiences))))
+
+;; Main Output
+(def fn print-resume ()
+  (using (file "resume.md" as 'rewrite)
+         (print dets)
+         (print langs)
+         (print projs)
+         (print exps)
+         (print footer)))

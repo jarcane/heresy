@@ -1,6 +1,7 @@
 #lang s-exp "../private/base.rkt"
 
 (require "list.rkt")
+(provide (all-defined-out))
 
 ; (empty$? str)
 ; Returns true if string is empty)
