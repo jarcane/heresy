@@ -44,9 +44,9 @@
 (def fn ** (str (c "*"))
   (& c str c))
 
-; List -> String
-; Generates newline-delimited string from list of strings
-(def fn prep (x y) (& x "\n\n" y))
+; String String -> String
+; Generates newline-delimited string from pair of strings
+(def fn prep (x y) (& x "\n" y))
 
 ;; Data
 (def details 
@@ -127,4 +127,4 @@
          (print langs)
          (print projs)
          (print exps)
-         (print footer)))
+         (print (** footer))))
