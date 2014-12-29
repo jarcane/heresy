@@ -32,9 +32,9 @@
   (& "  * " str))
 
 ; String -> String
-; Given comma-delimited string list, returns bulleted multi-line list
+; Given semi-colon-delimited string list, returns bulleted multi-line list
 (def fn bullet-list (str)
-  (let ([spl (rember$ (split str '(",")) ",")])
+  (let ([spl (rember$ (split str '(";")) ";")])
     (& (for (x in spl with "")
          (carry (& cry "\n" (bullet x))))
        "\n\n")))
@@ -48,6 +48,10 @@
 ; Generates newline-delimited string from pair of strings
 (def fn prep (x y) (& x "\n" y))
 
+; String String -> String
+; splices strings together with comma
+(def fn colonify (x y) (& x ";" y))
+
 ;; Data
 (def details 
   '("John Berry" 
@@ -59,8 +63,8 @@
 
 (def github "jarcane")
 
-(def languages '("Languages" ("Projects In" "Racket,Python")
-                             ("Familiar With" "Clojure,ClojureScript,Common Lisp")
+(def languages '("Languages" ("Projects In" "Racket;Python")
+                             ("Familiar With" "Clojure;ClojureScript;Common Lisp")
                              ("Learning" "F#,Haskell,C")))
 (def projects '("Projects" 
                 ("Heresy"
@@ -108,17 +112,19 @@
 ; Render projects
 (def projs 
   (& (heading (head projects))
-     "\n"
-     (list& (map (fn (x) (foldr prep "" (list (** (index 1 x) "**")
-                                              (** (index 2 x))
-                                              (index 3 x))))
-                 (tail projects)))))
+     (bullet-list 
+      (foldr colonify "" 
+             (map (fn (x) (foldr (fn (x y) (& x " " y)) 
+                                 " "
+                                 (list (** (gh-link (index 1 x)) "**")
+                                       (** (index 2 x))
+                                       (index 3 x)))) 
+                  (tail projects))))))
 
 ; Render experiences
 (def exps
   (& (heading (head experiences))
-     "\n"
-     (foldr prep "" (tail experiences))))
+     (bullet-list (foldr colonify "" (tail experiences)))))
 
 ;; Main Output
 (def fn print-resume ()
