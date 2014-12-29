@@ -262,6 +262,10 @@
   (syntax-rules ()
     [(! a fun b) (fun a b)]))
 
+(define-syntax int
+  (syntax-rules ()
+    [(_ n) (exact-truncate n)]))
+
 ;; Lists
 
 ; JOIN a b
