@@ -59,12 +59,9 @@
 ; (index* *lst* . *dims*)
 ; Walks through nested lists according to dimensions and returns the indexed result
 (def fn index* (lst . dims)
-  (for (x in dims)
-    (if (null? cry) 
-        then
-        (carry (index x lst))
-        else
-        (carry (index x cry)))))
+  (select 
+   ((null? dims) lst)
+   (else (apply index* (index (head dims) lst) (tail dims)))))
 
 ; (inlst *item* *lst*)
 ; Searches lst for item, returns index of item if found, False if not
