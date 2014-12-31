@@ -1,6 +1,5 @@
 *.bak
-*.zo
-*.dep
+compiled/
 private/hello.txt
 *.lyx#
-*.lyx~
+*~
