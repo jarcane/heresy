@@ -14,7 +14,7 @@ Installation
 
 To install:
 
-``raco pkg install git://github.com/jarcane/heresy``
+``raco pkg install heresy``
 
 To use, append this to the start of your file in DrRacket or your favorite text-editor:
 
