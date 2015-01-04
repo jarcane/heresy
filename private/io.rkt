@@ -1,7 +1,8 @@
 #lang racket
 
 (require racket/stxparam)
-(provide (all-defined-out))
+(provide (all-defined-out)
+         (rename-out (eof-object? eof?)))
 
 ; (using (file "name" as *'input|'output*) ...)
 ; parameterizes the current I/O port as indicated, redirecting print & input
