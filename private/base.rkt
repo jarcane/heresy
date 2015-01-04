@@ -34,7 +34,7 @@
                      (car head)
                      (cdr tail)
                      (eval run)
-                     ))
+                     (eof-object? eof?)))
 
 ;; Declarations
 
