@@ -23,7 +23,7 @@
          + - / * = < >
          list? null? zero? eq?
          symbol? equal? 
-         eof-object? eof
+         eof
          and or not else
          quote quasiquote 
          unquote unquote-splicing
@@ -35,7 +35,7 @@
                      (car head)
                      (cdr tail)
                      (eval run)
-                     ))
+                     (eof-object? eof?)))
 
 ;; Declarations
 
