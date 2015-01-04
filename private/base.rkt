@@ -22,7 +22,8 @@
          ; From Racket
          + - / * = < >
          list? null? zero? eq?
-         symbol? equal?
+         symbol? equal? 
+         eof-object? eof
          and or not else
          quote quasiquote 
          unquote unquote-splicing
@@ -34,7 +35,7 @@
                      (car head)
                      (cdr tail)
                      (eval run)
-                     (eof-object? eof?)))
+                     ))
 
 ;; Declarations
 
