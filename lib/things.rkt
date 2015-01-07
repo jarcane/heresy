@@ -31,39 +31,43 @@
                        field)]
              ...))))
 
-(def fn thing (lst)
+(def fn thing (λlst)
   (let ()
     (def this
       (fn args*
         (let ([alst lst]
               [fields (heads lst)])
           (select
-           [(null? args*) (map (fn (p) (list (head p) ((head (tail p)) this))) alst)]
+           [(null? args*) alst]
            [(eq? 'fields (head args*)) fields]
            [(and (symbol? (head args*))
-                 (assoc (head args*) alst)) ((alist-ref alst (head args*)) this)]
-                      [(list? (head args*)) 
-            (let recur ([al alst]
+                 (assoc (head args*) alst)) (alist-ref alst (head args*))]
+           [(list? (head args*)) 
+            (let recur ([λl λlst]
                         [pat (head args*)]
                         [c 1])
               (select
-               [(null? pat) (thing al)]
-               [(eq? (head pat) '*) (recur al (tail pat) (+ 1 c))]
+               [(null? pat) (thing λl)]
+               [(eq? (head pat) '*) (recur λl (tail pat) (+ 1 c))]
                [(and (list? (head pat)) (= (len (head pat)) 2) (eq? (head (head pat)) '#:m)
                      (procedure? (head (tail (head pat)))))
-                (recur (subst (head (index c al))
+                (recur (subst (head (index c λl))
                               (list (head (tail (head pat))))
-                              al)
+                              λl)
                   (tail pat)
                   (+ 1 c))]
                [else
                 (let ([hd (head pat)])
-                  (recur (subst (head (index c al))
-                                     (list (fn (_) hd))
-                                     al)
-                         (tail pat)
-                         (+ 1 c)))]))]
+                  (recur (subst (head (index c λl))
+                                (list (fn (_) hd))
+                                λl)
+                    (tail pat)
+                    (+ 1 c)))]))]
            [else (error "Thing expected a valid symbol or a pattern")]))))
+    (def lst
+      (map (fn (p)
+             (list (index* p 1) ((index* p 2) this)))
+           λlst))
     this))
 
 (def (send thing method . args)

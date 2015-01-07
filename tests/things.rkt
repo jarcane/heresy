@@ -2,6 +2,7 @@
 
 (require rackunit
          "../lib/things.rkt")
+(import rkt racket/base)
 
 (test-case "cthulhu"
   (describe cthulhu
@@ -41,4 +42,16 @@
   (check-equal? (charlie2 'size) 16)
   (check-equal? (send charlie2 'get-size) 16)
   (check-equal? (send charlie 'get-size) 10)
+  )
+
+(test-case "make sure the field exprs aren't re-evaluated"
+  (def x (rkt:box 1))
+  (def (get-x) (rkt:unbox x))
+  (def (inc-x!) (rkt:set-box! x (inc (get-x))))
+  (describe foo [a (inc-x!)])
+  (check-equal? (get-x) 2)
+  (foo 'a)
+  (check-equal? (get-x) 2)
+  (foo 'a)
+  (check-equal? (get-x) 2)
   )
