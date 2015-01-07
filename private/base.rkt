@@ -6,9 +6,17 @@
 
 ;; Requires
 (require racket/stxparam
-         (only-in racket/base [case rkt:case])
+         (only-in racket/base
+                  [case rkt:case]
+                  [cons join]
+                  [car head]
+                  [cdr tail]
+                  [eval run]
+                  [eof-object? eof?])
          "io.rkt"
-         "random.rkt")
+         "random.rkt"
+         (for-syntax racket/base
+                     syntax/parse))
 
 ;; Provides
 (provide (all-defined-out)
@@ -17,25 +25,24 @@
          ; required
          #%module-begin
          #%top-interaction
-         #%app #%datum #%top
+         #%datum #%top
          
          ; From Racket
          + - / * = < >
          list? null? zero? eq?
          symbol? equal? 
-         eof
+         eof eof?
          and or not else
          quote quasiquote 
          unquote unquote-splicing
          let list apply
          require provide all-defined-out
          error
+         join head tail
+         run
+         one?
          (for-syntax ...)
-         (rename-out (cons join)
-                     (car head)
-                     (cdr tail)
-                     (eval run)
-                     (eof-object? eof?)))
+         (rename-out [app #%app]))
 
 ;; Declarations
 
@@ -343,3 +350,46 @@
 
 ; Null
 (define-syntax Null (syntax-id-rules (Null) (Null '())))
+
+; (one? n)
+; Returns True if number is 1.
+(def fn one? (n)
+  (= n 1))
+
+;; len, index, index*, and a new #%app (here called app)
+
+; (len *lst*)
+; Returns the number of items in the list
+(def fn len (lst)
+  (select
+   ((null? lst) 0)
+   (else (+ 1 (len (tail lst))))))
+
+; (index *nth* *lst*)
+; Returns the nth entry in lst. 1-indexed.
+(def fn index (nth lst)
+  (select
+   ((> nth (len lst)) (error 'index "out of index"))
+   ((one? nth) (head lst))
+   (else (index (- nth 1) (tail lst)))))
+
+; (index* *lst* . *dims*)
+; Walks through nested lists according to dimensions and returns the indexed result
+(def fn index* (lst . dims)
+  (select 
+   ((null? dims) lst)
+   (else (apply index* (index (head dims) lst) (tail dims)))))
+
+(define-syntax app
+  (syntax-parser
+    [(app f-expr:expr arg:expr ...+)
+     #'(let ([f f-expr])
+         (cond [(procedure? f) (f arg ...)]
+               [(list? f) (index* f arg ...)]
+               [else (f arg ...)]))]
+    [(app f:expr arg/kw ...)
+     #'(f arg/kw ...)]))
+
+
+
+
