@@ -473,7 +473,7 @@ Returns a list with the order of @racket[l] reversed.
 }
 
 @defproc[(index [n number?] [l list?]) any]{
-Returns the nth entry of l, indexed from 1.
+Returns the @racket[n]th entry of @racket[l], indexed from 1.
 }
 
 @defproc[(index* [l list?] [dims number?] ...) any]{
@@ -484,6 +484,11 @@ given a nested list three lists deep, @racket[(index* l 2 3 1)] would return the
 @myexamples[
   (def dave '(1 (2 3 (4 5)) 6))
   (index* dave 2 3 1)
+]
+Also, @racket[(l dims ...)] can be used as a shorthand for @racket[index*]:
+@myexamples[
+  (def dave '(1 (2 3 (4 5)) 6))
+  (dave 2 3 1)
 ]}
 
 @defproc[(inlst [item any] [l list?]) any]{

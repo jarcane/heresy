@@ -12,11 +12,6 @@
 (def fn abs (n)
   (if (< n 0) then (* n -1) else n))
 
-; (one? n)
-; Returns True if number is 1.
-(def fn one? (n)
-  (= n 1))
-
 ; (even? n)
 ; returns True if n is even
 (def fn even? (n)
