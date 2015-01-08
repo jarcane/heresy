@@ -20,3 +20,12 @@
 ; returning the result of fun on the evaluation of fun2 and it's args. 
 (def fn compose (fun fun2)
   (fn (x . args) (fun (apply fun2 (join x args)))))
+
+; (fnlet *name* (arg) body ...)
+; A syntax sugaring for less verbose use of Y
+; Allows lambda functions that can still self-refer
+(def macro fnlet (name (n) body ...)
+  (Y
+   (fn (name)
+       (fn (n)
+           body ...))))
