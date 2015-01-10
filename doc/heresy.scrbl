@@ -857,6 +857,24 @@ efficient, and the more traditional recursive approach is generally recommended
 whenever possible (which is most of the time).
 }
 
+@defproc[(Y* [fn fn?]) fn?]{
+A generalization of the Y-combinator that allows the function to take any number
+of arguments.
+}
+
+@defform[(fnlet name args body ...+)]{
+Equivalent to @racket[(Y* (fn (name) (fn args body ...)))].
+For example, to map the Fibonacci sequence without
+defining a named function to do it:
+@myexamples[
+  (map (fnlet fib (n)
+         (select
+          ((zero? n) 0)
+          ((one? n) 1)
+          (else (+ (fib (- n 2)) (fib (- n 1))))))
+       (range 0 to 20))
+]}
+
 @defproc[(partial [fun fn?] [arg any] ...) fn?]{
 Returns a function with the @racket[arg]s partially applied to @racket[fun],
 which can then be passed the remaining arguments, as many as needed to complete
