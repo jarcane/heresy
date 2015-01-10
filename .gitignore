@@ -1,5 +1,6 @@
 *.bak
 compiled/
+doc/
 private/hello.txt
 *.lyx#
 *~
