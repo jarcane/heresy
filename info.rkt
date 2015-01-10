@@ -3,4 +3,4 @@
 (define collection "heresy")
 (define blurb
   "A BASIC-Flavored Lisp dialect")
-(define scribblings '(["doc/heresy.scrbl" ()]))
+(define scribblings '(["docs/heresy.scrbl" ()]))
