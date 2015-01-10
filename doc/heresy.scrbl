@@ -246,6 +246,10 @@ Returns True if @racket[v] is a list.
 Returns True if @racket[v] is @racket[Null], where Null is defined as the empty list @racket['()].
 }
 
+@defproc[(number? [v any]) boolean?]{
+Returns True if @racket[v] is a number.
+}
+
 @defproc[(zero? [v any]) boolean?]{
 Returns True if @racket[v] = 0.
 }
@@ -267,8 +271,16 @@ Returns True if @racket[v] is a symbol: ie. a quoted name such as @racket['foo].
 See @racket[quote] in @secref["syntax-and-evaluation"].
 }
 
+@defproc[(string? [v any]) boolean?]{
+Returns True if @racket[v] is a string.
+}
+
+@defproc[(fn? [v any]) boolean?]{
+Returns True if @racket[v] is a function.
+}
+
 @defproc[(atom? [v any]) boolean?]{
-Returns True if @racket[v] is an atom: ie. a number, symbol, or procedure,
+Returns True if @racket[v] is an atom: ie. a number, symbol, or function,
 rather than a list or Null.
 }
 
@@ -360,7 +372,7 @@ the appropriate location matched in the @racket[template]. The elipsis
 @racket[...] can be used in a pattern to indicate repeatable values.
 }
 
-@defproc[(apply [fun procedure?] [v any] ... [lst list?]) any]{
+@defproc[(apply [fun fn?] [v any] ... [lst list?]) any]{
 Applies @racket[fun] to the given arguments, as if it had been called with
 @racket[(fun v ... x ...)] where the @racket[x]s are the elements in @racket[lst].
 }
@@ -443,12 +455,12 @@ greater than @racket[finish] can only be declared by including a negative n.
 Otherwise only @racket[Null] will be returned.
 }
 
-@defproc[(map [fun procedure?] [l list?]) list?]{
+@defproc[(map [fun fn?] [l list?]) list?]{
 Given a single-argument function @racket[fun], returns a list with @racket[fun]
 applied to each item in @racket[l].
 }
 
-@defproc[(filter [fun procedure?] [l list?]) list?]{
+@defproc[(filter [fun fn?] [l list?]) list?]{
 Given a predicate @racket[fun], returns a new list containing only those
 elements of @racket[l] for which @racket[fun] returns True.
 }
@@ -457,13 +469,13 @@ elements of @racket[l] for which @racket[fun] returns True.
 Returns the number of items in @racket[l].
 }
 
-@defproc[(foldr [fun procedure?] [base any] [l list?]) any]{
+@defproc[(foldr [fun fn?] [base any] [l list?]) any]{
 Given a function @racket[fun] with two arguments, returns the cumulative result
 of @racket[fun] being applied to consecutive pairs, starting from @racket[base]
 and the rightmost element of @racket[l].
 }
 
-@defproc[(foldl [fun procedure?] [base any] [l list?]) any]{
+@defproc[(foldl [fun fn?] [base any] [l list?]) any]{
 Similar to @racket[foldr], except that it combines pairs from the left, starting
 with the head of @racket[l] and @racket[base].
 }
@@ -537,7 +549,7 @@ returns @racket[False].
 Returns a list of the heads of a list of lists.
 }
 
-@defproc[(sort [fun procedure?] [l list?]) list?]{
+@defproc[(sort [fun fn?] [l list?]) list?]{
 Sorts list @racket[l] according to the comparison function @racket[fun].
 }
 
@@ -546,7 +558,7 @@ Returns a new list of lists combining @racket[l1] and @racket[l2]. Excess length
 of either list is dropped.
 }
 
-@defproc[(zipwith [fun procedure?] [l1 list?] [l2 list?]) list?]{
+@defproc[(zipwith [fun fn?] [l1 list?] [l2 list?]) list?]{
 Returns a new list, combining the matching pairs of each list with @racket[fun].
 Excess length of either list is dropped.
 }
@@ -719,7 +731,7 @@ one to name and seed as many generators as one needs, though for practical
 purposes a default RND is still provided which is automatically created and
 seeded with a derivation of the current time in milliseconds.
 
-@defproc[(randomize [seed number? timer]) procedure?]{
+@defproc[(randomize [seed number? timer]) fn?]{
 Returns a new generator function initialized with @racket[seed]. If no
 @racket[seed] is provided, defaults to @racket[timer].
 }
@@ -824,7 +836,7 @@ by name.
 
 @subsection{Theory}
 
-@defproc[(Y [fn procedure?]) procedure?]{
+@defproc[(Y [fn fn?]) fn?]{
 The strict Y fixed-point combinator. Allows for recursion of anonymous
 functions. Given a @racket[fn1] which contains a single named argument, and
 within which is an additional single-argument @racket[fn2], the innermost
@@ -845,7 +857,7 @@ efficient, and the more traditional recursive approach is generally recommended
 whenever possible (which is most of the time).
 }
 
-@defproc[(partial [fun procedure?] [arg any] ...) procedure?]{
+@defproc[(partial [fun fn?] [arg any] ...) fn?]{
 Returns a function with the @racket[arg]s partially applied to @racket[fun],
 which can then be passed the remaining arguments, as many as needed to complete
 the calculation. For example:
@@ -853,7 +865,7 @@ the calculation. For example:
   (map (partial + 2) (range 1 to 4))
 ]}
 
-@defproc[(compose [fn1 procedure?] [fn2 procedure?]) procedure?]{
+@defproc[(compose [fn1 fn?] [fn2 fn?]) fn?]{
 Returns a new function which is a composition of @racket[fn1] and @racket[fn2].
 This function evaluates @racket[fn2] with its arguments, and then applies
 @racket[fn1] to the result of @racket[fn2].

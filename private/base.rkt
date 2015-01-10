@@ -11,6 +11,7 @@
                   [cons join]
                   [car head]
                   [cdr tail]
+                  [procedure? fn?]
                   [eval run]
                   [eof-object? eof?])
          "io.rkt"
@@ -31,6 +32,7 @@
          + - / * = < >
          list? null? zero? eq?
          symbol? equal? 
+         number? string? fn?
          eof eof?
          and or not else
          quote quasiquote 
