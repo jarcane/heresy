@@ -8,9 +8,5 @@
 
 ; W/ Heresy's for w/carry
 (def fn fact-2 (n)
-  (for (x in (range n to 1 step -1))
-    (if (null? cry) 
-     then
-       (carry x)
-     else
-       (carry (* cry x)))))
+  (for (x in (range n to 1 step -1) with 1)
+    (carry (* cry x))))
