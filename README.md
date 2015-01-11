@@ -18,4 +18,4 @@ To install:
 
 To use, append this to the start of your file in DrRacket or your favorite text-editor:
 
-``#lang s-exp heresy``
+``#lang heresy``
