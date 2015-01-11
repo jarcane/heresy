@@ -1,7 +1,7 @@
 Heresy
 ======
 
-Heresy is a BASIC-inspired functional dialect of Lisp, currently implemented as a Racket language that can be loaded by ``#lang s-exp``.
+Heresy is a BASIC-inspired functional dialect of Lisp, currently implemented as a Racket language.
 
 Heresy aims to provide a simple, semi-pure functional Lisp language that is nevertheless familiar to programmers of BASIC, by providing a combination of familiar control structures and features with purely functional execution.
 
