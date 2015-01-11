@@ -1,4 +1,4 @@
-#lang s-exp heresy
+#lang heresy
 
 (require rackunit)
 

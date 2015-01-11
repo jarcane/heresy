@@ -1,4 +1,4 @@
-#lang s-exp heresy
+#lang heresy
 
 ; Classical recursive
 (def fn fact (n)

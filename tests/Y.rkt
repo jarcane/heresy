@@ -1,4 +1,4 @@
-#lang s-exp heresy
+#lang heresy
 
 (import rkt racket/base)
 (require rackunit syntax/parse/define (rkt:for-syntax racket/base))

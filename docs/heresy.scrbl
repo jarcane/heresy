@@ -19,8 +19,7 @@
 
 source code: @url["https://github.com/jarcane/heresy"]
 
-@(hash-lang) @racketmodname[s-exp] @racketmodname[heresy]
-@defmodule[heresy]
+@defmodule[heresy #:lang]
 
 The Heresy language is a functional Lisp/Scheme dialect implemented in Racket,
 with syntax inspired by the BASIC family of programming languages. Its principle
