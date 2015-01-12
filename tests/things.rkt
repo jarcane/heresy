@@ -27,21 +27,25 @@
 
 (test-case "using methods"
   (def (make-fish sz)
-    (let ()
-      (describe my-fish
-                [size sz]
-                [get-size (fn () size)]
-                [grow (fn (amt)
-                        (Self `(,(+ amt size))))]
-                [eat (fn (other-fish)
-                       (grow (other-fish 'get-size)))])
-      my-fish))
+    (thing [size sz]
+           [get-size (fn () size)]
+           [grow (fn (amt)
+                   (Self `(,(+ amt size))))]
+           [eat (fn (other-fish)
+                  (grow (send other-fish 'get-size)))]))
   (def charlie (make-fish 10))
   (check-equal? (charlie 'size) 10)
   (def charlie2 (send charlie 'grow 6))
   (check-equal? (charlie2 'size) 16)
   (check-equal? (send charlie2 'get-size) 16)
   (check-equal? (send charlie 'get-size) 10)
+  (def (make-hungry-fish sz)
+    (thing extends (make-fish sz)
+           [eat-more (fn (fish1 fish2)
+                       (send+ Self (eat fish1) (eat fish2)))]))
+  (def hungry-fish (make-hungry-fish 32))
+  (check-equal? (hungry-fish 'size) 32)
+  (check-equal? ((send hungry-fish 'eat-more charlie charlie2) 'size) 58)
   )
 
 (test-case "make sure the field exprs aren't re-evaluated"
