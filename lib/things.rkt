@@ -3,7 +3,7 @@
 (require racket/stxparam
          "list.rkt"
          "require-stuff.rkt"
-         (only-in racket/base define-syntax gensym begin let*)
+         (only-in racket/base define-syntax gensym begin let* case-lambda)
          syntax/parse/define
          (for-syntax racket/base syntax/parse unstable/syntax))
 
@@ -49,17 +49,17 @@
                    ...))]
   [(thing extends super-thing:expr inherit (inherit-id:id ...) (field:id value:expr) ...)
    #'(let ([super super-thing])
-       (make-thing (append (filter (fn (x) (not (inlst (head x) '(field ...))))
-                                   (super λlst-sym))
-                           `([field
-                              ,(let ([field
-                                      (fn (ths)
-                                        (syntax-parameterize ([Self (make-rename-transformer #'ths)])
-                                          (def-field-id field ths) ...
-                                          (def-field-id inherit-id ths) ...
-                                          value))])
-                                 field)]
-                             ...))))]
+       (make-thing (alist-merge
+                    (super λlst-sym)
+                    `([field
+                       ,(let ([field
+                               (fn (ths)
+                                 (syntax-parameterize ([Self (make-rename-transformer #'ths)])
+                                   (def-field-id field ths) ...
+                                   (def-field-id inherit-id ths) ...
+                                   value))])
+                          field)]
+                      ...))))]
   [(thing extends super-thing:expr (field:id value:expr) ...)
    #'(thing extends super-thing inherit () (field value) ...)])
 
@@ -110,4 +110,20 @@
   (let* ([obj obj-expr]
          [obj (send* obj msg)] ...)
     obj))
+
+;; alist-merge
+(def alist-merge
+  (case-lambda
+    [() '()]
+    [(a) a]
+    [(a b)
+     (select
+      [(null? b) a]
+      [(null? a) b]
+      [else (let* ([b.fst (head b)] [b.rst (tail b)] [a.hds (map head a)]
+                   [b.fst.fst (head b.fst)] [b.fst.rst (tail b.fst)])
+              (select
+               [(inlst b.fst.fst a.hds) (alist-merge (subst b.fst.fst b.fst.rst a) b.rst)]
+               [else (alist-merge (append a (list b.fst)) b.rst)]))])]
+    [(a b . rst) (apply alist-merge (alist-merge a b) rst)]))
 

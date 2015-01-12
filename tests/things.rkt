@@ -59,3 +59,8 @@
   (foo 'a)
   (check-equal? (get-x) 2)
   )
+
+(test-case "make sure that (thing extends ...) doesn't change order of fields"
+  (describe foo [a 'a] [b 'b] [c 'c])
+  (describe bar extends foo [b 'new-b] [d 'd] [e 'e])
+  (check-equal? (bar) '([a a] [b new-b] [c c] [d d] [e e])))
