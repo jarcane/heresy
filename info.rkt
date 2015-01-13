@@ -3,4 +3,6 @@
 (define collection "heresy")
 (define blurb
   "A BASIC-Flavored Lisp dialect")
+(define deps '("base" "rackjure"))
+(define build-deps '("scribble-lib" "sandbox-lib" "rackunit-lib"))
 (define scribblings '(["docs/heresy.scrbl" ()]))
