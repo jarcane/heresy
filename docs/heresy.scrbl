@@ -759,12 +759,28 @@ other data, but can also be passed arguments to either return the values of
 their fields, return a new Thing, or to employ any functions contained within
 the thing.
 
-@defform[(describe Name (field value) ...)]{
+@defform*[#:literals (extends inherit)
+          [(describe Name (field value) ...)
+           (describe Name extends super-thing (field value) ...)
+           (describe Name extends super-thing inherit (id ...) (field value))]]{
 Defines a new type of Thing, given @racket[Name]. By convention, Things are
 generally named in uppercase, though this is not required by the syntax. Each
 field is an internal name and external symbol, which is mapped to the given
 value. Anonymous functions (@racket[fn]) can be assigned as values to Thing
 fields, and those functions can access the fields of the Thing by name.
+
+If the @racket[extends] option is provided, the new object extends
+@racket[super-object], inheriting it's fields and methods (unless they are
+overridden).  If the @racket[inherit] option is provided with it, then the
+@racket[id]s are available as bindings within the method expressions.
+}
+
+@defform*[#:literals (extends inherit)
+          [(thing (field value) ...)
+           (thing extends super-thing (field value) ...)
+           (thing extends super-thing inherit (id ...) (field value))]]{
+Just like @racket[fn] produces an anonamous function, @racket[thing] produces an
+anonamous Thing.
 }
 
 If there is a Thing defined as @defidentifier[#'Name]:
@@ -832,6 +848,9 @@ values of the other fields, this is not necessary, as fields are defined as
 local names within the context of the Thing, and thus can be referred to simply
 by name.
 }
+
+@defidform[extends]{can only be used within a @racket[describe] or @racket[thing] form.}
+@defidform[inherit]{can only be used within a @racket[describe] or @racket[thing] form.}
 
 @subsection{Theory}
 
