@@ -64,3 +64,13 @@
   (describe foo [a 'a] [b 'b] [c 'c])
   (describe bar extends foo [b 'new-b] [d 'd] [e 'e])
   (check-equal? (bar) '([a a] [b new-b] [c c] [d d] [e e])))
+
+(test-case "test super"
+  (describe Sup
+            [m1 (fn (x) (error 'nevergetshere))]
+            [m2 (fn (y) (m1 y))])
+  (describe Sub extends Sup super ([super-m2 m2])
+            [m1 (fn (x) (inc x))]
+            [m2 (fn (y) (error 'nevergetshere))]
+            [m3 (fn (y) (super-m2 y))])
+  (check-equal? (send Sub 'm3 1) 2))

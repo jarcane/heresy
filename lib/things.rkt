@@ -15,7 +15,7 @@
              (raise-syntax-error #f "cannot be used outside a thing definition" stx)))
          ...))
 
-(define-thing-literal-ids Self extends inherit)
+(define-thing-literal-ids Self extends inherit super)
 
 (def (alist-ref alist fld)
   (head (tail (assoc fld alist))))
@@ -29,15 +29,19 @@
 
 ; (describe *thing* (*field* *value*) ...)
 ; Declare a new kind of Thing, with the given fields and default values.
-(define-syntax-parser describe #:literals (extends inherit)
-  [(describe name:id extends super-thing:expr inherit (inherit-id:id ...) (field:id value:expr) ...)
-   #'(def name (thing extends super-thing inherit (inherit-id ...) (field value) ...))]
-  [(describe name:id extends super-thing:expr (field:id value:expr) ...)
-   #'(def name (thing extends super-thing (field value) ...))]
+(define-syntax-parser describe #:literals (extends inherit super)
+  [(describe name:id extends super-thing:expr
+             (~or (~optional (~seq inherit (inherit-id:id ...)) #:defaults ([(inherit-id 1) '()]))
+                  (~optional (~seq super ([super-id1:id super-id2:id] ...))
+                             #:defaults ([(super-id1 1) '()] [(super-id2 1) '()])))
+             ...
+             (field:id value:expr) ...)
+   #'(def name (thing extends super-thing inherit (inherit-id ...) super ([super-id1 super-id2] ...)
+                      (field value) ...))]
   [(describe name:id (field:id value:expr) ...)
    #'(def name (thing (field value) ...))])
 
-(define-syntax-parser thing #:literals (extends inherit)
+(define-syntax-parser thing #:literals (extends inherit super)
   [(thing (field:id value:expr) ...)
    #'(make-thing `([field
                     ,(let ([field
@@ -47,21 +51,26 @@
                                 value))])
                        field)]
                    ...))]
-  [(thing extends super-thing:expr inherit (inherit-id:id ...) (field:id value:expr) ...)
-   #'(let ([super super-thing])
+  [(thing extends super-thing:expr
+          (~or (~optional (~seq inherit (inherit-id:id ...)) #:defaults ([(inherit-id 1) '()]))
+               (~optional (~seq super ([super-id1:id super-id2:id] ...))
+                          #:defaults ([(super-id1 1) '()] [(super-id2 1) '()])))
+          ...
+          (field:id value:expr) ...)
+   #'(let* ([super super-thing]
+            [super-λlst (super λlst-sym)])
        (make-thing (alist-merge
-                    (super λlst-sym)
+                    super-λlst
                     `([field
                        ,(let ([field
                                (fn (ths)
                                  (syntax-parameterize ([Self (make-rename-transformer #'ths)])
                                    (def-field-id field ths) ...
                                    (def-field-id inherit-id ths) ...
+                                   (def super-id1 ((alist-ref super-λlst 'super-id2) ths)) ...
                                    value))])
                           field)]
-                      ...))))]
-  [(thing extends super-thing:expr (field:id value:expr) ...)
-   #'(thing extends super-thing inherit () (field value) ...)])
+                      ...))))])
 
 (def λlst-sym (gensym 'λlst))
 
