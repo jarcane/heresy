@@ -7,8 +7,9 @@
 (require "../lib/infix-math.rkt"
          "../lib/require-stuff.rkt"
          rackunit
-         rackjure/threading
          (only-in racket/base sqrt))
+
+(def macro ~> (a b) (b a))
 
 (test-case "quadratic1"
   (def fn quadratic (a b c)
