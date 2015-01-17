@@ -27,21 +27,25 @@
 
 (test-case "using methods"
   (def (make-fish sz)
-    (let ()
-      (describe my-fish
-                [size sz]
-                [get-size (fn () size)]
-                [grow (fn (amt)
-                        (Self `(,(+ amt size))))]
-                [eat (fn (other-fish)
-                       (grow (other-fish 'get-size)))])
-      my-fish))
+    (thing [size sz]
+           [get-size (fn () size)]
+           [grow (fn (amt)
+                   (Self `(,(+ amt size))))]
+           [eat (fn (other-fish)
+                  (grow (send other-fish 'get-size)))]))
   (def charlie (make-fish 10))
   (check-equal? (charlie 'size) 10)
   (def charlie2 (send charlie 'grow 6))
   (check-equal? (charlie2 'size) 16)
   (check-equal? (send charlie2 'get-size) 16)
   (check-equal? (send charlie 'get-size) 10)
+  (def (make-hungry-fish sz)
+    (thing extends (make-fish sz)
+           [eat-more (fn (fish1 fish2)
+                       (send+ Self (eat fish1) (eat fish2)))]))
+  (def hungry-fish (make-hungry-fish 32))
+  (check-equal? (hungry-fish 'size) 32)
+  (check-equal? ((send hungry-fish 'eat-more charlie charlie2) 'size) 58)
   )
 
 (test-case "make sure the field exprs aren't re-evaluated"
@@ -55,3 +59,18 @@
   (foo 'a)
   (check-equal? (get-x) 2)
   )
+
+(test-case "make sure that (thing extends ...) doesn't change order of fields"
+  (describe foo [a 'a] [b 'b] [c 'c])
+  (describe bar extends foo [b 'new-b] [d 'd] [e 'e])
+  (check-equal? (bar) '([a a] [b new-b] [c c] [d d] [e e])))
+
+(test-case "test super"
+  (describe Sup
+            [m1 (fn (x) (error 'nevergetshere))]
+            [m2 (fn (y) (m1 y))])
+  (describe Sub extends Sup super ([super-m2 m2])
+            [m1 (fn (x) (inc x))]
+            [m2 (fn (y) (error 'nevergetshere))]
+            [m3 (fn (y) (super-m2 y))])
+  (check-equal? (send Sub 'm3 1) 2))
