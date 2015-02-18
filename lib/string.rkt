@@ -74,3 +74,15 @@
              (join (left$ str (- s2 1)) 
                    (join (mid$ str s2 1)
                          (split (slice$ str (+ 1 s2)) delims))))))))
+
+; (format *str-template* v1 ...)
+; Returns a new string, based on template, with indicated reserved places replaced by vals
+; Reserved spaces are indicated by ##, and consume one of the following variables
+(def fn format (t . rest)
+  (select
+   ((empty$? t) t)
+   ((and (=$ (head$ t) "#")
+         (=$ (head$ (tail$ t)) "#")) (& (str$ (head rest))
+                                        (apply format (tail$ (tail$ t)) (tail rest))))
+   (else (& (head$ t)
+            (apply format (tail$ t) rest)))))

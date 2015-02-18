@@ -250,9 +250,10 @@
   (map string (string->list l)))
 
 ; (str$ *num*) 
-; Converts a number into a string
+; Converts a printable value into a string
 (define (str$ n)
-  (number->string n))
+  (with-output-to-string
+   (thunk (display n))))
 
 ;; Math
 
