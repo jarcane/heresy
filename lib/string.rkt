@@ -77,12 +77,12 @@
 
 ; (format *str-template* v1 ...)
 ; Returns a new string, based on template, with indicated reserved places replaced by vals
-; Reserved spaces are indicated by ##, and consume one of the following variables
-(def fn format (t . rest)
+; Reserved spaces are indicated by #_, and consume one of the following variables
+(def fn format$ (t . rest)
   (select
    ((empty$? t) t)
    ((and (=$ (head$ t) "#")
-         (=$ (head$ (tail$ t)) "#")) (& (str$ (head rest))
-                                        (apply format (tail$ (tail$ t)) (tail rest))))
+         (=$ (head$ (tail$ t)) "_")) (& (str$ (head rest))
+                                        (apply format$ (tail$ (tail$ t)) (tail rest))))
    (else (& (head$ t)
-            (apply format (tail$ t) rest)))))
+            (apply format$ (tail$ t) rest)))))

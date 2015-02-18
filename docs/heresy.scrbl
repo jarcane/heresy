@@ -576,8 +576,8 @@ Concatenates its arguments into a single string.
 Returns a list of one-character strings from the given string.
 }
 
-@defproc[(str$ [n number?]) string?]{
-Converts a number @racket[n] to a string.
+@defproc[(str$ [n any?]) string?]{
+Converts a value @racket[n] to a string.
 }
 
 @defproc[(empty$? [str string?]) boolean?]{
@@ -628,6 +628,10 @@ False if not found.
 @defproc[(split [str string?] [delimiters list? '(" ")]) list?]{
 Returns a list of string sections split at the given delimiters. If
 @racket[delimiters] is not specified, defaults to space (@racket[" "]).
+}
+
+@defproc[(format$ [template string?] [value any?] ...) string?]{
+Given a string template, returns a new string with instances of glyph @racket["#_"] replaced in order, starting with the first value given following the string.
 }
 
 @subsection{Math}
