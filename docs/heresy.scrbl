@@ -766,7 +766,7 @@ the thing.
 @defform*[#:literals (extends inherit)
           [(describe Name (field value) ...)
            (describe Name extends super-thing (field value) ...)
-           (describe Name extends super-thing inherit (id ...) (field value))]]{
+           (describe Name extends super-thing inherit (id ...) (field value) ...)]]{
 Defines a new type of Thing, given @racket[Name]. By convention, Things are
 generally named in uppercase, though this is not required by the syntax. Each
 field is an internal name and external symbol, which is mapped to the given
@@ -782,7 +782,7 @@ overridden).  If the @racket[inherit] option is provided with it, then the
 @defform*[#:literals (extends inherit)
           [(thing (field value) ...)
            (thing extends super-thing (field value) ...)
-           (thing extends super-thing inherit (id ...) (field value))]]{
+           (thing extends super-thing inherit (id ...) (field value) ...)]]{
 Just like @racket[fn] produces an anonamous function, @racket[thing] produces an
 anonamous Thing.
 }
