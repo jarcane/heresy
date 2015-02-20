@@ -773,8 +773,8 @@ field is an internal name and external symbol, which is mapped to the given
 value. Anonymous functions (@racket[fn]) can be assigned as values to Thing
 fields, and those functions can access the fields of the Thing by name.
 
-If the @racket[extends] option is provided, the new object extends
-@racket[super-object], inheriting it's fields and methods (unless they are
+If the @racket[extends] option is provided, the new Thing extends
+@racket[super-thing], inheriting it's fields and methods (unless they are
 overridden).  If the @racket[inherit] option is provided with it, then the
 @racket[id]s are available as bindings within the method expressions.
 }
