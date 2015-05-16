@@ -6,4 +6,5 @@
 (define scribblings '(["docs/heresy.scrbl" ()]))
 
 (define deps '("base"))
-(define build-deps '("rackunit-lib" "sandbox-lib" "scribble-lib"))
+(define build-deps '("racket-doc"
+                     "rackunit-lib" "sandbox-lib" "scribble-lib"))
