@@ -10,7 +10,8 @@
          "./lib/string.rkt"
          "./lib/math.rkt"
          "./lib/theory.rkt"
-         "./lib/things.rkt")
+         "./lib/things.rkt"
+         "./lib/infix-math.rkt")
 
 ;; Provides
 (provide (all-from-out "./private/base.rkt"
@@ -18,4 +19,5 @@
                        "./lib/string.rkt"
                        "./lib/math.rkt"
                        "./lib/theory.rkt"
-                       "./lib/things.rkt"))
+                       "./lib/things.rkt"
+                       "./lib/infix-math.rkt"))
