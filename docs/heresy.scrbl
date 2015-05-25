@@ -733,10 +733,12 @@ single global seed which the RND function then refers to, Heresy's
 one to name and seed as many generators as one needs, though for practical
 purposes a default RND is still provided which is automatically created and
 seeded with a derivation of the current time in milliseconds.
+Heresy's RNG employs a fairly strong 64ish-bit Xorshift* algorithm, though no 
+guarantees are offered as to its cryptographic security. 
 
-@defproc[(randomize [seed number? timer]) fn?]{
-Returns a new generator function initialized with @racket[seed]. If no
-@racket[seed] is provided, defaults to @racket[timer].
+@defproc[(randomize [seed any/c timer]) fn?]{
+Returns a new generator function initialized with @racket[seed], which is first
+passed through @racket[equal-hash-code]. If no @racket[seed] is provided, defaults to @racket[timer].
 }
 
 @defproc[(rnd) number?]{
