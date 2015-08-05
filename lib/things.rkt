@@ -5,7 +5,7 @@
          "require-stuff.rkt"
          (only-in racket/base define-syntax gensym begin let* case-lambda)
          syntax/parse/define
-         (for-syntax racket/base syntax/parse unstable/syntax))
+         (for-syntax racket/base syntax/parse syntax/transformer))
 
 (provide (all-defined-out))
 
