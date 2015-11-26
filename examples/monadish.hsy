@@ -1,6 +1,6 @@
 #lang heresy
 
-(describe State (empty Null))
+(describe State (new (fn () State)))
 
 (def fn do*> (initial-value . fns)
   (for (f in fns with initial-value)
