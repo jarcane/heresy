@@ -1,0 +1,37 @@
+#lang heresy
+
+(def fn -> (iv . fns)
+  (for (f in fns with iv)
+    (carry (f cry))))
+
+(def macro +> (f args ...)
+  (fn (x)
+    (f x args ...)))
+
+(def macro <+ (f args ...)
+  (fn (x)
+    (f args ... x)))
+
+(def macro +-> (iv (f args ...) ...)
+  (-> iv
+      (+> f args ...)
+      ...))
+
+(def macro <-+ (iv (f args ...) ...)
+  (-> iv
+      (<+ f args ...)
+      ...))
+
+(-> '(1 2 3 4)
+    (<+ map (fn (x) (* x x)))
+    (+> left 2)
+    (<+ append '(a b))
+    (+> append '(a b)))
+
+(+-> '(1 2 3 4)
+     (left 2)
+     (append '(a b)))
+
+(<-+ '(1 2 3 4)
+     (map (fn (x) (* x x)))
+     (append '(a b)))
