@@ -17,19 +17,19 @@
 
 (def macro pass (f . args)
   (fn (s)
-      (f . args)
-      s))
+    (f . args)
+    s))
 
 (def macro use ((name ...) body ...)
   (fn (s)
-      (let ([name (s (quote name))] ...)
-        body ...
-        s)))
+    (let ([name (s (quote name))] ...)
+      body ...
+      s)))
 
 (def macro ->from ((name ...) var val)
   (fn (s)
-      (let ([name (s (quote name))] ...)
-        (thing extends s (var val)))))
+    (let ([name (s (quote name))] ...)
+      (thing extends s (var val)))))
 
 (do> (-> x 5)
      (-> y 4)

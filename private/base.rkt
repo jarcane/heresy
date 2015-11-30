@@ -43,7 +43,7 @@
          join head tail
          run
          one?
-         (for-syntax ...)
+         (for-syntax ... _)
          (rename-out [app #%app]))
 
 ;; Declarations
@@ -66,9 +66,13 @@
 ; (DEF MACRO name (pattern-vars) pattern)
 ; Defines new variables and functions (with help from FN)
 (define-syntax def
-  (syntax-rules (macro fn)
+  (syntax-rules (macro macroset fn)
     [(_ macro name (args ... . rest) body0 bodyn ...) 
      (define-syntax-rule (name args ... . rest) body0 bodyn ...)]
+    [(_ macroset name [(pname ptr0 ptrn ...) (body0 bodyn ...)] ...)
+     (define-syntax name
+       (syntax-rules ()
+         [(pname ptr0 ptrn ...) (body0 bodyn ...)] ...))]
     [(_ fn name (args ... . rest) body0 bodyn ...) 
      (define (name args ... . rest) body0 bodyn ...)]
     [(_ name contents) (define name contents)]))
@@ -77,6 +81,9 @@
 (define-syntax-parameter macro 
   (lambda (stx)
     (raise-syntax-error (syntax-e stx) "macro must be used with def")))
+(define-syntax-parameter macroset
+  (lambda (stx)
+    (raise-syntax-error (syntax-e stx) "syntax must be used with def")))
 ;(define-syntax-parameter fn 
 ;  (lambda (stx)
 ;    (raise-syntax-error (syntax-e stx) 
