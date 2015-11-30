@@ -1,39 +1,7 @@
 #lang heresy
 
-(describe State (new (fn () State)))
-
-(def fn do*> (initial-value . fns)
-  (for (f in fns with initial-value)
-    (carry (f cry))))
-
-(def fn do> fns
-  (apply do*> (join State fns)))
-
-(def macro -> (name value)
-  (fn (s) (thing extends s (name value))))
-
-(def macro return (name)
-  (fn (s) (s (quote name))))
-
-(def macro pass (f . args)
-  (fn (s)
-    (f . args)
-    s))
-
-(def macro use ((name ...) body ...)
-  (fn (s)
-    (let ([name (s (quote name))] ...)
-      body ...
-      s)))
-
-(def macro ->from ((name ...) var val)
-  (fn (s)
-    (let ([name (s (quote name))] ...)
-      (thing extends s (var val)))))
-
-(do> (-> x 5)
-     (-> y 4)
-     (pass print "Ignoring State ...")
-     (use (x y) (print (+ x y)))
-     (->from (x y) z (* x y))
+(do> (:= x 5)
+     (:= y 4)
+     (:= (x y) z (+ x y))
+     (:_ (x y) (print (format$ "#_ + #_ = " x y)))
      (return z))
