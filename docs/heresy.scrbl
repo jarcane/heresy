@@ -131,6 +131,24 @@ the body of the arguments list followed by a single variable (usually called res
   (bar 3 4 5 6 7 8)
 ]}
 
+@defform[#:link-target? #f #:literals (macro)
+         (def macro name (pattern ...) template)]{
+Defines a new macro with @racket[name]. A macro can best be thought of as a
+function which is not evaluated, but rather returns syntax to be evaluated in
+the form of a template. Each name described in the @racket[pattern] defines a
+"pattern variable" which can then be used in the body of the @racket[template]
+and will pass any syntax contained in that portion of the @racket[pattern] in
+the appropriate location matched in the @racket[template]. The elipsis
+@racket[...] can be used in a pattern to indicate repeatable values.
+}
+
+@defform[#:link-target? #f #:literals (macroset)
+         (def macroset name [(name pattern ...) template] ...)]{
+Similar to @racket[def macro], except that multiple matching patterns can be defined
+allowing for macros with variable syntax. Like @racket[def macro], the @racket[...] 
+symbol can be used to indicate repeating values.
+} 
+
 @defform[(let ((name value) ...) body ...+)]{
 Binds the given name-value pairs for use in the local context created by the
 body of the expression. This is used to define local variables, such as are
@@ -358,17 +376,6 @@ Evaluates the given form. Usage is not recommended.
 
 @defform[(rem any ...)]{
 Ignores its arguments and returns void. Useful for block comments.
-}
-
-@defform[#:link-target? #f #:literals (macro)
-         (def macro name (pattern ...) template)]{
-Defines a new macro with @racket[name]. A macro can best be thought of as a
-function which is not evaluated, but rather returns syntax to be evaluated in
-the form of a template. Each name described in the @racket[pattern] defines a
-"pattern variable" which can then be used in the body of the @racket[template]
-and will pass any syntax contained in that portion of the @racket[pattern] in
-the appropriate location matched in the @racket[template]. The elipsis
-@racket[...] can be used in a pattern to indicate repeatable values.
 }
 
 @defproc[(apply [fun fn?] [v any] ... [lst list?]) any]{
@@ -766,7 +773,8 @@ their fields, return a new Thing, or to employ any functions contained within
 the thing.
 
 @defform*[#:literals (extends inherit)
-          [(describe Name (field value) ...)
+          [(describe Name)
+		   (describe Name (field value) ...)
            (describe Name extends super-thing (field value) ...)
            (describe Name extends super-thing inherit (id ...) (field value) ...)]]{
 Defines a new type of Thing, given @racket[Name]. By convention, Things are
@@ -782,7 +790,8 @@ overridden).  If the @racket[inherit] option is provided with it, then the
 }
 
 @defform*[#:literals (extends inherit)
-          [(thing (field value) ...)
+          [(thing)
+		   (thing (field value) ...)
            (thing extends super-thing (field value) ...)
            (thing extends super-thing inherit (id ...) (field value) ...)]]{
 Just like @racket[fn] produces an anonamous function, @racket[thing] produces an
@@ -916,3 +925,47 @@ This function evaluates @racket[fn2] with its arguments, and then applies
   (abs-sub 4 5)
 ]}
 
+@subsection{Pipe/Threading Operators}
+
+@defproc[(:> [initial-value any] [fns fn?] ...) any]{
+The forward pipe operator. Given a value and a series of single-argument functions, 
+applies them in order from left to right and returns the resulting value.
+@myexamples[
+	(:> 5 inc dec sgn)
+]
+}
+
+@defform[(f> [fun fn?] [args* any] ...)]{
+A currying macro. Expands into an anonymous function that takes a single argument,
+and inserts it as the first argument of @racket[fun], followed by the remaining
+@racket[args*].
+@myexamples[
+	(:> '(1 2) (f> append '(3 4)))
+]
+}
+
+@defform[(l> [fun fn?] [args* any] ...)]{
+The inverse of @racket[f>]. Returns a function whose argument is placed as the last
+argument to the given @racket[fun].
+@myexamples[
+	(:> '(1 2) (l> append '(3 4)))
+]
+}
+
+@defform[(-> [initial-value any] ([fun fn?] [args* any] ...) ...)]{
+The first-argument threading macro. Works similarly to @racket[:>], except that it 
+automatically applies @racket[f>] to each listed form following the initial value.
+@myexamples[
+(-> '(1 2 3 4)
+    (left 2)
+    (append '(a b)))]
+}
+
+@defform[(->> [initial-value any] ([fun fn?] [args* any] ...) ...)]{
+The last-argument (as in @racket[l>]) version of @racket[->]. 
+@myexamples[
+(->> '(1 2 3 4)
+     (map (fn (x) (* x x)))
+     (append '(a b)))
+]
+}
