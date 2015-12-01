@@ -30,10 +30,10 @@
 ; State -> State
 ; Executes fn with args, optionally binding names to the local scope for use in by fn, then ignores their return value and returns State
 (def macroset :_ 
-  [(:_ (name ...) body ...)
+  [(:_ (name ...) f args ...)
    (fn (s)
        (let ([name (s (quote name))] ...)
-         body ...
+         (f args ...)
          s))]
   [(:_ f args ...)
    (fn (s)

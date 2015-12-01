@@ -935,7 +935,7 @@ applies them in order from left to right and returns the resulting value.
 ]
 }
 
-@defform[(f> [fun fn?] [args* any] ...)]{
+@defform[(f> fun args* ...)]{
 A currying macro. Expands into an anonymous function that takes a single argument,
 and inserts it as the first argument of @racket[fun], followed by the remaining
 @racket[args*].
@@ -944,7 +944,7 @@ and inserts it as the first argument of @racket[fun], followed by the remaining
 ]
 }
 
-@defform[(l> [fun fn?] [args* any] ...)]{
+@defform[(l> fun args* ...)]{
 The inverse of @racket[f>]. Returns a function whose argument is placed as the last
 argument to the given @racket[fun].
 @myexamples[
@@ -952,7 +952,7 @@ argument to the given @racket[fun].
 ]
 }
 
-@defform[(-> [initial-value any] ([fun fn?] [args* any] ...) ...)]{
+@defform[(-> initial-value (fun args* ...) ...)]{
 The first-argument threading macro. Works similarly to @racket[:>], except that it 
 automatically applies @racket[f>] to each listed form following the initial value.
 @myexamples[
@@ -961,11 +961,64 @@ automatically applies @racket[f>] to each listed form following the initial valu
     (append '(a b)))]
 }
 
-@defform[(->> [initial-value any] ([fun fn?] [args* any] ...) ...)]{
+@defform[(->> initial-value (fun args* ...) ...)]{
 The last-argument (as in @racket[l>]) version of @racket[->]. 
 @myexamples[
 (->> '(1 2 3 4)
      (map (fn (x) (* x x)))
      (append '(a b)))
 ]
+}
+
+@subsection{State Notation}
+
+Heresy by design contains no mutable values. Variables once set cannot be reset or altered,
+only shadowed by local scope. The following operators however provide a notation for performing
+functions with a limited local state that is mutable using a set of special operators.
+@myexamples[
+(do> (:= x 5)
+     (:= y 4)
+     (:= (x y) z (+ x y))
+     (:_ (x y) print (format$ "#_ + #_ = " x y))
+     (return z))
+]
+
+@defthing[State Thing]{
+The empty State object. Used to store and retrieve values, essentially acting as a namespace for
+@racket[do>].
+}
+
+@defform[(do> (form ...) ...)]{
+Beginning with a fresh State object, passes that State object through the subsequent forms, then
+returns it, unless @racket[return] is called in the final position with a specific value from the state.
+Equivalent to @racket[(:> State ...)].
+}
+
+@defform*[[(:= name value)
+		  (:= (vars ...) name value)]]{
+The bind operator. Expands to a function that takes the current State and binds a value to @racket[name] 
+in the current State object. If the @racket[(vars ...)] form is provided, the listed vars are lifted from the local state and bound for use in the value clause.
+@myexamples[
+(do> (:= a 3)
+     (:= (a) b (+ a 3))
+     (return b))
+]
+}
+
+@defform*[[(:_ fun args* ...)
+		  (:_ (vars ...) fun args ...)]]{
+The pass operator. Expands to a function that takes the current State, executes @racket[fun] and ignores
+its result, then returns State unchanged. If the @racket[vars] clause is provided with names, those names
+are available for use in @racket[fun]'s arguments.
+@myexamples[
+(do> (:= x 4)
+     (:_ (x) print x)
+     (return x))
+]
+}
+
+@defform[(return var)]{
+The return operator. Expands to a function that takes the present State, and returns the value associated
+with @racket[var]. Note that use of this will thus terminate State, so it is best used as the final form
+in a @racket[do>] block.
 }
