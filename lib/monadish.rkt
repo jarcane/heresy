@@ -21,8 +21,9 @@
 (def macroset :=
   [(:= (name ...) var value)
    (fn (s)
-       (let ([name (s (quote name))] ...)
-         (thing extends s (var value))))]
+     (thing extends s
+            (var (let ([name (s (quote name))] ...)
+                   value))))]
   [(:= var value)
    (fn (s) (thing extends s (var value)))])
 
