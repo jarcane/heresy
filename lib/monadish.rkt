@@ -12,7 +12,7 @@
 
 ; State
 ; A handy empty object for use as a State store
-(describe State (new (fn () State)))
+(describe State)
 
 ; (:= [(*names* ...)] *var* *value*)
 ; State -> State
