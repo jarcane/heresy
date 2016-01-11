@@ -102,8 +102,8 @@
           (("<") (inc-iptr (dec-dptr Machine)))
           (("+") (inc-iptr (inc-byte Machine)))
           (("-") (inc-iptr (dec-byte Machine)))
-          ((".") (inc-iptr (in-byte Machine)))
-          ((",") (inc-iptr (out-byte Machine)))
+          ((".") (inc-iptr (out-byte Machine)))
+          ((",") (inc-iptr (in-byte  Machine)))
           (("[") (if (zero? ((Machine 'cells) (Machine 'data-ptr))) then
                      (jmp-r Machine) else
                      (inc-iptr Machine)))
