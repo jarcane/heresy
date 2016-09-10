@@ -3,5 +3,5 @@
 (do> (:= x 5)
      (:= y 4)
      (:= (x y) z (+ x y))
-     (:_ (x y) (print (format$ "#_ + #_ = " x y)))
+     (:_ (x y) print (format$ "#_ + #_ = " x y))
      (return z))
