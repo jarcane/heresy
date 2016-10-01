@@ -46,7 +46,7 @@
 (def fn inlst (item lst (idx 1))
   (select
    ((null? lst) False)
-   ((eq? (head lst) item) idx)
+   ((equal? (head lst) item) idx)
    (else (inlst item (tail lst) (+ 1 idx)))))
 
 ; (left *lst* *n*)
