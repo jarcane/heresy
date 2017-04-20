@@ -4,7 +4,8 @@
 
 (describe Signal
           (type Null)
-          (val Null))
+          (new-val Null)
+          (thread-to-send (rkt:current-thread)))
 
 (def fn atom (val)
   (rkt:thread
@@ -13,7 +14,7 @@
          (def signal (rkt:thread-receive))
          (select case (signal 'type)
             ((get) (do
-                     (rkt:thread-send (rkt:current-thread) val)
+                     (rkt:thread-send (signal 'thread-to-send) cry)
                      (carry cry)))
             ((reset) (carry (signal 'val)))
             (else (carry cry)))))))
