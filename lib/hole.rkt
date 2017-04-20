@@ -9,18 +9,18 @@
           (update-fn (fn (x) x))
           (args Null))
 
-(def fn atom (val)
+(def fn hole (val)
   (rkt:thread
    (fn ()
-       (do loop with val
-         (def signal (rkt:thread-receive))
-         (select case (signal 'type)
-            ((get) (do
-                     (rkt:thread-send (signal 'thread-to-send) cry)
-                     (carry cry)))
-            ((reset) (carry (signal 'new-val)))
-            ((update) (carry (apply (signal 'update-fn) cry (signal 'args))))
-            (else (carry cry)))))))
+     (do loop with val
+       (def signal (rkt:thread-receive))
+       (select case (signal 'type)
+         ((get) (do
+                  (rkt:thread-send (signal 'thread-to-send) cry)
+                  (carry cry)))
+         ((reset) (carry (signal 'new-val)))
+         ((update) (carry (apply (signal 'update-fn) cry (signal 'args))))
+         (else (carry cry)))))))
 
 (def fn deref (a)
   (rkt:thread-send a (Signal `(get)))
