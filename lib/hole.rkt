@@ -1,6 +1,8 @@
-#lang heresy
+#lang s-exp "../private/base.rkt"
 
+(import "things.rkt")
 (import rkt racket)
+(provide (all-defined-out))
 
 (describe Signal
           (type Null)
@@ -30,17 +32,17 @@
                       (carry result)))
          (else (carry cry)))))))
 
-(def fn deref (a)
-  (rkt:thread-send a (Signal `(get)))
+(def fn deref (hol)
+  (rkt:thread-send hol (Signal `(get)))
   (rkt:thread-receive))
 
-(def fn reset (a new-val)
-  (rkt:thread-send a (Signal `(reset ,new-val)))
-  (rkt:thread-receive))
+(def fn reset (hol new-val)
+  (rkt:thread-send hol (Signal `(reset ,new-val)))
+  hol)
 
-(def fn update (a fn . args)
-  (rkt:thread-send a (Signal `(update * * ,fn ,args)))
+(def fn update (hol fn . args)
+  (rkt:thread-send hol (Signal `(update * * ,fn ,args)))
   (def result (rkt:thread-receive))
   (if (rkt:exn:fail? result) then
       (rkt:raise result) else
-      result))
+      hol))
