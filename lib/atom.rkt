@@ -6,7 +6,8 @@
           (type Null)
           (new-val Null)
           (thread-to-send (rkt:current-thread))
-          (update-fn (fn (x) x)))
+          (update-fn (fn (x) x))
+          (args Null))
 
 (def fn atom (val)
   (rkt:thread
@@ -18,7 +19,7 @@
                      (rkt:thread-send (signal 'thread-to-send) cry)
                      (carry cry)))
             ((reset) (carry (signal 'new-val)))
-            ((update) (carry ((signal 'update-fn) cry)))
+            ((update) (carry (apply (signal 'update-fn) cry (signal 'args))))
             (else (carry cry)))))))
 
 (def fn deref (a)
@@ -28,5 +29,5 @@
 (def fn reset (a new-val)
   (rkt:thread-send a (Signal `(reset ,new-val))))
 
-(def fn update (a fn)
-  (rkt:thread-send a (Signal `(update * * ,fn))))
+(def fn update (a fn . args)
+  (rkt:thread-send a (Signal `(update * * ,fn ,args))))
