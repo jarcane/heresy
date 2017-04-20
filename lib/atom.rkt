@@ -1,0 +1,26 @@
+#lang heresy
+
+(import rkt racket)
+
+(describe Signal
+          (type Null)
+          (val Null))
+
+(def fn atom (val)
+  (rkt:thread
+   (fn ()
+       (do loop with val
+         (def signal (rkt:thread-receive))
+         (select case (signal 'type)
+            ((get) (do
+                     (rkt:thread-send (rkt:current-thread) val)
+                     (carry cry)))
+            ((reset) (carry (signal 'val)))
+            (else (carry cry)))))))
+
+(def fn deref (a)
+  (rkt:thread-send a (Signal `(get)))
+  (rkt:thread-receive))
+
+(def fn reset (a val)
+  (rkt:thread-send a (Signal `(reset ,val))))
