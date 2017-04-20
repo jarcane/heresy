@@ -1,7 +1,6 @@
 #lang heresy
 
 (import rkt racket)
-(import rkt racket/exn)
 
 (describe Signal
           (type Null)
