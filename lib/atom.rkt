@@ -16,7 +16,7 @@
             ((get) (do
                      (rkt:thread-send (signal 'thread-to-send) cry)
                      (carry cry)))
-            ((reset) (carry (signal 'val)))
+            ((reset) (carry (signal 'new-val)))
             (else (carry cry)))))))
 
 (def fn deref (a)
