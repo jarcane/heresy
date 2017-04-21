@@ -33,7 +33,7 @@
          (else (carry cry)))))))
 
 (def fn deref (hol)
-  (rkt:thread-send hol (Signal `(get)))
+  (rkt:thread-send hol (Signal `(get * ,(rkt:current-thread))))
   (rkt:thread-receive))
 
 (def fn reset (hol new-val)
@@ -41,7 +41,7 @@
   hol)
 
 (def fn update (hol fn . args)
-  (rkt:thread-send hol (Signal `(update * * ,fn ,args)))
+  (rkt:thread-send hol (Signal `(update * ,(rkt:current-thread) ,fn ,args)))
   (def result (rkt:thread-receive))
   (if (rkt:exn:fail? result) then
       (rkt:raise result) else
