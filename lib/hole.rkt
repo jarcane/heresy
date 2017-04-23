@@ -2,6 +2,7 @@
 
 (import "things.rkt")
 (import rkt racket)
+(import rkt racket/async-channel)
 (provide (all-defined-out))
 
 ; Signal
@@ -23,25 +24,25 @@
 ; Returns a hole containing val. Holes are tiny in-memory databases that carry a single value,
 ; and communicate by passing messages to and from the thread.  
 (def fn hole (val)
-  (def chan (rkt:make-channel))
+  (def chan (rkt:make-async-channel))
   (def thr
     (rkt:thread
      (fn ()
        (do loop with val
-           (def signal (rkt:channel-get chan))
+           (def signal (rkt:async-channel-get chan))
            (select case (signal 'type)
                    ((get) (do
-                            (rkt:channel-put chan cry)
+                            (rkt:async-channel-put chan cry)
                             (carry cry)))
                    ((reset) (do
-                              (rkt:channel-put chan (signal 'new-val))
+                              (rkt:async-channel-put chan (signal 'new-val))
                               (carry (signal 'new-val))))
                    ((update) (rkt:with-handlers ((rkt:exn:fail?
                                                   (fn (e)
-                                                    (rkt:channel-put chan e)
+                                                    (rkt:async-channel-put chan e)
                                                     (carry cry))))
                                                 (def result (apply (signal 'update-fn) cry (signal 'args)))
-                                                (rkt:channel-put chan result)
+                                                (rkt:async-channel-put chan result)
                                                 (carry result)))
                    (else (carry cry)))))))
   (Hole (list thr chan)))
@@ -50,14 +51,15 @@
 ; Hole -> Any
 ; Returns the current value store in hol.
 (def fn deref (hol)
-  (rkt:channel-put (hol 'channel) (Signal `(get)))
-  (rkt:channel-get (hol 'channel)))
+  (rkt:async-channel-put (hol 'channel) (Signal `(get)))
+  (rkt:async-channel-get (hol 'channel)))
 
 ; (reset *hol* *new-val*)
 ; Hole Any -> Hole
 ; Resets the current value of hol to new-val
 (def fn reset (hol new-val)
-  (rkt:channel-put (hol 'channel) (Signal `(reset ,new-val)))
+  (rkt:async-channel-put (hol 'channel) (Signal `(reset ,new-val)))
+  (rkt:async-channel-get (hol 'channel))
   hol)
 
 ; (update *hol* *fn* . *args* ...)
@@ -65,8 +67,8 @@
 ; Updates the current value of hol by applying fn with the current value as first arg, and args
 ; as the remaining arguments
 (def fn update (hol fn . args)
-  (rkt:channel-put (hol 'channel) (Signal `(update * ,fn ,args)))
-  (def result (rkt:channel-get (hol 'channel)))
+  (rkt:async-channel-put (hol 'channel) (Signal `(update * ,fn ,args)))
+  (def result (rkt:async-channel-get (hol 'channel)))
   (if (rkt:exn:fail? result) then
       (rkt:raise result) else
       hol))
@@ -77,14 +79,3 @@
 (def macro reset-thing (hol (field val) ...)
   (update hol (fn (t)
                 (thing extends t (field val) ...))))
-
-
-(def foo (hole 1))
-(reset foo 2)
-(deref foo)
-(update foo + 5)
-(deref foo)
-(reset foo (thing (foo 1)))
-((deref foo))
-(reset-thing foo (foo 2))
-((deref foo))

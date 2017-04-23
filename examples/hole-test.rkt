@@ -1,11 +1,11 @@
 #lang heresy
 
 (def foo (hole 1))
-
+(reset foo 2)
 (deref foo)
-
-(update foo + 1 2 3)
-
+(update foo + 5)
 (deref foo)
-
-;(update foo / 0)
+(reset foo (thing (foo 1)))
+((deref foo))
+(reset-thing foo (foo 2))
+((deref foo))
