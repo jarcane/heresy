@@ -16,10 +16,7 @@
   (l 'cdr))
 
 (def fn cons? (v)
-  (and (fn? v)
-       (rkt:with-handlers ((rkt:exn:fail (fn (e) False)))
-                          (and (v 'car)
-                               (v 'cdr)))))
+  (is-a? Cons v))
 
 (def fn print-cons (l)
   (select
@@ -35,6 +32,8 @@
    (else (join (car l)
                (cons->list (cdr l))))))
 
-(print-cons (cons 1 (cons (cons 2 (cons 4 Null)) (cons 3 Null))))
+(def l (cons 1 (cons (cons 2 (cons 4 Null)) (cons 3 Null))))
 
-(cons->list (cons 1 (cons (cons 2 (cons 4 Null)) (cons 3 Null))))
+(print-cons l)
+(cons->list l)
+(cons? l)

@@ -3,7 +3,19 @@
 (require racket/stxparam
          "list.rkt"
          "require-stuff.rkt"
-         (only-in racket/base define-syntax gensym begin let* case-lambda)
+         (only-in racket/base
+                  define-syntax
+                  gensym
+                  begin
+                  let*
+                  for/and
+                  case-lambda
+                  with-handlers
+                  struct
+                  exn:fail
+                  exn:fail?
+                  raise
+                  current-continuation-marks)
          syntax/parse/define
          (for-syntax racket/base syntax/parse unstable/syntax))
 
@@ -73,6 +85,7 @@
                       ...))))])
 
 (def λlst-sym (gensym 'λlst))
+(struct exn:bad-thing-ref exn:fail ())
 
 (def fn make-thing (λlst)
   (let ()
@@ -100,7 +113,9 @@
                                 λl)
                     (tail pat)
                     (+ 1 c)))]))]
-           [else (error "Thing expected a valid symbol or a pattern")]))))
+           [else (raise (exn:bad-thing-ref
+                         "Thing expected a valid symbol or a pattern"
+                         (current-continuation-marks)))]))))
     (def lst
       (map (fn (p)
              (list (index* p 1) ((index* p 2) this)))
@@ -119,6 +134,19 @@
   (let* ([obj obj-expr]
          [obj (send* obj msg)] ...)
     obj))
+
+(def fn thing? (v)
+  (and (fn? v)
+       (with-handlers ((exn:bad-thing-ref? (fn (e) False)))
+         (and (list? (v))
+              (fn? (v '()))
+              (v 'fields)))))
+
+(def fn is-a? (Type Thing)
+  (and (thing? Thing)
+       (with-handlers ((exn:bad-thing-ref? (fn (e) False)))
+         (for/and ((i (Type 'fields)))
+           (Thing i)))))
 
 ;; alist-merge
 (def alist-merge
