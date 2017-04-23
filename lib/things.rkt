@@ -15,7 +15,8 @@
                   exn:fail
                   exn:fail?
                   raise
-                  current-continuation-marks)
+                  current-continuation-marks
+                  equal-hash-code)
          syntax/parse/define
          (for-syntax racket/base syntax/parse unstable/syntax))
 
@@ -92,10 +93,12 @@
     (def this
       (fn args*
         (let ([alst lst]
+              [hash (equal-hash-code lst)]
               [fields (heads lst)])
           (select
            [(null? args*) alst]
            [(eq? 'fields (head args*)) fields]
+           [(eq? 'hash (head args*)) hash]
            [(eq? λlst-sym (head args*)) λlst]
            [(and (symbol? (head args*))
                  (assoc (head args*) alst)) (alist-ref alst (head args*))]
@@ -143,10 +146,15 @@
               (v 'fields)))))
 
 (def fn is-a? (Type Thing)
-  (and (thing? Thing)
-       (with-handlers ((exn:bad-thing-ref? (fn (e) False)))
-         (for/and ((i (Type 'fields)))
-           (Thing i)))))
+  (or (thing=? Type Thing)
+      (and (thing? Thing)
+           (with-handlers ((exn:bad-thing-ref? (fn (e) False)))
+             (for/and ((i (Type 'fields)))
+               (Thing i))))))
+
+(def fn thing=? (thing1 thing2)
+  (equal? (thing1 'hash)
+          (thing2 'hash)))
 
 ;; alist-merge
 (def alist-merge
