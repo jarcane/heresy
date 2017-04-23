@@ -62,3 +62,10 @@
   (if (rkt:exn:fail? result) then
       (rkt:raise result) else
       hol))
+
+; (reset-thing *hol* *sym* *val*)
+; Hole Field Any -> Hole
+; Expects a Thing stored in hol, and resets the value in the thing field defined by sym to val
+(def macro reset-thing (hol (field val) ...)
+  (update hol (fn (t)
+                  (thing extends t (field val) ...))))
