@@ -30,7 +30,7 @@
 (def fn cons->list (l)
   (select
    ((null? l) l)
-   ((fn? (car l)) (join (cons->list (car l))
+   ((cons? (car l)) (join (cons->list (car l))
                         (cons->list (cdr l))))
    (else (join (car l)
                (cons->list (cdr l))))))
