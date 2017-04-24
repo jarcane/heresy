@@ -19,3 +19,8 @@ To install:
 To use, append this to the start of your file in DrRacket or your favorite text-editor:
 
 ``#lang heresy``
+
+Contributing
+------------
+
+Pull requests should be made against the `develop` branch. `master` is reserved for the current release, as it is the source for the raco package for Heresy.

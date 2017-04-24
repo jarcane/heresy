@@ -3,7 +3,20 @@
 (require racket/stxparam
          "list.rkt"
          "require-stuff.rkt"
-         (only-in racket/base define-syntax gensym begin let* case-lambda)
+         (only-in racket/base
+                  define-syntax
+                  gensym
+                  begin
+                  let*
+                  for/and
+                  case-lambda
+                  with-handlers
+                  struct
+                  exn:fail
+                  exn:fail?
+                  raise
+                  current-continuation-marks
+                  equal-hash-code)
          syntax/parse/define
          (for-syntax racket/base syntax/parse unstable/syntax))
 
@@ -73,16 +86,19 @@
                       ...))))])
 
 (def λlst-sym (gensym 'λlst))
+(struct exn:bad-thing-ref exn:fail ())
 
 (def fn make-thing (λlst)
   (let ()
     (def this
       (fn args*
         (let ([alst lst]
+              [hash (equal-hash-code lst)]
               [fields (heads lst)])
           (select
            [(null? args*) alst]
            [(eq? 'fields (head args*)) fields]
+           [(eq? 'hash (head args*)) hash]
            [(eq? λlst-sym (head args*)) λlst]
            [(and (symbol? (head args*))
                  (assoc (head args*) alst)) (alist-ref alst (head args*))]
@@ -100,7 +116,9 @@
                                 λl)
                     (tail pat)
                     (+ 1 c)))]))]
-           [else (error "Thing expected a valid symbol or a pattern")]))))
+           [else (raise (exn:bad-thing-ref
+                         "Thing expected a valid symbol or a pattern"
+                         (current-continuation-marks)))]))))
     (def lst
       (map (fn (p)
              (list (index* p 1) ((index* p 2) this)))
@@ -120,6 +138,24 @@
          [obj (send* obj msg)] ...)
     obj))
 
+(def fn thing? (v)
+  (and (fn? v)
+       (with-handlers ((exn:bad-thing-ref? (fn (e) False)))
+         (and (list? (v))
+              (list? (v 'fields))
+              (v 'hash)
+              (fn? (v '()))))))
+
+(def fn is-a? (Type Thing)
+  (and (thing? Thing)
+       (or (thing=? Type Thing)
+           (equal? (Type 'fields)
+                   (Thing 'fields)))))
+
+(def fn thing=? (thing1 thing2)
+  (equal? (thing1 'hash)
+          (thing2 'hash)))
+
 ;; alist-merge
 (def alist-merge
   (case-lambda
@@ -130,7 +166,7 @@
       [(null? b) a]
       [(null? a) b]
       [else (let* ([b.fst (head b)] [b.rst (tail b)] [a.hds (map head a)]
-                   [b.fst.fst (head b.fst)] [b.fst.rst (tail b.fst)])
+                                    [b.fst.fst (head b.fst)] [b.fst.rst (tail b.fst)])
               (select
                [(inlst b.fst.fst a.hds) (alist-merge (subst b.fst.fst b.fst.rst a) b.rst)]
                [else (alist-merge (append a (list b.fst)) b.rst)]))])]
