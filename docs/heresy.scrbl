@@ -13,7 +13,7 @@
 @(define-syntax-rule @mytabular[[cell ...] ...]
    @tabular[#:sep @hspace[1] (list (list cell ...) ...)])
 
-@title{The Heresy Programming Language}
+@title[#:style '(toc)]{The Heresy Programming Language}
 
 @author{John S. Berry III}
 
@@ -34,7 +34,9 @@ from many others in the Racket community.
 Heresy and this documentation are Copyright (c) 2014 John S. Berry III and
 released under the terms of the GNU LGPL.
 
-@section{The Heresy Rules}
+@table-of-contents[]
+
+@section[#:tag "rules"]{The Heresy Rules}
 
 The Heresy language is developed according to a few basic "ground rules," which
 the author and contributors attempt to follow in developing new features and
@@ -75,7 +77,7 @@ functions for the language. These are as follows:
         else who wishes to be part of this project.}
 ]
 
-@section{Heresy Syntax and Conventions}
+@section[#:tag "syntax"]{Heresy Syntax and Conventions}
 
 Generally speaking, Heresy follows standard s-expression syntax as expected from
 any Lisp, being composed of parenthesized sequences of terms in Polish notation.
@@ -95,9 +97,14 @@ Racket/Scheme and BASIC exists, prefer BASIC.
 When borrowing BASIC syntax and naming for use in Heresy, the author has
 generally relied chiefly on QBASIC and ECMA BASIC for reference.
 
-@section{Heresy Reference}
+@section[#:tag "reference" #:style '(toc)]{Heresy Reference}
 
-@subsection{Declarations}
+The following sections describe the forms and functions of the Heresy programming language
+in more detail, subdivided by category for easier navigation.
+
+@local-table-of-contents[]
+
+@subsection[#:tag "declarations"]{Declarations}
 
 @defform[(def name value)]{
 Defines a new variable of @racket[name] with the given @racket[value].
@@ -172,7 +179,7 @@ directly in place by using it as the operator in an expression, like so:
   ((fn (x y) (* x y)) 4 5)
 ]}
 
-@subsection{Conditionals and Loops}
+@subsection[#:tag "conditionals"]{Conditionals and Loops}
 
 @defform[#:literals (then else)
          (if test then texpr else fexpr)]{
@@ -253,7 +260,7 @@ parameter, and @racket[carry] can be used to pass a new value of @racket[cry] to
 the next iteration.
 }
 
-@subsection{Predicates and Logic}
+@subsection[#:tag "logic"]{Predicates and Logic}
 
 @defproc[(list? [v any]) boolean?]{
 Returns True if @racket[v] is a list.
@@ -383,7 +390,7 @@ Applies @racket[fun] to the given arguments, as if it had been called with
 @racket[(fun v ... x ...)] where the @racket[x]s are the elements in @racket[lst].
 }
 
-@subsection{Input and Output}
+@subsection[#:tag "io"]{Input and Output}
 
 @defform*[#:literals (& lit)
           [(print v)
@@ -438,7 +445,7 @@ A value (distinct from all other values) that represents an end-of-file.
 Returns @racket[True] if @racket[v] is an @racket[eof] object.
 }
 
-@subsection{Lists}
+@subsection[#:tag "lists"]{Lists}
 
 @defproc[(list [v any] ...) list?]{
 Returns a list containing the given values.
@@ -577,7 +584,7 @@ Returns a new list, combining the matching pairs of each list with @racket[fun].
 Excess length of either list is dropped.
 }
 
-@subsection{Strings}
+@subsection[#:tag "strings"]{Strings}
 
 @defproc[(=$ [x string?] [y string?]) boolean?]{
 Returns True if the two strings are equal.
@@ -649,7 +656,7 @@ Returns a list of string sections split at the given delimiters. If
 Given a string template, returns a new string with instances of glyph @racket["#_"] replaced in order, starting with the first value given following the string.
 }
 
-@subsection{Math}
+@subsection[#:tag "math"]{Math}
 
 @defproc[(+ [x number?] ...) number?]{
 Adds the given numbers left to right and returns the result. If only one argument is given, returns the argument. If no arguments are provided, returns 0.
@@ -743,7 +750,7 @@ Returns the tangent of @racket[x] as a floating point value.
 Returns the value of @racket[x], rounded to a whole number, rounded down.
 }
 
-@subsection{Random Numbers}
+@subsection[#:tag "random"]{Random Numbers}
 
 Heresy’s random number generator operates slightly differently to traditional
 BASIC's, in order to offer a more functional approach. Rather than defining a
@@ -769,7 +776,7 @@ A pre-defined generator which returns a random number between @racket[0] and
 A special internal variable which contains the current time in milliseconds.
 }
 
-@subsection{Things}
+@subsection[#:tag "things"]{Things}
 
 Things are Heresy's definable data structures. Unlike the objects of most
 object-oriented languages, which often exist to hold and carry mutable state and
@@ -899,7 +906,7 @@ by name.
 @defidform[extends]{can only be used within a @racket[describe] or @racket[thing] form.}
 @defidform[inherit]{can only be used within a @racket[describe] or @racket[thing] form.}
 
-@subsection{Theory}
+@subsection[#:tag "theory"]{Theory}
 
 @defproc[(Y [fn fn?]) fn?]{
 The strict Y fixed-point combinator. Allows for recursion of anonymous
@@ -957,7 +964,7 @@ This function evaluates @racket[fn2] with its arguments, and then applies
   (abs-sub 4 5)
 ]}
 
-@subsection{Pipe/Threading Operators}
+@subsection[#:tag "pipes"]{Pipe/Threading Operators}
 
 @defproc[(:> [initial-value any] [fns fn?] ...) any]{
 The forward pipe operator. Given a value and a series of single-argument functions, 
@@ -1002,7 +1009,7 @@ The last-argument (as in @racket[l>]) version of @racket[->].
 ]
 }
 
-@subsection{State Notation}
+@subsection[#:tag "state"]{State Notation}
 
 Heresy by design contains no mutable values. Variables once set cannot be reset or altered,
 only shadowed by local scope. The following operators however provide a notation for performing
@@ -1055,7 +1062,7 @@ with @racket[var]. Note that use of this will thus terminate State, so it is bes
 in a @racket[do>] block.
 }
 
-@subsection["Holes"]
+@subsection[#:tag "holes"]{Holes}
 
 Holes are an experimental data structure inspired by Clojure's atoms. Their purpose is to
 provide an in-memory data store that is treated as a first-class value, which thus can be bound
