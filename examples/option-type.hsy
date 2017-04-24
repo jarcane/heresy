@@ -5,7 +5,7 @@
           (none True))
 
 (def fn some (v)
-  (Option `(,v #f)))
+  (Option (list v False)))
 
 (def fn none ()
   Option)
@@ -19,7 +19,7 @@
 (def fn option-map (fn opt)
   (select
    ((is-none? opt) (none))
-   (else (Option `(,(fn (opt 'some)) #f)))))
+   (else (Option (list (fn (opt 'some)) #f)))))
 
 (def fn option-filter (pred? opt)
   (select

@@ -731,6 +731,10 @@ Returns the cosine of @racket[x] as a floating point value.
 Returns the tangent of @racket[x] as a floating point value.
 }
 
+@defproc[(int [x number?]) number?]{
+Returns the value of @racket[x], rounded to a whole number, rounded down.
+}
+
 @subsection{Random Numbers}
 
 Heresy’s random number generator operates slightly differently to traditional

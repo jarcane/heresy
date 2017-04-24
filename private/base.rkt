@@ -265,24 +265,20 @@
 ;; Math
 
 ; ^
-(define-syntax ^
-  (syntax-rules ()
-    [(_ a b) (expt a b)]))
+(def ^ expt)
 
 ; (mod x y)
 ; returns the modulo of x over y
-(define-syntax mod
-  (syntax-rules ()
-    [(_ x y) (modulo x y)]))
+(def mod modulo)
 
 ; ! (infix operator)
 (define-syntax !
   (syntax-rules ()
     [(! a fun b) (fun a b)]))
 
-(define-syntax int
-  (syntax-rules ()
-    [(_ n) (exact-truncate n)]))
+; (int x)
+; rounds x down
+(def int exact-truncate)
 
 ;; Lists
 
