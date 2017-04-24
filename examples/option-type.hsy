@@ -1,0 +1,34 @@
+#lang heresy
+
+(describe Option
+          (some False)
+          (none True))
+
+(def fn some (v)
+  (Option `(,v #f)))
+
+(def fn none ()
+  Option)
+
+(def fn is-some? (opt)
+  (opt 'some))
+
+(def fn is-none? (opt)
+  (opt 'none))
+
+(def fn option-map (fn opt)
+  (select
+   ((is-none? opt) (none))
+   (else (Option `(,(fn (opt 'some)) #f)))))
+
+(def fn option-filter (pred? opt)
+  (select
+   ((is-none? opt) (none))
+   ((pred? (opt 'some)) opt)
+   (else (none))))
+
+(->> (some 5)
+     (option-map inc)
+     (option-filter even?)
+     (option-filter odd?)
+     (is-none?))
