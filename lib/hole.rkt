@@ -47,6 +47,14 @@
                    (else (carry cry)))))))
   (Hole (list thr chan)))
 
+; (hole? *v*)
+; Any -> Boolean
+; Returns #t if v is a hole.
+(def fn hole? (v)
+  (and (is-a? Hole v)
+       (rkt:async-channel? (v 'channel))
+       (rkt:thread? (v 'thread))))
+
 ; (deref *hol*)
 ; Hole -> Any
 ; Returns the current value store in hol.
@@ -73,8 +81,8 @@
       (rkt:raise result) else
       hol))
 
-; (reset-thing *hol* *sym* *val*)
-; Hole Field Any -> Hole
+; (reset-thing *hol* *sym* *val* ...)
+; Hole Field Any ... -> Hole
 ; Expects a Thing stored in hol, and resets the value in the thing field defined by sym to val
 (def macro reset-thing (hol (field val) ...)
   (update hol (fn (t)

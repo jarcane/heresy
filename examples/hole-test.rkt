@@ -1,6 +1,7 @@
 #lang heresy
 
 (def foo (hole 1))
+(hole? foo)
 (reset foo 2)
 (deref foo)
 (update foo + 5)

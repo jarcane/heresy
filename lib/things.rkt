@@ -143,6 +143,7 @@
        (with-handlers ((exn:bad-thing-ref? (fn (e) False)))
          (and (list? (v))
               (list? (v 'fields))
+              (v 'hash)
               (fn? (v '()))))))
 
 (def fn is-a? (Type Thing)

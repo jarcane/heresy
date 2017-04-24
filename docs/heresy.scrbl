@@ -430,6 +430,14 @@ the @racket[mode] provided. @racket[mode] is a symbol, of one of the following:
 [@racket['input]   @elem{Opens file as the current input port.}]]
 }
 
+@defthing[eof eof-object?]{
+A value (distinct from all other values) that represents an end-of-file.
+}
+
+@defproc[(eof? [v any?]) boolean?]{
+Returns @racket[True] if @racket[v] is an @racket[eof] object.
+}
+
 @subsection{Lists}
 
 @defproc[(list [v any] ...) list?]{
@@ -860,6 +868,26 @@ function named by @racket[(Thing symbol)] with the given arguments and returns
 the result.
 }
 
+@defproc[(thing? [v any?]) boolean?]{
+Returns @racket[True] if @racket[v] "looks like" a Thing, or @racket[False] if it doesn't.
+@racket[thing?] employs a duck-typing method, checking the object for the expected
+properties of a Thing, so it is possible, albeit unlikely, to fool it. Specifically
+it checks first if @racket[v] is a @racket[fn?], then checks the returns for the default
+internal methods of all Things, and its internal hash value. 
+}
+
+@defproc[(is-a? [Type thing?] [Thing thing?]) boolean?]{
+Returns @racket[True] if @racket[Thing] "looks like" an instance of @racket[Type]. This
+will return @racket[True] if @racket[Type] and @racket[Thing] are @racket[thing=?],
+or finally, by comparing the fields of @racket[Type] and @racket[Thing]. Thus, two Things
+that define identical fields will appear to be instances of each other. 
+}
+
+@defproc[(thing=? [thing1 thing?] [thing2 thing?]) boolean]{
+Returns @racket[True] if @racket[thing1] and @racket[thing2]'s fields are @racket[equal?]
+to each other, according to the internal hash values generated from their fields. 
+}
+
 @defform[(Self ....)]{
 @racket[Self] is the self-referring identifier for a Thing, allowing for
 functions within Things to call the Thing itself. Note that if it is only the
@@ -1025,4 +1053,44 @@ are available for use in @racket[fun]'s arguments.
 The return operator. Expands to a function that takes the present State, and returns the value associated
 with @racket[var]. Note that use of this will thus terminate State, so it is best used as the final form
 in a @racket[do>] block.
+}
+
+@subsection["Holes"]
+
+Holes are an experimental data structure inspired by Clojure's atoms. Their purpose is to
+provide an in-memory data store that is treated as a first-class value, which thus can be bound
+to a value or passed to functions. They can also be useful for providing a source of shared
+program state.
+
+Each hole is a Thing containing two values: a thread containing a loop closure that holds a
+value, and an asynchronous channel for communicating with that thread. Operations are provided
+for setting and updating the value of the hole, as well as referencing it.
+
+Holes are an experimental feature of Heresy, and best used both carefully, and sparingly, as any
+mutable, concurrent system.
+
+@defproc[(hole [v any?]) hole?]{
+Creates a hole containing @racket[v].
+}
+
+@defproc[(hole? [v any?]) boolean?]{
+Returns @racket[True] if @racket[v] is a hole.
+}
+
+@defproc[(deref [hol hole?]) any?]{
+Returns the current value contained within @racket[hol].
+}
+
+@defproc[(reset [hol hole?] [new-val any?]) hole?]{
+Resets the current value of @racket[hol] to @racket[new-val], returning the hole.
+}
+
+@defproc[(update [hol hole?] [fn fn?] [args any?] ...) hole?]{
+Resets the current value of @racket[hol] to the result if applying @racket[fn] to the current
+value of @racket[hol], followed by @racket[args], ie. @racket[(apply f curr-val args)].
+}
+
+@defform[(reset-thing [hol hole?] (field value) ...)]{
+Resets the fields of a Thing contained in @racket[hol] to the values provided, and returns
+the hole.
 }
