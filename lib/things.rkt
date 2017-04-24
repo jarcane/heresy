@@ -142,15 +142,14 @@
   (and (fn? v)
        (with-handlers ((exn:bad-thing-ref? (fn (e) False)))
          (and (list? (v))
-              (fn? (v '()))
-              (v 'fields)))))
+              (list? (v 'fields))
+              (fn? (v '()))))))
 
 (def fn is-a? (Type Thing)
-  (or (thing=? Type Thing)
-      (and (thing? Thing)
-           (with-handlers ((exn:bad-thing-ref? (fn (e) False)))
-             (for/and ((i (Type 'fields)))
-               (Thing i))))))
+  (and (thing? Thing)
+       (or (thing=? Type Thing)
+           (equal? (Type 'fields)
+                   (Thing 'fields)))))
 
 (def fn thing=? (thing1 thing2)
   (equal? (thing1 'hash)
@@ -166,7 +165,7 @@
       [(null? b) a]
       [(null? a) b]
       [else (let* ([b.fst (head b)] [b.rst (tail b)] [a.hds (map head a)]
-                   [b.fst.fst (head b.fst)] [b.fst.rst (tail b.fst)])
+                                    [b.fst.fst (head b.fst)] [b.fst.rst (tail b.fst)])
               (select
                [(inlst b.fst.fst a.hds) (alist-merge (subst b.fst.fst b.fst.rst a) b.rst)]
                [else (alist-merge (append a (list b.fst)) b.rst)]))])]
