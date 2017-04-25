@@ -28,14 +28,14 @@
 
 (def fn option-map (fn opt)
   (select
-   ((is-none? opt) opt)
-   (else (some (fn (opt 'contains))))))
+    ((is-none? opt) opt)
+    (else (some (fn (opt 'contains))))))
 
 (def fn option-filter (pred? opt)
   (select
-   ((is-none? opt) opt)
-   ((pred? (opt 'contains)) opt)
-   (else None)))
+    ((is-none? opt) opt)
+    ((pred? (opt 'contains)) opt)
+    (else None)))
 
 (def fn // (x y)
   (>>= x
@@ -44,8 +44,10 @@
               (fn (b)
                 (if (= b 0) then None else (some (/ a b))))))))
 
-(def macroset maybe-do 
-  ((maybe-do (exp ...)) (exp ...))  
+(def macroset maybe-do (= <-)
+  ((maybe-do (exp ...)) (exp ...))
+  ((maybe-do (name = val) exp ...)
+   (>>= (some val) (fn (name) (maybe-do exp ...))))
   ((maybe-do (name <- val) exp ...)
    (>>= val (fn (name) (maybe-do exp ...)))))
 
@@ -55,5 +57,17 @@
    (b <- y)
    (if (zero? b) then None else (some (/ a b)))))
 
-(-> (//- (some 4) (some 0))
-    (is-none?))
+(rem
+ (-> (//- (some 4) (some 0))
+     (is-none?))
+
+ ((maybe-do
+   (a <- (some 4))
+   (c = (* a 4))
+   (return c)))
+
+ (maybe-do
+  (a <- (some 5))
+  (b <- (some 4))
+  (c = (+ a b))
+  (* a c)))
