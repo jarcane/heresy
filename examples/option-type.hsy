@@ -1,34 +1,59 @@
 #lang heresy
 
-(describe Option
-          (some False)
-          (none True))
+(describe Some (contains Null))
+(describe None)
 
 (def fn some (v)
-  (Option (list v False)))
-
-(def fn none ()
-  Option)
+  (Some (list v)))
 
 (def fn is-some? (opt)
-  (opt 'some))
+  (is-a? Some opt))
 
 (def fn is-none? (opt)
-  (opt 'none))
+  (equal? opt None))
+
+(def fn return (v)
+  (some v))
+
+(def fn >>= (opt fn)
+  (select
+    ((is-none? opt) None)
+    (else (fn (opt 'contains)))))
+
+(def fn >> (opt1 opt2)
+  (>>= opt1 (fn (_) opt2)))
+
+(def fn get-some (opt)
+  (>>= opt (fn (_) (opt 'contains))))
 
 (def fn option-map (fn opt)
   (select
-   ((is-none? opt) (none))
-   (else (Option (list (fn (opt 'some)) #f)))))
+   ((is-none? opt) opt)
+   (else (some (fn (opt 'contains))))))
 
 (def fn option-filter (pred? opt)
   (select
-   ((is-none? opt) (none))
-   ((pred? (opt 'some)) opt)
-   (else (none))))
+   ((is-none? opt) opt)
+   ((pred? (opt 'contains)) opt)
+   (else None)))
 
-(->> (some 5)
-     (option-map inc)
-     (option-filter even?)
-     (option-filter odd?)
-     (is-none?))
+(def fn // (x y)
+  (>>= x
+       (fn (a)
+         (>>= y
+              (fn (b)
+                (if (= b 0) then None else (some (/ a b))))))))
+
+(def macroset maybe-do 
+  ((maybe-do (exp ...)) (exp ...))  
+  ((maybe-do (name <- val) exp ...)
+   (>>= val (fn (name) (maybe-do exp ...)))))
+
+(def fn //- (x y)
+  (maybe-do
+   (a <- x)
+   (b <- y)
+   (if (zero? b) then None else (some (/ a b)))))
+
+(-> (//- (some 4) (some 0))
+    (is-none?))

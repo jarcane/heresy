@@ -73,6 +73,10 @@
      (define-syntax name
        (syntax-rules ()
          [(pname ptr0 ptrn ...) (body0 bodyn ...)] ...))]
+    [(_ macroset name (lits ...) [(pname ptr0 ptrn ...) (body0 bodyn ...)] ...)
+     (define-syntax name
+       (syntax-rules (lits ...)
+         [(pname ptr0 ptrn ...) (body0 bodyn ...)] ...))]
     [(_ fn name (args ... . rest) body0 bodyn ...) 
      (define (name args ... . rest) body0 bodyn ...)]
     [(_ name contents) (define name contents)]))
