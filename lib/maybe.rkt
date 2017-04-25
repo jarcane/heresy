@@ -21,6 +21,9 @@
     ((is-none? opt) None)
     (else (fn (opt 'contains)))))
 
+(def fn yield (v)
+  (some v))
+
 (def fn get-some (opt)
   (maybe-bind opt identity))
 
