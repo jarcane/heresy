@@ -1,41 +1,6 @@
 #lang heresy
 
-(describe Some (contains Null))
-(describe None)
-
-(def fn some (v)
-  (Some (list v)))
-
-(def fn is-some? (opt)
-  (is-a? Some opt))
-
-(def fn is-none? (opt)
-  (equal? opt None))
-
-(def fn return (v)
-  (some v))
-
-(def fn >>= (opt fn)
-  (select
-    ((is-none? opt) None)
-    (else (fn (opt 'contains)))))
-
-(def fn >> (opt1 opt2)
-  (>>= opt1 (fn (_) opt2)))
-
-(def fn get-some (opt)
-  (>>= opt (fn (_) (opt 'contains))))
-
-(def fn option-map (fn opt)
-  (select
-    ((is-none? opt) opt)
-    (else (some (fn (opt 'contains))))))
-
-(def fn option-filter (pred? opt)
-  (select
-    ((is-none? opt) opt)
-    ((pred? (opt 'contains)) opt)
-    (else None)))
+(def >>= maybe-bind)
 
 (def fn // (x y)
   (>>= x
@@ -44,27 +9,20 @@
               (fn (b)
                 (if (= b 0) then None else (some (/ a b))))))))
 
-(def macroset maybe-do (= <-)
-  ((maybe-do (exp ...)) (exp ...))
-  ((maybe-do (name = val) exp ...)
-   (>>= (some val) (fn (name) (maybe-do exp ...))))
-  ((maybe-do (name <- val) exp ...)
-   (>>= val (fn (name) (maybe-do exp ...)))))
-
 (def fn //- (x y)
   (maybe-do
    (a <- x)
    (b <- y)
    (if (zero? b) then None else (some (/ a b)))))
 
-(rem
- (-> (//- (some 4) (some 0))
-     (is-none?))
+(do
+ (-> (//- (some 4) (some 2))
+     (get-some))
 
  ((maybe-do
    (a <- (some 4))
    (c = (* a 4))
-   (return c)))
+   (some c)))
 
  (maybe-do
   (a <- (some 5))

@@ -13,7 +13,8 @@
          "./lib/things.rkt"
          "./lib/infix-math.rkt"
          "./lib/monadish.rkt"
-         "./lib/hole.rkt")
+         "./lib/hole.rkt"
+         "./lib/maybe.rkt")
 
 ;; Provides
 (provide (all-from-out "./private/base.rkt"
@@ -24,4 +25,5 @@
                        "./lib/things.rkt"
                        "./lib/infix-math.rkt"
                        "./lib/monadish.rkt"
-                       "./lib/hole.rkt"))
+                       "./lib/hole.rkt"
+                       "./lib/maybe.rkt"))

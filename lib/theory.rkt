@@ -37,3 +37,8 @@
    (fn (name)
      (fn args
        body ...))))
+
+; (identity v)
+; Any -> Any
+; The identity function. Given a value, returns that value. 
+(def fn identity (v) v)
