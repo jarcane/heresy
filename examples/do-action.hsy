@@ -20,4 +20,5 @@
  (b := (input stx))
  (print (format$ "#_ * #_ = " a b))
  (c := (* a b))
+ (a := 100)
  (print c))
