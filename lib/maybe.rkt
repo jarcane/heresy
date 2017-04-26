@@ -5,13 +5,15 @@
 (provide (all-defined-out))
 
 ;; The Maybe type family
-; Some
-; Contains a value
-(describe Some (contains Null))
+(describe Maybe)
 
 ; None
 ; Represents no result
-(describe None)
+(describe None extends Maybe)
+
+; Some
+; Contains a value
+(describe Some extends Maybe (contains Null))
 
 ; (some v)
 ; Any -> Some
