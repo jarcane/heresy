@@ -88,17 +88,21 @@
 (def λlst-sym (gensym 'λlst))
 (struct exn:bad-thing-ref exn:fail ())
 
-(def fn make-thing (λlst)
+(def fn make-thing (λlst [name 'thing] [ident (gensym name)] )
   (let ()
     (def this
       (fn args*
         (let ([alst lst]
               [hash (equal-hash-code lst)]
+              [name name]
+              [ident ident]
               [fields (heads lst)])
           (select
            [(null? args*) alst]
            [(eq? 'fields (head args*)) fields]
-           [(eq? 'hash (head args*)) hash]
+           [(eq? '__hash (head args*)) hash]
+           [(eq? '__ident (head args*)) ident]
+           [(eq? '__name (head args*)) name]
            [(eq? λlst-sym (head args*)) λlst]
            [(and (symbol? (head args*))
                  (assoc (head args*) alst)) (alist-ref alst (head args*))]
@@ -107,7 +111,7 @@
                         [pat (head args*)]
                         [c 1])
               (select
-               [(null? pat) (make-thing λl)]
+               [(null? pat) (make-thing λl name ident)]
                [(eq? (head pat) '*) (recur λl (tail pat) (+ 1 c))]
                [else
                 (let ([hd (head pat)])
@@ -143,18 +147,19 @@
        (with-handlers ((exn:bad-thing-ref? (fn (e) False)))
          (and (list? (v))
               (list? (v 'fields))
-              (v 'hash)
+              (v '__hash)
               (fn? (v '()))))))
 
 (def fn is-a? (Type Thing)
-  (and (thing? Thing)
-       (or (thing=? Type Thing)
-           (equal? (Type 'fields)
-                   (Thing 'fields)))))
+  (and (thing? Type)
+       (thing? Thing)
+       (equal? (Type '__ident)
+               (Thing '__ident))))
 
 (def fn thing=? (thing1 thing2)
-  (equal? (thing1 'hash)
-          (thing2 'hash)))
+  (and (is-a? thing1 thing2)
+       (equal? (thing1 '__hash)
+               (thing2 '__hash))))
 
 ;; alist-merge
 (def alist-merge
