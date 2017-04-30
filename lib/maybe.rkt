@@ -31,7 +31,7 @@
 ; Maybe -> Boolean
 ; Returns true if opt is None.
 (def fn is-none? (opt)
-  (equal? opt None))
+  (is-a? None opt))
 
 ; (maybe? v)
 ; Any -> Boolean
@@ -70,12 +70,13 @@
     (else (some (fn (opt 'contains))))))
 
 ; (maybe-filter pred? opt)
+; Fn(Any -> Boolean) Maybe -> Maybe
 ; If opt is None, returns None. If opt is Some(v), returns Some(v) if (pred? v) is true,
 ; or None if it is false
 (def fn maybe-filter (pred? opt)
   (select
-    ((is-none? opt) opt)
-    ((pred? (opt 'contains)) opt)
+    ((and (is-some? opt)
+          (pred? (opt 'contains))) opt)
     (else None)))
 
 ; (maybe-do ...)
@@ -86,9 +87,11 @@
 ; Subsequent val expressions have the previous named vals in scope.
 ; The last line must be a normal expression, most useful if it is a calculation of previous
 ; bound values. A bare expression will return its result, use (yield ...) to return a Some.
-(def macroset maybe-do (= <- yield)
-  ((maybe-do (exp ...)) (exp ...))
+(def macroset maybe-do (= <- if yield)
+  ((maybe-do (exp ...)) (exp ...))  
   ((maybe-do (name = val) exp ...)
    (maybe-bind (some val) (fn (name) (maybe-do exp ...))))
   ((maybe-do (name <- val) exp ...)
-   (maybe-bind val (fn (name) (maybe-do exp ...)))))
+   (maybe-bind val (fn (name) (maybe-do exp ...))))
+  ((maybe-do (if pred? name) exp ...)
+   (maybe-bind (maybe-filter pred? name) (fn (name) (maybe-do exp ...)))))
