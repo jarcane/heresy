@@ -157,8 +157,8 @@
        (thing? Thing)
        (or (equal? (Type '__ident)
                    (Thing '__ident))
-           (inlst (Type '__ident)
-                  (Thing '__parents)))))
+           (not (null? (inlst (Type '__ident)
+                              (Thing '__parents)))))))
 
 (def fn thing=? (thing1 thing2)
   (and (is-a? thing1 thing2)
