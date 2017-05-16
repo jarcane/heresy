@@ -37,8 +37,7 @@
 ; Any -> Boolean
 ; Returns true if v is a Maybe.
 (def fn maybe? (opt)
-  (or (is-some? opt)
-      (is-none? opt)))
+  (is-a? Maybe opt))
 
 ; (maybe-bind opt fn)
 ; Maybe Fn(Any -> Maybe) -> Maybe
