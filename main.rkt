@@ -12,6 +12,7 @@
          "./lib/theory.rkt"
          "./lib/things.rkt"
          "./lib/infix-math.rkt"
+         "./lib/pipes.rkt"
          "./lib/monadish.rkt"
          "./lib/hole.rkt"
          "./lib/maybe.rkt")
@@ -24,6 +25,7 @@
                        "./lib/theory.rkt"
                        "./lib/things.rkt"
                        "./lib/infix-math.rkt"
+                       "./lib/pipes.rkt"
                        "./lib/monadish.rkt"
                        "./lib/hole.rkt"
                        "./lib/maybe.rkt"))
