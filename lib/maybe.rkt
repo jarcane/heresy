@@ -81,7 +81,7 @@
 ; (maybe-guard test)
 ; Bool -> Maybe
 (def fn maybe-guard (test)
-  (if test then (some test) else None))
+  (if test then (some Null) else None))
 
 ; (maybe-do ...)
 ; Do notation micro-DSL for Maybe.
