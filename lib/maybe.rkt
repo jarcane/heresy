@@ -78,6 +78,11 @@
           (pred? (opt 'contains))) opt)
     (else None)))
 
+; (maybe-guard test)
+; Bool -> Maybe
+(def fn maybe-guard (test)
+  (if test then (some test) else None))
+
 ; (maybe-do ...)
 ; Do notation micro-DSL for Maybe.
 ; For each line but the last, the following two forms are allowed:
@@ -92,5 +97,5 @@
    (maybe-bind (some val) (fn (name) (maybe-do exp ...))))
   ((maybe-do (name <- val) exp ...)
    (maybe-bind val (fn (name) (maybe-do exp ...))))
-  ((maybe-do (if pred? name) exp ...)
-   (maybe-bind (maybe-filter pred? name) (fn (name) (maybe-do exp ...)))))
+  ((maybe-do (if test name) exp ...)
+   (maybe-bind (maybe-guard test) (fn (name) (maybe-do exp ...)))))
