@@ -20,7 +20,7 @@
   ((_ (name <- val) exp ...)
    (list-bind val (fn (name) (list-do exp ...))))
   ((_ (if test) exp ...)
-   (list-bind (list-guard test) (fn (name) (list-do exp ...))))
+   (list-bind (list-guard test) (fn (_) (list-do exp ...))))
   )
 
 (list-do

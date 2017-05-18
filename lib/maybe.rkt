@@ -98,4 +98,4 @@
   ((maybe-do (name <- val) exp ...)
    (maybe-bind val (fn (name) (maybe-do exp ...))))
   ((maybe-do (if test) exp ...)
-   (maybe-bind (maybe-guard test) (fn (name) (maybe-do exp ...)))))
+   (maybe-bind (maybe-guard test) (fn (_) (maybe-do exp ...)))))

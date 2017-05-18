@@ -86,18 +86,17 @@
                                    value))])
                           field)]
                       ...))
-                   super-parents))])
+                   (join super-ident super-parents)))])
 
 (def λlst-sym (gensym 'λlst))
 (struct exn:bad-thing-ref exn:fail ())
 
-(def fn make-thing (λlst [parent-list Null] [ident (gensym 'thing)])
+(def fn make-thing (λlst [parents Null] [ident (gensym 'thing)])
   (let ()
     (def this
       (fn args*
         (let ([alst lst]
               [hash (equal-hash-code lst)]
-              [parents (join ident parent-list)]
               [fields (heads lst)])
           (select
            [(null? args*) alst]
@@ -157,8 +156,8 @@
        (thing? Thing)
        (or (equal? (Type '__ident)
                    (Thing '__ident))
-           (not (null? (inlst (Type '__ident)
-                              (Thing '__parents)))))))
+           (number? (inlst (Type '__ident)
+                              (Thing '__parents))))))
 
 (def fn thing=? (thing1 thing2)
   (and (is-a? thing1 thing2)
