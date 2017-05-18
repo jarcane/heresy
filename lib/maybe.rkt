@@ -48,12 +48,6 @@
     ((is-none? opt) None)
     (else (fn (opt 'contains)))))
 
-; (yield v)
-; Any -> Some
-; Returns v wrapped in Some
-(def fn yield (v)
-  (some v))
-
 ; (get-some opt)
 ; Maybe -> Any
 ; If opt is Some(v), returns v, else if None, returns None.
@@ -92,7 +86,8 @@
 ; The last line must be a normal expression, most useful if it is a calculation of previous
 ; bound values. A bare expression will return its result, use (yield ...) to return a Some.
 (def macroset maybe-do (= <- if yield)
-  ((maybe-do (exp ...)) (exp ...))  
+  ((maybe-do (yield exp ...)) (some exp ...))
+  ((maybe-do (exp ...)) (exp ...)) 
   ((maybe-do (name = val) exp ...)
    (maybe-bind (some val) (fn (name) (maybe-do exp ...))))
   ((maybe-do (name <- val) exp ...)
