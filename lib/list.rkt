@@ -1,6 +1,7 @@
 #lang s-exp "../private/base.rkt"
 
 (require "math.rkt")
+(require "monadology.rkt")
 (provide (all-defined-out))
 
 ; (map *fun* *lst*)
@@ -163,12 +164,6 @@
 
 ; (list-do ...)
 ; The do notation DSL for lists.
-(def macroset list-do (= <- if yield)
-  ((_ (yield exp ...)) (list exp ...))
-  ((_ (exp ...)) (exp ...))
-  ((_ (name = val) exp ...)
-   (list-bind (list val) (fn (name) (list-do exp ...))))
-  ((_ (name <- val) exp ...)
-   (list-bind val (fn (name) (list-do exp ...))))
-  ((_ (if test) exp ...)
-   (list-bind (list-guard test) (fn (_) (list-do exp ...)))))
+(def macroset list-do 
+  ((_ e ...)
+   (monad-do (list-bind list list-guard) e ...)))
