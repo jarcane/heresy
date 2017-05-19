@@ -1,6 +1,7 @@
 #lang s-exp "../private/base.rkt"
 
 (import "things.rkt")
+(import "monadology.rkt")
 (import rkt racket)
 (import rkt racket/async-channel)
 (provide (all-defined-out))
@@ -41,7 +42,9 @@
                                                   (fn (e)
                                                     (rkt:async-channel-put chan e)
                                                     (carry cry))))
-                                                (def result (apply (signal 'update-fn) cry (signal 'args)))
+                                                (def result (apply (signal 'update-fn)
+                                                                   cry
+                                                                   (signal 'args)))
                                                 (rkt:async-channel-put chan result)
                                                 (carry result)))
                    (else (carry cry)))))))
@@ -87,3 +90,14 @@
 (def macro reset-thing (hol (field val) ...)
   (update hol (fn (t)
                 (thing extends t (field val) ...))))
+
+; (hole-guard test)
+; The guard implementation for holes
+(def fn hole-guard (test)
+  (if test then (hole Null) else Null))
+
+; (hole-do ...)
+; The do notation for holes
+(def macroset hole-do
+  ((_ e ...)
+   (monad-do (update hole hole-guard) e ...)))
