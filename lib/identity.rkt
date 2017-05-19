@@ -1,6 +1,7 @@
 #lang s-exp "../private/base.rkt"
 
 (import "things.rkt")
+(import "monadology.rkt")
 
 ; A container thing 
 (describe Identity (state Null))
@@ -13,10 +14,10 @@
 (def fn id-bind (act fn)
   (fn (act 'state)))
 
-; A simple DSL for handling imperative operations
-(def macroset i-do (:= return)
-  ((_ (return exp ...)) (exp ...))
-  ((_ (name := val) exp ...)
-   (id-bind (id val) (fn (name) (do> exp ...))))
-  ((_ (exp0 ...) exp1 ...)
-   (id-bind (id (exp0 ...)) (fn (_) (do> exp1 ...)))))
+; The guard function for identity. Essentially meaningless, but necessary for the definition
+(def fn id-guard (test)
+  (if test then (id Null) else Null))
+
+; An instance of monad-do for Identity
+(def macro id-do (e ...)
+  (monad-do (id-bind id id-guard) e ...))
