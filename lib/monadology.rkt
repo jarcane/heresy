@@ -2,6 +2,8 @@
 
 (provide (all-defined-out))
 
+; Inspired by Remko Trançon's post on Scheme monads: https://el-tramo.be/blog/scheme-monads/
+
 (def macroset monad-do (<- = yield if)
   
   ((_ (>>= return guard)
