@@ -267,7 +267,8 @@ Returns True if @racket[v] is a list.
 }
 
 @defproc[(null? [v any]) boolean?]{
-Returns True if @racket[v] is @racket[Null], where Null is defined as the empty list @racket['()].
+Returns True if @racket[v] is @racket[Null], where Null is defined as the empty list
+@racket['()].
 }
 
 @defproc[(number? [v any]) boolean?]{
@@ -653,13 +654,15 @@ Returns a list of string sections split at the given delimiters. If
 }
 
 @defproc[(format$ [template string?] [value any?] ...) string?]{
-Given a string template, returns a new string with instances of glyph @racket["#_"] replaced in order, starting with the first value given following the string.
+Given a string template, returns a new string with instances of glyph @racket["#_"] replaced
+in order, starting with the first value given following the string.
 }
 
 @subsection[#:tag "math"]{Math}
 
 @defproc[(+ [x number?] ...) number?]{
-Adds the given numbers left to right and returns the result. If only one argument is given, returns the argument. If no arguments are provided, returns 0.
+Adds the given numbers left to right and returns the result. If only one argument is given,
+returns the argument. If no arguments are provided, returns 0.
 }
 
 @defproc*[([(- [x number?] [y nuber?] ...+) number?]
@@ -764,7 +767,8 @@ guarantees are offered as to its cryptographic security.
 
 @defproc[(randomize [seed any/c timer]) fn?]{
 Returns a new generator function initialized with @racket[seed], which is first
-passed through @racket[equal-hash-code]. If no @racket[seed] is provided, defaults to @racket[timer].
+passed through @racket[equal-hash-code]. If no @racket[seed] is provided, defaults
+to @racket[timer].
 }
 
 @defproc[(rnd) number?]{
