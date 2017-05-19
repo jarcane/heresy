@@ -14,7 +14,7 @@
   (fn (act 'state)))
 
 ; A simple DSL for handling imperative operations
-(def macroset do> (:= return)
+(def macroset i-do (:= return)
   ((_ (return exp ...)) (exp ...))
   ((_ (name := val) exp ...)
    (id-bind (id val) (fn (name) (do> exp ...))))
