@@ -2,22 +2,26 @@
 
 (provide (all-defined-out))
 
-(def macroset monad-do (<- := yield if)
+(def macroset monad-do (<- = yield if)
   
   ((_ (>>= return guard)
       (yield exp ...))
    (return exp ...))
 
   ((_ (>>= return guard)
-      (name := exp)
+      (exp ...))
+   (exp ...))
+
+  ((_ (>>= return guard)
+      (name = val)
       exps ...)
-   (>>= (return exp)
+   (>>= (return val)
         (fn (name) (monad-do (>>= return guard) exps ...))))
   
   ((_ (>>= return guard)
-      (name <- exp)
+      (name <- val)
       exps ...)
-   (>>= exp
+   (>>= val
         (fn (name) (monad-do (>>= return guard) exps ...))))
   
   ((_ (>>= return guard)

@@ -2,6 +2,7 @@
 
 (import "things.rkt")
 (import "theory.rkt")
+(import "monadology.rkt")
 (provide (all-defined-out))
 
 ;; The Maybe type family
@@ -85,12 +86,6 @@
 ; Subsequent val expressions have the previous named vals in scope.
 ; The last line must be a normal expression, most useful if it is a calculation of previous
 ; bound values. A bare expression will return its result, use (yield ...) to return a Some.
-(def macroset maybe-do (= <- if yield)
-  ((maybe-do (yield exp ...)) (some exp ...))
-  ((maybe-do (exp ...)) (exp ...)) 
-  ((maybe-do (name = val) exp ...)
-   (maybe-bind (some val) (fn (name) (maybe-do exp ...))))
-  ((maybe-do (name <- val) exp ...)
-   (maybe-bind val (fn (name) (maybe-do exp ...))))
-  ((maybe-do (if test) exp ...)
-   (maybe-bind (maybe-guard test) (fn (_) (maybe-do exp ...)))))
+(def macroset maybe-do 
+  ((_ e ...)
+   (monad-do (maybe-bind some maybe-guard) e ...)))
