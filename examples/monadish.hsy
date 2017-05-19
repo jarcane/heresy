@@ -5,3 +5,9 @@
      (:= (x y) z (+ x y))
      (:_ (x y) print (format$ "#_ + #_ = " x y))
      (return z))
+
+(id-do
+ (x = 5)
+ (y = 4)
+ (z = (+ x y))
+ (print (format$ "#_ + #_ = #_" x y z)))

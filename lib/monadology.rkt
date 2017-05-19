@@ -2,10 +2,9 @@
 
 (provide (all-defined-out))
 
-; Inspired by Remko Trançon's post on Scheme monads: https://el-tramo.be/blog/scheme-monads/
-
 ; monad-do
 ; The base implementation for Heresy do notation DSL
+; Inspired by Remko Trançon's post on Scheme monads: https://el-tramo.be/blog/scheme-monads/
 ; This constructor form can be used directly, by providing the bind (>>=), return, and guard
 ; functions for a data type, or more commonly, wrapped in a macro that provides these
 ; Comments below describe individual forms/operators within the DSL

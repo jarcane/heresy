@@ -14,6 +14,8 @@
          "./lib/infix-math.rkt"
          "./lib/pipes.rkt"
          "./lib/monadish.rkt"
+         "./lib/monadology.rkt"
+         "./lib/identity.rkt"
          "./lib/hole.rkt"
          "./lib/maybe.rkt")
 
@@ -27,5 +29,7 @@
                        "./lib/infix-math.rkt"
                        "./lib/pipes.rkt"
                        "./lib/monadish.rkt"
+                       "./lib/monadology.rkt"
+                       "./lib/identity.rkt"
                        "./lib/hole.rkt"
                        "./lib/maybe.rkt"))

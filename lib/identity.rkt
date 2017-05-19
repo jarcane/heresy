@@ -2,6 +2,7 @@
 
 (import "things.rkt")
 (import "monadology.rkt")
+(provide (all-defined-out))
 
 ; A container thing 
 (describe Identity (state Null))
