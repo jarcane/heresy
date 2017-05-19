@@ -19,5 +19,6 @@
   (if test then (id Null) else Null))
 
 ; An instance of monad-do for Identity
-(def macro id-do (e ...)
-  (monad-do (id-bind id id-guard) e ...))
+(def macroset id-do
+  ((id-do e ...)
+   (monad-do (id-bind id id-guard) e ...)))
