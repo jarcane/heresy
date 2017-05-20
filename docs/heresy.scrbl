@@ -1123,3 +1123,97 @@ If @racket[pred?] is true for the value contained in @racket[opt], returns @rack
 The monad guard operator for maybe. If @racket[test] is true, returns @racket[(some Null)],
 else returns @racket[None].
 }
+
+@subsection[#:tag "monad-do"]{Do Notation}
+
+@racket[monad-do] provides a generic, specializable DSL for handling monadic values, inspired by
+Haskell's do notation and Scala's for comprehensions. @racket[monad-do] itself is generic,
+expecting the provision of functions for the bind (@racket[>>=]), return, and guard operators, but
+individual types can easily layer over this with a simple macro to provide a specialized version
+of the DSL for a particular data type.
+
+A "monad" is a data type which can contain a value, and a set of operator functions which
+operate on that type while obeying certain rules. Y0ou can think of them as a kind of container,
+and the components of an assembly line that processes the container and its contents.
+
+Let's say that we have a Thing called @racket[Box], defined thusly:
+@myexamples[#:label #f
+(describe Box (val Null))
+]
+We then define a set of three functions, that work with @racket[Box]. The first, is
+@italic{return}, which is a constructor function that wraps a value in our type:
+@myexamples[
+(def fn box-return (val)
+  (Box (list val)))
+ ]
+The next function is @italic{bind}, known in some languages as the operator @racket[>>=]. This
+takes an instance of our type, and a function, and applies the function to the value inside
+our type. The definition of @italic{bind} for @racket[Box] looks like this:
+@myexamples[
+(def fn box-bind (box fn)
+  (fn (box 'val)))
+ ]
+The final function is @italic{guard}, which is not especially useful on its own, but enables us
+to implement a filter effect inside @racket[monad-do]. This function takes a boolean value,
+the result of some test, and returns either an instance of our type with empty contents, or
+nothing. For @racket[Box], it looks like this.
+@myexamples[
+(def fn box-guard (test)
+  (if test then (box-return Null) else Null))
+ ]
+Now, we can provide those functions to @racket[monad-do] ourselves, or for convenience, we can
+define a macro that wraps @racket[monad-do] without new operators pre-defined. It is necessary
+to use @racket[def macroset] here, due to the peculiarities of the underlying Racket macro
+system.
+@myexamples[
+(def macroset box-do
+  [(_ e ...)
+   (monad-do (box-bind box-return box-guard) e ...)])
+ ]
+
+Together, these three functions actually form an implementation of the Identity monad, which is
+documented later, but by combining these and providing them to @racket[monad-do], we can perform
+already perform basic imperative-like operations in our otherwise functional language of Heresy,
+and all without any mutability involved! Behold:
+@myexamples[
+(describe Box (val Null))
+(def fn box-return (val)
+  (Box (list val)))
+(def fn box-bind (box fn)
+  (fn (box 'val)))
+(def fn box-guard (test)
+  (if test then (box-return Null) else Null))
+(def macroset box-do
+  [(_ e ...)
+   (monad-do (box-bind box-return box-guard) e ...)])
+(box-do
+ (a <- (box-return 5))
+ (b = (* a 5))
+ (print b)
+ (yield a))
+ ]
+
+@defform/subs[#:literals (<- = if yield)
+              (monad-do (bind return guard) exprs ... final-expr)
+              [(exprs (name <- val)
+                      (name = val)
+                      (if test)
+                      (expr ...))
+               (final-expr (yield val)
+                           (return-expr ...))]]{
+The main implementation for do notation. The opening clause is a list of the three necessary
+operators for a given type to implement monadic operations, which should be implemented
+as follows:
+
+@itemlist[@item{@racket[bind]: A function which takes two arguments: an instance of the type,
+                and a function. @racket[bind] applies the function to the type and returns the
+                result.}
+          @item{@racket[return]: A function which takes a value, and wraps it in the type.}
+          @item{@racket[guard]: A function which takes a boolean, and on true returns an
+                instance of the type, and on false returns the empty instance or Null.}]
+
+The rest of the body of the form is composed of various operations, which bind, guard, or return
+values, described as follows. The last line of the do notation is special, in a sense, as it must
+consist of either @racket[yield] or a bare expression.
+
+}
