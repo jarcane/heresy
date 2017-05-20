@@ -149,11 +149,12 @@ the appropriate location matched in the @racket[template]. The elipsis
 @racket[...] can be used in a pattern to indicate repeatable values.
 }
 
-@defform[#:link-target? #f #:literals (macroset)
-         (def macroset name [(name pattern ...) template] ...)]{
-Similar to @racket[def macro], except that multiple matching patterns can be defined
-allowing for macros with variable syntax. Like @racket[def macro], the @racket[...] 
-symbol can be used to indicate repeating values.
+@defform*[#:link-target? #f #:literals (macroset)
+          ((def macroset name [(name pattern ...) template] ...)
+           (def macroset name (literal ...) [(name pattern ...) template] ...))]{
+ Similar to @racket[def macro], except that multiple matching patterns can be defined
+ allowing for macros with variable syntax. Like @racket[def macro], the @racket[...] 
+ symbol can be used to indicate repeating values.
 } 
 
 @defform[(let ((name value) ...) body ...+)]{
@@ -585,6 +586,10 @@ Returns a new list, combining the matching pairs of each list with @racket[fun].
 Excess length of either list is dropped.
 }
 
+@defproc[(flatten [lst list?]) list?]{
+Traverses a list, and flattens any nested lists into a single one-dimensional list.
+}
+
 @subsection[#:tag "strings"]{Strings}
 
 @defproc[(=$ [x string?] [y string?]) boolean?]{
@@ -888,15 +893,17 @@ internal methods of all Things, and its internal hash value.
 }
 
 @defproc[(is-a? [Type thing?] [Thing thing?]) boolean?]{
-Returns @racket[True] if @racket[Thing] "looks like" an instance of @racket[Type]. This
-will return @racket[True] if @racket[Type] and @racket[Thing] are @racket[thing=?],
-or finally, by comparing the fields of @racket[Type] and @racket[Thing]. Thus, two Things
-that define identical fields will appear to be instances of each other. 
+Returns @racket[True] if @racket[Thing] is an instance of @racket[Type]. This
+will return @racket[True] if @racket[Thing] is the same kind as @racket[Type], or
+if @racket[Thing] is derived from @racket[Type], as by @racket[extends]. This is done by
+comparing the internal @racket['__ident] field of @racket[Type] to both the @racket['__ident]
+and @racket['__parents] fields of @racket[Thing].
 }
 
 @defproc[(thing=? [thing1 thing?] [thing2 thing?]) boolean]{
 Returns @racket[True] if @racket[thing1] and @racket[thing2]'s fields are @racket[equal?]
-to each other, according to the internal hash values generated from their fields. 
+to each other, according to the internal hash values generated from their fields, after first
+checking that both things are the same type according to @racket[is-a?].
 }
 
 @defform[(Self ....)]{
@@ -967,6 +974,10 @@ This function evaluates @racket[fn2] with its arguments, and then applies
   (def abs-sub (compose abs -))
   (abs-sub 4 5)
 ]}
+
+@defproc[(identity [v any?]) any?]{
+Returns @racket[v].
+}
 
 @subsection[#:tag "pipes"]{Pipe/Threading Operators}
 
@@ -1051,4 +1062,64 @@ value of @racket[hol], followed by @racket[args], ie. @racket[(apply f curr-val 
 @defform[(reset-thing [hol hole?] (field value) ...)]{
 Resets the fields of a Thing contained in @racket[hol] to the values provided, and returns
 the hole.
+}
+
+@subsection[#:tag "maybe"]{Maybe}
+
+Maybe is an "option type", similar to that found in languages like Scala, Haskell, and Rust. It
+allows for safe return from a function that might not return a result, without relying on @racket[Null].
+A Maybe can be either a Some containing a value, or the empty thing None. Maybe is implemented
+as a heirarchy of things, and the usual thing functions and behaviors apply to them, but a number
+of helper functions have also been provided for easier use with them.
+
+@defthing[Maybe thing? #:value (thing)]{
+The parent object of the Maybe family. 
+}
+
+@defthing[Some maybe? #:value (thing extends Maybe (contains Null))]{
+The thing for a Maybe containing a value. Child of @racket[Maybe].
+}
+
+@defthing[None maybe? #:value (thing extends Maybe)]{
+The empty value, for a Maybe that contains no value. 
+}
+
+@defproc[(some [v any?]) is-some?]{
+Returns @racket[v] wrapped in @racket[Some].
+}
+
+@defproc[(is-some? [opt any?]) boolean?]{
+Returns @racket[True] if @racket[opt] is @racket[Some].
+}
+
+@defproc[(is-none? [opt any?]) boolean?]{
+Returns @racket[True] if @racket[opt] is @racket[None].
+}
+
+@defproc[(maybe? [opt any?]) boolean?]{
+Returns @racket[True] if @racket[opt] is a @racket[Maybe].
+}
+
+@defproc[(maybe-bind [opt maybe?] [fn fn?]) (or is-none? any?)]{
+The bind operator for @racket[Maybe]. Returns @racket[None] if @racket[opt] is @racket[None],
+or if it is @racket[Some], returns the result of @racket[fn] applied to the value field of
+@racket[Some].
+}
+
+@defproc[(get-some [opt maybe?]) (or is-none? any?)]{
+If @racket[opt] is @racket[Some], returns the value it contains, or else @racket[None].
+}
+
+@defproc[(maybe-map [fn fn?] [opt maybe?]) maybe?]{
+Returns the result of @racket[fn] applied to the value contained in @racket[opt].
+}
+
+@defproc[(maybe-filter [pred? fn?] [opt maybe?]) maybe?]{
+If @racket[pred?] is true for the value contained in @racket[opt], returns @racket[opt],
+ else returns @racket[None].
+}
+
+@defproc[(maybe-guard [test boolean?]) maybe?]{
+The monad guard operator for maybe. If @racket[test] is true, returns @racket[(some Null)],
+else returns @racket[None].
 }
