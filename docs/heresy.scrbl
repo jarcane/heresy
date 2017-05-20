@@ -149,11 +149,12 @@ the appropriate location matched in the @racket[template]. The elipsis
 @racket[...] can be used in a pattern to indicate repeatable values.
 }
 
-@defform[#:link-target? #f #:literals (macroset)
-         (def macroset name [(name pattern ...) template] ...)]{
-Similar to @racket[def macro], except that multiple matching patterns can be defined
-allowing for macros with variable syntax. Like @racket[def macro], the @racket[...] 
-symbol can be used to indicate repeating values.
+@defform*[#:link-target? #f #:literals (macroset)
+          ((def macroset name [(name pattern ...) template] ...)
+           (def macroset name (literal ...) [(name pattern ...) template] ...))]{
+ Similar to @racket[def macro], except that multiple matching patterns can be defined
+ allowing for macros with variable syntax. Like @racket[def macro], the @racket[...] 
+ symbol can be used to indicate repeating values.
 } 
 
 @defform[(let ((name value) ...) body ...+)]{
@@ -267,7 +268,8 @@ Returns True if @racket[v] is a list.
 }
 
 @defproc[(null? [v any]) boolean?]{
-Returns True if @racket[v] is @racket[Null], where Null is defined as the empty list @racket['()].
+Returns True if @racket[v] is @racket[Null], where Null is defined as the empty list
+@racket['()].
 }
 
 @defproc[(number? [v any]) boolean?]{
@@ -584,6 +586,10 @@ Returns a new list, combining the matching pairs of each list with @racket[fun].
 Excess length of either list is dropped.
 }
 
+@defproc[(flatten [lst list?]) list?]{
+Traverses a list, and flattens any nested lists into a single one-dimensional list.
+}
+
 @subsection[#:tag "strings"]{Strings}
 
 @defproc[(=$ [x string?] [y string?]) boolean?]{
@@ -653,13 +659,15 @@ Returns a list of string sections split at the given delimiters. If
 }
 
 @defproc[(format$ [template string?] [value any?] ...) string?]{
-Given a string template, returns a new string with instances of glyph @racket["#_"] replaced in order, starting with the first value given following the string.
+Given a string template, returns a new string with instances of glyph @racket["#_"] replaced
+in order, starting with the first value given following the string.
 }
 
 @subsection[#:tag "math"]{Math}
 
 @defproc[(+ [x number?] ...) number?]{
-Adds the given numbers left to right and returns the result. If only one argument is given, returns the argument. If no arguments are provided, returns 0.
+Adds the given numbers left to right and returns the result. If only one argument is given,
+returns the argument. If no arguments are provided, returns 0.
 }
 
 @defproc*[([(- [x number?] [y nuber?] ...+) number?]
@@ -764,7 +772,8 @@ guarantees are offered as to its cryptographic security.
 
 @defproc[(randomize [seed any/c timer]) fn?]{
 Returns a new generator function initialized with @racket[seed], which is first
-passed through @racket[equal-hash-code]. If no @racket[seed] is provided, defaults to @racket[timer].
+passed through @racket[equal-hash-code]. If no @racket[seed] is provided, defaults
+to @racket[timer].
 }
 
 @defproc[(rnd) number?]{
@@ -884,15 +893,17 @@ internal methods of all Things, and its internal hash value.
 }
 
 @defproc[(is-a? [Type thing?] [Thing thing?]) boolean?]{
-Returns @racket[True] if @racket[Thing] "looks like" an instance of @racket[Type]. This
-will return @racket[True] if @racket[Type] and @racket[Thing] are @racket[thing=?],
-or finally, by comparing the fields of @racket[Type] and @racket[Thing]. Thus, two Things
-that define identical fields will appear to be instances of each other. 
+Returns @racket[True] if @racket[Thing] is an instance of @racket[Type]. This
+will return @racket[True] if @racket[Thing] is the same kind as @racket[Type], or
+if @racket[Thing] is derived from @racket[Type], as by @racket[extends]. This is done by
+comparing the internal @racket['__ident] field of @racket[Type] to both the @racket['__ident]
+and @racket['__parents] fields of @racket[Thing].
 }
 
 @defproc[(thing=? [thing1 thing?] [thing2 thing?]) boolean]{
 Returns @racket[True] if @racket[thing1] and @racket[thing2]'s fields are @racket[equal?]
-to each other, according to the internal hash values generated from their fields. 
+to each other, according to the internal hash values generated from their fields, after first
+checking that both things are the same type according to @racket[is-a?].
 }
 
 @defform[(Self ....)]{
@@ -964,6 +975,10 @@ This function evaluates @racket[fn2] with its arguments, and then applies
   (abs-sub 4 5)
 ]}
 
+@defproc[(identity [v any?]) any?]{
+Returns @racket[v].
+}
+
 @subsection[#:tag "pipes"]{Pipe/Threading Operators}
 
 @defproc[(:> [initial-value any] [fns fn?] ...) any]{
@@ -1009,59 +1024,6 @@ The last-argument (as in @racket[l>]) version of @racket[->].
 ]
 }
 
-@subsection[#:tag "state"]{State Notation}
-
-Heresy by design contains no mutable values. Variables once set cannot be reset or altered,
-only shadowed by local scope. The following operators however provide a notation for performing
-functions with a limited local state that is mutable using a set of special operators.
-@myexamples[
-(do> (:= x 5)
-     (:= y 4)
-     (:= (x y) z (+ x y))
-     (:_ (x y) print (format$ "#_ + #_ = " x y))
-     (return z))
-]
-
-@defthing[State Thing]{
-The empty State object. Used to store and retrieve values, essentially acting as a namespace for
-@racket[do>].
-}
-
-@defform[(do> (form ...) ...)]{
-Beginning with a fresh State object, passes that State object through the subsequent forms, then
-returns it, unless @racket[return] is called in the final position with a specific value from the state.
-Equivalent to @racket[(:> State ...)].
-}
-
-@defform*[[(:= name value)
-		  (:= (vars ...) name value)]]{
-The bind operator. Expands to a function that takes the current State and binds a value to @racket[name] 
-in the current State object. If the @racket[(vars ...)] form is provided, the listed vars are lifted from the local state and bound for use in the value clause.
-@myexamples[
-(do> (:= a 3)
-     (:= (a) b (+ a 3))
-     (return b))
-]
-}
-
-@defform*[[(:_ fun args* ...)
-		  (:_ (vars ...) fun args ...)]]{
-The pass operator. Expands to a function that takes the current State, executes @racket[fun] and ignores
-its result, then returns State unchanged. If the @racket[vars] clause is provided with names, those names
-are available for use in @racket[fun]'s arguments.
-@myexamples[
-(do> (:= x 4)
-     (:_ (x) print x)
-     (return x))
-]
-}
-
-@defform[(return var)]{
-The return operator. Expands to a function that takes the present State, and returns the value associated
-with @racket[var]. Note that use of this will thus terminate State, so it is best used as the final form
-in a @racket[do>] block.
-}
-
 @subsection[#:tag "holes"]{Holes}
 
 Holes are an experimental data structure inspired by Clojure's atoms. Their purpose is to
@@ -1101,3 +1063,228 @@ value of @racket[hol], followed by @racket[args], ie. @racket[(apply f curr-val 
 Resets the fields of a Thing contained in @racket[hol] to the values provided, and returns
 the hole.
 }
+
+@subsection[#:tag "maybe"]{Maybe}
+
+Maybe is an "option type", similar to that found in languages like Scala, Haskell, and Rust. It
+allows for safe return from a function that might not return a result, without relying on @racket[Null].
+A Maybe can be either a Some containing a value, or the empty thing None. Maybe is implemented
+as a heirarchy of things, and the usual thing functions and behaviors apply to them, but a number
+of helper functions have also been provided for easier use with them.
+
+@defthing[Maybe thing? #:value (thing)]{
+The parent object of the Maybe family. 
+}
+
+@defthing[Some maybe? #:value (thing extends Maybe (contains Null))]{
+The thing for a Maybe containing a value. Child of @racket[Maybe].
+}
+
+@defthing[None maybe? #:value (thing extends Maybe)]{
+The empty value, for a Maybe that contains no value. 
+}
+
+@defproc[(some [v any?]) is-some?]{
+Returns @racket[v] wrapped in @racket[Some].
+}
+
+@defproc[(is-some? [opt any?]) boolean?]{
+Returns @racket[True] if @racket[opt] is @racket[Some].
+}
+
+@defproc[(is-none? [opt any?]) boolean?]{
+Returns @racket[True] if @racket[opt] is @racket[None].
+}
+
+@defproc[(maybe? [opt any?]) boolean?]{
+Returns @racket[True] if @racket[opt] is a @racket[Maybe].
+}
+
+@defproc[(maybe-bind [opt maybe?] [fn fn?]) (or is-none? any?)]{
+The bind operator for @racket[Maybe]. Returns @racket[None] if @racket[opt] is @racket[None],
+or if it is @racket[Some], returns the result of @racket[fn] applied to the value field of
+@racket[Some].
+}
+
+@defproc[(get-some [opt maybe?]) (or is-none? any?)]{
+If @racket[opt] is @racket[Some], returns the value it contains, or else @racket[None].
+}
+
+@defproc[(maybe-map [fn fn?] [opt maybe?]) maybe?]{
+Returns the result of @racket[fn] applied to the value contained in @racket[opt].
+}
+
+@defproc[(maybe-filter [pred? fn?] [opt maybe?]) maybe?]{
+If @racket[pred?] is true for the value contained in @racket[opt], returns @racket[opt],
+ else returns @racket[None].
+}
+
+@defproc[(maybe-guard [test boolean?]) maybe?]{
+The monad guard operator for maybe. If @racket[test] is true, returns @racket[(some Null)],
+else returns @racket[None].
+}
+
+@subsection[#:tag "monad-do"]{Monads and Do Notation}
+
+@racket[monad-do] provides a generic, specializable DSL for handling monadic values, inspired by
+Haskell's do notation and Scala's for comprehensions. @racket[monad-do] itself is generic,
+expecting the provision of functions for the bind (@racket[>>=]), return, and guard operators, but
+individual types can easily layer over this with a simple macro to provide a specialized version
+of the DSL for a particular data type.
+
+@defform/subs[#:literals (<- = if yield)
+              (monad-do (bind return guard) exprs ... final-expr)
+              [(exprs (name <- val)
+                      (name = val)
+                      (if test)
+                      (expr ...))
+               (final-expr (yield val ...)
+                           (return-expr ...))]]{
+The main implementation for do notation. The opening clause is a list of the three necessary
+operators for a given type to implement monadic operations, which should be implemented
+as follows:
+
+@itemlist[@item{@racket[bind]: A function which takes two arguments: an instance of the type,
+                and a function. @racket[bind] returns the result of applying the function
+                to the value of the instance.}
+          @item{@racket[return]: A function which takes a value, and wraps it in an instance of
+                the type.}
+          @item{@racket[guard]: A function which takes a boolean, and on true returns an
+                instance of the type, and on false returns the empty instance or Null.}]
+
+The rest of the body of the form is composed of various operations, which bind, guard, or return
+values, described as follows. The last line of the do notation is special, in a sense, as it must
+consist of either @racket[yield] or a bare expression.
+
+@specsubform[(name <- val)]{
+ Binds @racket[val] to @racket[name]. @racket[val] must be an instance of the type over which
+ the do form operates.
+ }
+
+@specsubform[(name = val)]{
+ Wraps @racket[val] in the current type, and binds it to @racket[name].
+ }
+
+@specsubform[(if test)]{
+ Filters the ongoing expression according to test. 
+ }
+
+@specsubform[(yield val ...)]{
+ When used as the last line of a do form, returns the given @racket[val](s) wrapped in the type
+ of the ongoing do form.
+ }
+
+@specsubform[(expr ...)]{
+ When used in the body of a do form, the @racket[expr] is evaluated but its return value ignored.
+ If the last line of the do form is a bare expression, then the form will return the result of the
+ expression.
+ }
+}
+
+@defform[(maybe-do expr ...)]{
+A specialization of @racket[monad-do] for @racket[Maybe]. This is useful for chaining operations
+that return @racket[Maybe], as the monad for @racket[Maybe] short-circuits. If one operation
+in the chain is a @racket[None], then the result of a @racket[yield] will be none.
+
+@myexamples[
+ (is-none? (maybe-do
+            (a <- (some 5))
+            (b <- None)
+            (c = (+ a b))
+            (yield c)))
+ ]
+}
+
+@defform[(list-do expr ...)]{
+A specialization of @racket[monad-do] for lists. @racket[list-do] flatmaps over it's operations
+forming a single-dimensional list from its calculations. This essentially enables list
+comprehensions.
+
+@myexamples[
+(list-do
+ (rank <- (append (range 2 to 10) '(J Q K A)))
+ (suit <- '(♠ ♣ ♥ ♦))
+ (if (equal? suit '♦))
+ (card = (format$ "#_#_" rank suit))
+ (yield card))
+ ]
+}
+
+@defform[(id-do expr ...)]{
+The Identity monad as a specialization of @racket[monad-do]. This essentially replaces the
+functionality of the old "monadish" DSL from Heresy 0.1.0 and earlier. Mostly this is useful
+as an example, but can be used for chaining together operations and mock-mutable behavior.
+
+@myexamples[
+(id-do
+ (x = 5)
+ (y = 4)
+ (z = (+ x y))
+ (print (format$ "#_ + #_ = #_" x y z)))
+ ]
+}
+
+@subsubsection[#:tag "implementing-monad"]{Implementing a monad}
+
+A "monad" is a data type which can contain a value, and a set of operator functions which
+operate on that type while obeying certain rules. You can think of them as a kind of container,
+and the components of an assembly line that processes the container and its contents.
+
+Let's say that we have a Thing called @racket[Box], defined thusly:
+@myexamples[
+(describe Box (val Null))
+]
+We then define a set of three functions, that work with @racket[Box]. The first, is
+@italic{return}, which is a constructor function that wraps a value in our type:
+@myexamples[
+(def fn box-return (val)
+  (Box (list val)))
+ ]
+The next function is @italic{bind}, known in some languages as the operator @racket[>>=]. This
+takes an instance of our type, and a function, and applies the function to the value inside
+our type. The definition of @italic{bind} for @racket[Box] looks like this:
+@myexamples[
+(def fn box-bind (box fn)
+  (fn (box 'val)))
+ ]
+The final function is @italic{guard}, which is not especially useful on its own, but enables us
+to implement a filter effect inside @racket[monad-do]. This function takes a boolean value,
+the result of some test, and returns either an instance of our type with empty contents, or
+nothing. For @racket[Box], it looks like this.
+@myexamples[
+(def fn box-guard (test)
+  (if test then (box-return Null) else Null))
+ ]
+Now, we can provide those functions to @racket[monad-do] ourselves, or for convenience, we can
+define a macro that wraps @racket[monad-do] without new operators pre-defined. It is necessary
+to use @racket[def macroset] here, due to the peculiarities of the underlying Racket macro
+system.
+@myexamples[
+(def macroset box-do
+  [(_ e ...)
+   (monad-do (box-bind box-return box-guard) e ...)])
+ ]
+
+Together, these three functions actually form an implementation of the Identity monad, and
+by combining these and providing them to @racket[monad-do], we can 
+already perform imperative-like operations in our otherwise functional language of Heresy,
+and all without any mutability involved! Behold:
+@myexamples[
+(do
+  (describe Box (val Null))
+  (def fn box-return (val)
+    (Box (list val)))
+  (def fn box-bind (box fn)
+    (fn (box 'val)))
+  (def fn box-guard (test)
+    (if test then (box-return Null) else Null))
+  (def macroset box-do
+    [(_ e ...)
+     (monad-do (box-bind box-return box-guard) e ...)]))
+(box-do
+ (a <- (box-return 5))
+ (print a)
+ (a <- (box-return 10))
+ (b = (* a 5))
+ (print b))
+ ]

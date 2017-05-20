@@ -1,6 +1,7 @@
 #lang s-exp "../private/base.rkt"
 
 (require "math.rkt")
+(require "monadology.rkt")
 (provide (all-defined-out))
 
 ; (map *fun* *lst*)
@@ -141,3 +142,28 @@
                (zipwith fun 
                         (tail lst1)
                         (tail lst2))))))
+
+; (flatten *lst*)
+; Given a list of lists, flattens all nested lists into a single list
+(def fn flatten (lst)
+  (select
+    ((null? lst) Null)
+    ((list? lst)
+     (append (flatten (head lst)) (flatten (tail lst))))
+    (else (list lst))))
+
+; (list-bind lst fn)
+; The monadic (>>=) bind operator for lists
+(def fn list-bind (lst fn)
+  (flatten (map fn lst)))
+
+; (list-guard test)
+; The guard function for lists. Used by list-do
+(def fn list-guard (test)
+  (if test then (list Null) else Null))
+
+; (list-do ...)
+; The do notation DSL for lists.
+(def macroset list-do 
+  ((_ e ...)
+   (monad-do (list-bind list list-guard) e ...)))

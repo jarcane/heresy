@@ -1,6 +1,7 @@
 #lang s-exp "../private/base.rkt"
 
 (import "things.rkt")
+(import "monadology.rkt")
 (import rkt racket)
 (import rkt racket/async-channel)
 (provide (all-defined-out))
@@ -41,7 +42,9 @@
                                                   (fn (e)
                                                     (rkt:async-channel-put chan e)
                                                     (carry cry))))
-                                                (def result (apply (signal 'update-fn) cry (signal 'args)))
+                                                (def result (apply (signal 'update-fn)
+                                                                   cry
+                                                                   (signal 'args)))
                                                 (rkt:async-channel-put chan result)
                                                 (carry result)))
                    (else (carry cry)))))))

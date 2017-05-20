@@ -1,6 +1,0 @@
-#lang heresy
-
-(do> (:= x 5)
-     (:= (x) x (* x x))
-     (:_ (x) print x)
-     (return x))

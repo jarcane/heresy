@@ -10,3 +10,10 @@
 ((deref foo))
 (reset-thing foo (foo 2))
 ((deref foo))
+
+(hole-do
+ (a <- (hole 1))
+ (b <- (hole 2))
+ (z = (+ a b))
+ (print z)
+ (yield z))

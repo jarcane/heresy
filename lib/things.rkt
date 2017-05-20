@@ -71,7 +71,9 @@
           ...
           (field:id value:expr) ...)
    #'(let* ([super super-thing]
-            [super-λlst (super λlst-sym)])
+            [super-λlst (super λlst-sym)]
+            [super-parents (super '__parents)]
+            [super-ident (super '__ident)])
        (make-thing (alist-merge
                     super-λlst
                     `([field
@@ -83,12 +85,13 @@
                                    (def super-id1 ((alist-ref super-λlst 'super-id2) ths)) ...
                                    value))])
                           field)]
-                      ...))))])
+                      ...))
+                   (join super-ident super-parents)))])
 
 (def λlst-sym (gensym 'λlst))
 (struct exn:bad-thing-ref exn:fail ())
 
-(def fn make-thing (λlst)
+(def fn make-thing (λlst [parents Null] [ident (gensym 'thing)])
   (let ()
     (def this
       (fn args*
@@ -98,7 +101,9 @@
           (select
            [(null? args*) alst]
            [(eq? 'fields (head args*)) fields]
-           [(eq? 'hash (head args*)) hash]
+           [(eq? '__hash (head args*)) hash]
+           [(eq? '__ident (head args*)) ident]
+           [(eq? '__parents (head args*)) parents]
            [(eq? λlst-sym (head args*)) λlst]
            [(and (symbol? (head args*))
                  (assoc (head args*) alst)) (alist-ref alst (head args*))]
@@ -107,7 +112,7 @@
                         [pat (head args*)]
                         [c 1])
               (select
-               [(null? pat) (make-thing λl)]
+               [(null? pat) (make-thing λl parents ident)]
                [(eq? (head pat) '*) (recur λl (tail pat) (+ 1 c))]
                [else
                 (let ([hd (head pat)])
@@ -143,18 +148,21 @@
        (with-handlers ((exn:bad-thing-ref? (fn (e) False)))
          (and (list? (v))
               (list? (v 'fields))
-              (v 'hash)
+              (v '__hash)
               (fn? (v '()))))))
 
 (def fn is-a? (Type Thing)
-  (and (thing? Thing)
-       (or (thing=? Type Thing)
-           (equal? (Type 'fields)
-                   (Thing 'fields)))))
+  (and (thing? Type)
+       (thing? Thing)
+       (or (equal? (Type '__ident)
+                   (Thing '__ident))
+           (number? (inlst (Type '__ident)
+                              (Thing '__parents))))))
 
 (def fn thing=? (thing1 thing2)
-  (equal? (thing1 'hash)
-          (thing2 'hash)))
+  (and (is-a? thing1 thing2)
+       (equal? (thing1 '__hash)
+               (thing2 '__hash))))
 
 ;; alist-merge
 (def alist-merge
