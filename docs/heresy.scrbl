@@ -1124,7 +1124,7 @@ The monad guard operator for maybe. If @racket[test] is true, returns @racket[(s
 else returns @racket[None].
 }
 
-@subsection[#:tag "monad-do"]{Do Notation}
+@subsection[#:tag "monad-do"]{Monads and Do Notation}
 
 @racket[monad-do] provides a generic, specializable DSL for handling monadic values, inspired by
 Haskell's do notation and Scala's for comprehensions. @racket[monad-do] itself is generic,
@@ -1132,12 +1132,106 @@ expecting the provision of functions for the bind (@racket[>>=]), return, and gu
 individual types can easily layer over this with a simple macro to provide a specialized version
 of the DSL for a particular data type.
 
+@defform/subs[#:literals (<- = if yield)
+              (monad-do (bind return guard) exprs ... final-expr)
+              [(exprs (name <- val)
+                      (name = val)
+                      (if test)
+                      (expr ...))
+               (final-expr (yield val ...)
+                           (return-expr ...))]]{
+The main implementation for do notation. The opening clause is a list of the three necessary
+operators for a given type to implement monadic operations, which should be implemented
+as follows:
+
+@itemlist[@item{@racket[bind]: A function which takes two arguments: an instance of the type,
+                and a function. @racket[bind] returns the result of applying the function
+                to the value of the instance.}
+          @item{@racket[return]: A function which takes a value, and wraps it in an instance of
+                the type.}
+          @item{@racket[guard]: A function which takes a boolean, and on true returns an
+                instance of the type, and on false returns the empty instance or Null.}]
+
+The rest of the body of the form is composed of various operations, which bind, guard, or return
+values, described as follows. The last line of the do notation is special, in a sense, as it must
+consist of either @racket[yield] or a bare expression.
+
+@specsubform[(name <- val)]{
+ Binds @racket[val] to @racket[name]. @racket[val] must be an instance of the type over which
+ the do form operates.
+ }
+
+@specsubform[(name = val)]{
+ Wraps @racket[val] in the current type, and binds it to @racket[name].
+ }
+
+@specsubform[(if test)]{
+ Filters the ongoing expression according to test. 
+ }
+
+@specsubform[(yield val ...)]{
+ When used as the last line of a do form, returns the given @racket[val](s) wrapped in the type
+ of the ongoing do form.
+ }
+
+@specsubform[(expr ...)]{
+ When used in the body of a do form, the @racket[expr] is evaluated but its return value ignored.
+ If the last line of the do form is a bare expression, then the form will return the result of the
+ expression.
+ }
+}
+
+@defform[(maybe-do expr ...)]{
+A specialization of @racket[monad-do] for @racket[Maybe]. This is useful for chaining operations
+that return @racket[Maybe], as the monad for @racket[Maybe] short-circuits. If one operation
+in the chain is a @racket[None], then the result of a @racket[yield] will be none.
+
+@myexamples[
+ (is-none? (maybe-do
+            (a <- (some 5))
+            (b <- None)
+            (c = (+ a b))
+            (yield c)))
+ ]
+}
+
+@defform[(list-do expr ...)]{
+A specialization of @racket[monad-do] for lists. @racket[list-do] flatmaps over it's operations
+forming a single-dimensional list from its calculations. This essentially enables list
+comprehensions.
+
+@myexamples[
+(list-do
+ (rank <- (append (range 2 to 10) '(J Q K A)))
+ (suit <- '(♠ ♣ ♥ ♦))
+ (if (equal? suit '♦))
+ (card = (format$ "#_#_" rank suit))
+ (yield card))
+ ]
+}
+
+@defform[(id-do expr ...)]{
+The Identity monad as a specialization of @racket[monad-do]. This essentially replaces the
+functionality of the old "monadish" DSL from Heresy 0.1.0 and earlier. Mostly this is useful
+as an example, but can be used for chaining together operations and mock-mutable behavior.
+
+@myexamples[
+(id-do
+ (x = 5)
+ (y = 4)
+ (z = (+ x y))
+ (print (format$ "#_ + #_ = #_" x y z)))
+ ]
+}
+
+@subsubsection[#:tag "implementing-monad"]{Implementing a monad}
+
 A "monad" is a data type which can contain a value, and a set of operator functions which
-operate on that type while obeying certain rules. Y0ou can think of them as a kind of container,
+operate on that type while obeying certain rules. You can think of them as a kind of container,
 and the components of an assembly line that processes the container and its contents.
 
 Let's say that we have a Thing called @racket[Box], defined thusly:
-@myexamples[#:label #f
+@myexamples[
 (describe Box (val Null))
 ]
 We then define a set of three functions, that work with @racket[Box]. The first, is
@@ -1171,49 +1265,26 @@ system.
    (monad-do (box-bind box-return box-guard) e ...)])
  ]
 
-Together, these three functions actually form an implementation of the Identity monad, which is
-documented later, but by combining these and providing them to @racket[monad-do], we can perform
-already perform basic imperative-like operations in our otherwise functional language of Heresy,
+Together, these three functions actually form an implementation of the Identity monad, and
+by combining these and providing them to @racket[monad-do], we can 
+already perform imperative-like operations in our otherwise functional language of Heresy,
 and all without any mutability involved! Behold:
 @myexamples[
-(describe Box (val Null))
-(def fn box-return (val)
-  (Box (list val)))
-(def fn box-bind (box fn)
-  (fn (box 'val)))
-(def fn box-guard (test)
-  (if test then (box-return Null) else Null))
-(def macroset box-do
-  [(_ e ...)
-   (monad-do (box-bind box-return box-guard) e ...)])
+(do
+  (describe Box (val Null))
+  (def fn box-return (val)
+    (Box (list val)))
+  (def fn box-bind (box fn)
+    (fn (box 'val)))
+  (def fn box-guard (test)
+    (if test then (box-return Null) else Null))
+  (def macroset box-do
+    [(_ e ...)
+     (monad-do (box-bind box-return box-guard) e ...)]))
 (box-do
  (a <- (box-return 5))
+ (print a)
+ (a <- (box-return 10))
  (b = (* a 5))
- (print b)
- (yield a))
+ (print b))
  ]
-
-@defform/subs[#:literals (<- = if yield)
-              (monad-do (bind return guard) exprs ... final-expr)
-              [(exprs (name <- val)
-                      (name = val)
-                      (if test)
-                      (expr ...))
-               (final-expr (yield val)
-                           (return-expr ...))]]{
-The main implementation for do notation. The opening clause is a list of the three necessary
-operators for a given type to implement monadic operations, which should be implemented
-as follows:
-
-@itemlist[@item{@racket[bind]: A function which takes two arguments: an instance of the type,
-                and a function. @racket[bind] applies the function to the type and returns the
-                result.}
-          @item{@racket[return]: A function which takes a value, and wraps it in the type.}
-          @item{@racket[guard]: A function which takes a boolean, and on true returns an
-                instance of the type, and on false returns the empty instance or Null.}]
-
-The rest of the body of the form is composed of various operations, which bind, guard, or return
-values, described as follows. The last line of the do notation is special, in a sense, as it must
-consist of either @racket[yield] or a bare expression.
-
-}
