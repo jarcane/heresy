@@ -4,3 +4,7 @@ doc/
 private/hello.txt
 *.lyx#
 *~
+
+docs/*.html
+docs/*.js
+docs/*.css
