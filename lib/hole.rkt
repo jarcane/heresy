@@ -90,14 +90,3 @@
 (def macro reset-thing (hol (field val) ...)
   (update hol (fn (t)
                 (thing extends t (field val) ...))))
-
-; (hole-guard test)
-; The guard implementation for holes
-(def fn hole-guard (test)
-  (if test then (hole Null) else Null))
-
-; (hole-do ...)
-; The do notation for holes
-(def macroset hole-do
-  ((_ e ...)
-   (monad-do (update hole hole-guard) e ...)))
