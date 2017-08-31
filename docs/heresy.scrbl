@@ -822,8 +822,8 @@ overridden).  If the @racket[inherit] option is provided with it, then the
 		   (thing (field value) ...)
            (thing extends super-thing (field value) ...)
            (thing extends super-thing inherit (id ...) (field value) ...)]]{
-Just like @racket[fn] produces an anonamous function, @racket[thing] produces an
-anonamous Thing.
+Just like @racket[fn] produces an anonymous function, @racket[thing] produces an
+anonymous Thing.
 }
 
 If there is a Thing defined as @defidentifier[#'Name]:
