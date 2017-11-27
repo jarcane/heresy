@@ -266,6 +266,11 @@
   (with-output-to-string
    (thunk (display n))))
 
+; (chr$ *num*)
+; Converts an integer into a single-character string
+(define (chr$ n)
+  (str$ (integer->char (int n))))
+
 ;; Math
 
 ; ^

@@ -608,6 +608,11 @@ Returns a list of one-character strings from the given string.
 Converts a value @racket[n] to a string.
 }
 
+@defproc[(chr$ [n number?]) string?]{
+Converts a given number @racket[n] to single-character string. If the number is not an 
+integer it will first be coerced to one with @racket[int].
+}
+
 @defproc[(empty$? [str string?]) boolean?]{
 Returns True if the string is empty (@racket[""]).
 }
