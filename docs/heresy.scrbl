@@ -1031,17 +1031,10 @@ The last-argument (as in @racket[l>]) version of @racket[->].
 
 @subsection[#:tag "holes"]{Holes}
 
-Holes are an experimental data structure inspired by Clojure's atoms. Their purpose is to
-provide an in-memory data store that is treated as a first-class value, which thus can be bound
-to a value or passed to functions. They can also be useful for providing a source of shared
-program state.
-
-Each hole is a Thing containing two values: a thread containing a loop closure that holds a
-value, and an asynchronous channel for communicating with that thread. Operations are provided
-for setting and updating the value of the hole, as well as referencing it.
-
-Holes are an experimental feature of Heresy, and best used both carefully, and sparingly, as any
-mutable, concurrent system.
+Holes are a simple mutable data structure based on Racket boxes, with an API inspired by
+Clojure's atoms. Their purpose is to provide an in-memory data store that is treated as a
+first-class value, which thus can be bound to a value or passed to functions. They can also
+be useful for providing a source of shared program state.
 
 @defproc[(hole [v any?]) hole?]{
 Creates a hole containing @racket[v].
