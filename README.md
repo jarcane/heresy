@@ -1,5 +1,6 @@
-Heresy
+Heresy 
 ======
+[![Build Status](https://travis-ci.org/jarcane/heresy.svg?branch=master)](https://travis-ci.org/jarcane/heresy)
 
 Heresy is a BASIC-inspired functional dialect of Lisp, currently implemented as a Racket language.
 
