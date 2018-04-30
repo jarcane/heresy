@@ -15,7 +15,7 @@
 
 @title[#:style '(toc)]{The Heresy Programming Language}
 
-@author{John S. Berry III}
+@author{Annaia Berry}
 
 source code: @url["https://github.com/jarcane/heresy"]
 
@@ -28,10 +28,10 @@ experiment with and learn how to program functionally. This document will detail
 the general philosophy of the Heresy language, such as exists, as well as the
 language syntax and functions. 
 
-The Heresy language was created by John S. Berry III with additional contributions
+The Heresy language was created by Annaia Berry with additional contributions
 from many others in the Racket community.
 
-Heresy and this documentation are Copyright (c) 2014 John S. Berry III and
+Heresy and this documentation are Copyright (c) 2014 Annaia Berry and
 released under the terms of the GNU LGPL.
 
 @table-of-contents[]

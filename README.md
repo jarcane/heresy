@@ -7,7 +7,7 @@ Heresy aims to provide a simple, semi-pure functional Lisp language that is neve
 
 The official documentation and reference can be found here:  http://pkg-build.racket-lang.org/doc/heresy/index.html
 
-Heresy is chiefly written by myself, with considerable contributions from Alex Knauth, and several others in the Racket community. The code Copyright 2014 by John S. Berry III, and is licensed via the LGPL v3.
+Heresy is chiefly written by myself, with considerable contributions from Alex Knauth, and several others in the Racket community. The code Copyright 2014 by Annaia Berry, and is licensed via the LGPL v3.
 
 Installation
 ------------

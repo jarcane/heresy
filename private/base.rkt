@@ -1,7 +1,7 @@
 #lang racket
 
 ;; Heresy - a BASIC-flavored Lisp dialect
-; Copyright (C) 2014 John S. Berry III
+; Copyright (C) 2014 Annaia Berry
 ; Licensed with the LGPL v.3.0
 
 ;; Requires
