@@ -53,3 +53,20 @@
 (def macro reset-thing (hol (field val) ...)
   (update hol (fn (t)
                 (thing extends t (field val) ...))))
+
+; (hole-bind *hol* *fn*)
+; Hole Fn -> Hole
+; Applies fn over the current value of hol. The bind (>>=) operator for holes.
+(def fn hole-bind (hol fn)
+  (fn (deref hol)))
+
+; (hole-guard *test*)
+; The guard operator for holes
+(def fn hole-guard (test)
+  (if test then (hole Null) else Null))
+
+; (hole-do ...)
+; monad-do as defined for holes
+(def macroset hole-do
+  ((_ e ...)
+   (monad-do (hole-bind hole hole-guard) e ...)))

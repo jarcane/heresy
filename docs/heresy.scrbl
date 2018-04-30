@@ -1062,6 +1062,14 @@ Resets the fields of a Thing contained in @racket[hol] to the values provided, a
 the hole.
 }
 
+@defproc[(hole-bind [hol hole?] [fn fn?]) any?]{
+Applies @racket[fn] to the value contained by @racket[hol]. The monadic bind (>>=) operator for holes.
+}
+
+@defproc[(hole-guard [test boolean?]) any?]{
+The monadic guard operator for holes. Primarily of use for the @racket[hole-do] DSL.
+}
+
 @subsection[#:tag "maybe"]{Maybe}
 
 Maybe is an "option type", similar to that found in languages like Scala, Haskell, and Rust. It
@@ -1194,7 +1202,7 @@ in the chain is a @racket[None], then the result of a @racket[yield] will be non
 }
 
 @defform[(list-do expr ...)]{
-A specialization of @racket[monad-do] for lists. @racket[list-do] flatmaps over it's operations
+A specialization of @racket[monad-do] for lists. @racket[list-do] flatmaps over its operations
 forming a single-dimensional list from its calculations. This essentially enables list
 comprehensions.
 
@@ -1219,6 +1227,20 @@ as an example, but can be used for chaining together operations and mock-mutable
  (y = 4)
  (z = (+ x y))
  (print (format$ "#_ + #_ = #_" x y z)))
+ ]
+}
+
+@defform[(hole-do expr ...)]{
+A specialization of @racket[monad-do] for holes. Allows you to operate over and combine values 
+from multiple holes easily, while returning a new hole for future use. 
+
+@myexamples[
+  (deref
+   (hole-do
+   (x <- (hole 5))
+   (y <- (hole 6))
+   (z = (+ x y))
+   (yield z)))
  ]
 }
 
