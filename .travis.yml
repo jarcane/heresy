@@ -57,14 +57,6 @@ install:
 
 before_script:
 
-# Here supply steps such as raco make, raco test, etc.
-#script:
-#  - raco make main.rkt
-#  - raco test -x .
-
-# OR: If your repo is a Racket package with an info.rkt that includes
-# some `deps`:
-#
 script:
   - raco pkg install --deps search-auto
   - raco setup -D --check-pkg-deps <your-package-name>
