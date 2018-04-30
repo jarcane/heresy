@@ -65,9 +65,9 @@ before_script:
 # OR: If your repo is a Racket package with an info.rkt that includes
 # some `deps`:
 #
- script:
- - raco pkg install --deps search-auto
- - raco setup -D --check-pkg-deps <your-package-name>
- - raco test -x -p <your-package-name>
+script:
+  - raco pkg install --deps search-auto
+  - raco setup -D --check-pkg-deps <your-package-name>
+  - raco test -x -p <your-package-name>
 
 after_script:
