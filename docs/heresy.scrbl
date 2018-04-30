@@ -15,7 +15,7 @@
 
 @title[#:style '(toc)]{The Heresy Programming Language}
 
-@author{John S. Berry III}
+@author{Annaia Berry}
 
 source code: @url["https://github.com/jarcane/heresy"]
 
@@ -28,10 +28,10 @@ experiment with and learn how to program functionally. This document will detail
 the general philosophy of the Heresy language, such as exists, as well as the
 language syntax and functions. 
 
-The Heresy language was created by John S. Berry III with additional contributions
+The Heresy language was created by Annaia Berry with additional contributions
 from many others in the Racket community.
 
-Heresy and this documentation are Copyright (c) 2014 John S. Berry III and
+Heresy and this documentation are Copyright (c) 2014 Annaia Berry and
 released under the terms of the GNU LGPL.
 
 @table-of-contents[]
@@ -608,6 +608,11 @@ Returns a list of one-character strings from the given string.
 Converts a value @racket[n] to a string.
 }
 
+@defproc[(chr$ [n number?]) string?]{
+Converts a given number @racket[n] to single-character string. If the number is not an 
+integer it will first be coerced to one with @racket[int].
+}
+
 @defproc[(empty$? [str string?]) boolean?]{
 Returns True if the string is empty (@racket[""]).
 }
@@ -822,8 +827,8 @@ overridden).  If the @racket[inherit] option is provided with it, then the
 		   (thing (field value) ...)
            (thing extends super-thing (field value) ...)
            (thing extends super-thing inherit (id ...) (field value) ...)]]{
-Just like @racket[fn] produces an anonamous function, @racket[thing] produces an
-anonamous Thing.
+Just like @racket[fn] produces an anonymous function, @racket[thing] produces an
+anonymous Thing.
 }
 
 If there is a Thing defined as @defidentifier[#'Name]:
@@ -1026,17 +1031,10 @@ The last-argument (as in @racket[l>]) version of @racket[->].
 
 @subsection[#:tag "holes"]{Holes}
 
-Holes are an experimental data structure inspired by Clojure's atoms. Their purpose is to
-provide an in-memory data store that is treated as a first-class value, which thus can be bound
-to a value or passed to functions. They can also be useful for providing a source of shared
-program state.
-
-Each hole is a Thing containing two values: a thread containing a loop closure that holds a
-value, and an asynchronous channel for communicating with that thread. Operations are provided
-for setting and updating the value of the hole, as well as referencing it.
-
-Holes are an experimental feature of Heresy, and best used both carefully, and sparingly, as any
-mutable, concurrent system.
+Holes are a simple mutable data structure based on Racket boxes, with an API inspired by
+Clojure's atoms. Their purpose is to provide an in-memory data store that is treated as a
+first-class value, which thus can be bound to a value or passed to functions. They can also
+be useful for providing a source of shared program state.
 
 @defproc[(hole [v any?]) hole?]{
 Creates a hole containing @racket[v].
@@ -1062,6 +1060,14 @@ value of @racket[hol], followed by @racket[args], ie. @racket[(apply f curr-val 
 @defform[(reset-thing [hol hole?] (field value) ...)]{
 Resets the fields of a Thing contained in @racket[hol] to the values provided, and returns
 the hole.
+}
+
+@defproc[(hole-bind [hol hole?] [fn fn?]) any?]{
+Applies @racket[fn] to the value contained by @racket[hol]. The monadic bind (>>=) operator for holes.
+}
+
+@defproc[(hole-guard [test boolean?]) any?]{
+The monadic guard operator for holes. Primarily of use for the @racket[hole-do] DSL.
 }
 
 @subsection[#:tag "maybe"]{Maybe}
@@ -1196,7 +1202,7 @@ in the chain is a @racket[None], then the result of a @racket[yield] will be non
 }
 
 @defform[(list-do expr ...)]{
-A specialization of @racket[monad-do] for lists. @racket[list-do] flatmaps over it's operations
+A specialization of @racket[monad-do] for lists. @racket[list-do] flatmaps over its operations
 forming a single-dimensional list from its calculations. This essentially enables list
 comprehensions.
 
@@ -1221,6 +1227,20 @@ as an example, but can be used for chaining together operations and mock-mutable
  (y = 4)
  (z = (+ x y))
  (print (format$ "#_ + #_ = #_" x y z)))
+ ]
+}
+
+@defform[(hole-do expr ...)]{
+A specialization of @racket[monad-do] for holes. Allows you to operate over and combine values 
+from multiple holes easily, while returning a new hole for future use. 
+
+@myexamples[
+  (deref
+   (hole-do
+   (x <- (hole 5))
+   (y <- (hole 6))
+   (z = (+ x y))
+   (yield z)))
  ]
 }
 
