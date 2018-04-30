@@ -59,7 +59,7 @@ before_script:
 
 script:
   - raco pkg install --deps search-auto
-  - raco setup -D --check-pkg-deps <your-package-name>
-  - raco test -x -p <your-package-name>
+  - raco setup -D --check-pkg-deps heresy
+  - raco test -x -p heresy
 
 after_script:
