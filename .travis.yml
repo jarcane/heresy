@@ -58,7 +58,7 @@ install:
 before_script:
 
 # Here supply steps such as raco make, raco test, etc.
-script:
+#script:
 #  - raco make main.rkt
 #  - raco test -x .
 
