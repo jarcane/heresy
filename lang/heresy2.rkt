@@ -52,7 +52,7 @@
 
 ; UnaryOp
 ; Op Expr
-; Op = not
+; Op = not | carry
 
 ; FunctionAppl
 ; Identifier \( Expr+(,) \)
@@ -61,12 +61,16 @@
 ; "if" Expr "then" Expr "else" Expr "end"
 
 ; For
-; "for" Identifier "in" Expr ("with" Expr)
-; Expr+
-; "end"
+; "for" Identifier "in" Expr ("with" Expr) Expr "end"
 
+; Fn
+; "fn" \( (Identifier+(,)) \) Expr "end"
+
+; Block
+; "begin" [ Expr \n ] "end"
+ 
 ; Expr
-; ( \( ) [ BinOp | UnaryOp | FunctionAppl | Identifier | Value ] ( \) )
+; ( \( ) [ BinOp | UnaryOp | FunctionAppl | Identifier | Block | Value ] ( \) )
 
 
 ;; Statements
@@ -75,9 +79,7 @@
 ; "def" Identifier \= Expr
 
 ; DefFn
-; "def" "fn" Identifier \( (Identifier+(,)) \) \n
-; Line+
-; "end"
+; "def" "fn" Identifier \( (Identifier+(,)) \) Expr "end"
 
 ;; Misc
 
