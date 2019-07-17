@@ -14,10 +14,10 @@
 ;; Primitives
 
 ; Null
-; Null
+; "Null"
 
 ; Boolean
-; True | False
+; "True" | "False"
 
 ; String
 ; \" CHAR+ \"
@@ -41,6 +41,9 @@
 ; \: Identifier
 
 
+; Value
+; Null | Boolean | String | Integer | Float | Exponential | Identifier | Symbol
+
 ;; Operators
 
 ; BinOp
@@ -53,3 +56,30 @@
 
 ; FunctionAppl
 ; Identifier \( Expr+(,) \)
+
+; If
+; "if" Expr "then" Expr "else" Expr "end"
+
+; For
+; "for" Identifier "in" Expr ("with" Expr)
+; Expr+
+; "end"
+
+; Expr
+; ( \( ) [ BinOp | UnaryOp | FunctionAppl | Identifier | Value ] ( \) )
+
+
+;; Statements
+
+; Def
+; "def" Identifier \= Expr
+
+; DefFn
+; "def" "fn" Identifier \( (Identifier+(,)) \) \n
+; Line+
+; "end"
+
+;; Misc
+
+; Comment
+; [ "rem" | \' ] Any+ \n
