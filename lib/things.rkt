@@ -143,6 +143,9 @@
          [obj (send* obj msg)] ...)
     obj))
 
+; (thing? v)
+; Any -> Bool
+; Returns True if value is a Thing
 (def fn thing? (v)
   (and (fn? v)
        (with-handlers ((exn:bad-thing-ref? (fn (e) False)))
@@ -151,6 +154,9 @@
               (v '__hash)
               (fn? (v '()))))))
 
+; (is-a? Type Thing)
+; Thing Thing -> Bool
+; Returns True if Thing is the same type as Type
 (def fn is-a? (Type Thing)
   (and (thing? Type)
        (thing? Thing)
@@ -159,10 +165,26 @@
            (number? (inlst (Type '__ident)
                               (Thing '__parents))))))
 
+; (thing=? thing1 thing2)
+; Thing Thing -> Bool
+; Returns True if both Things are the same type and their hash values are equal?
 (def fn thing=? (thing1 thing2)
   (and (is-a? thing1 thing2)
        (equal? (thing1 '__hash)
                (thing2 '__hash))))
+
+;; Placeholder values
+;; These are simple values predefined for common primitive types, to provide more self-documenting default values for newly described things
+;; Note that no error checking is actually performed, these are merely for documentation purposes
+;; Placeholders that take an argument allow you to also specify what type is within the container, ie. (List Number)
+(def Any Null)
+(def String "")
+(def Number 0)
+(def Boolean False)
+(def Symbol 'default)
+(def Fn (fn (v) v))
+(def Thing (thing))
+(def fn List (type) (list type))
 
 ;; alist-merge
 (def alist-merge
