@@ -99,7 +99,7 @@
 (def fn subst (tgt new lst)
   (select 
    ((null? lst) False)
-   ((eq? tgt (head (head lst))) (join (join tgt new) (tail lst)))
+   ((eq? tgt (head (head lst))) (join (join tgt (join new Null)) (tail lst)))
    (else (join (head lst) (subst tgt new (tail lst))))))
 
 ; (heads *lst*)

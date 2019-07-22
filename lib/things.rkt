@@ -117,7 +117,7 @@
                [else
                 (let ([hd (head pat)])
                   (recur (subst (head (index c λl))
-                                (list (fn (_) hd))
+                                (fn (_) hd)
                                 λl)
                     (tail pat)
                     (+ 1 c)))]))]
@@ -126,7 +126,7 @@
                          (current-continuation-marks)))]))))
     (def lst
       (map (fn (p)
-             (list (index* p 1) ((index* p 2) this)))
+             (list (index 1 p) ((index 2 p) this)))
            λlst))
     this))
 
@@ -195,8 +195,12 @@
      (select
       [(null? b) a]
       [(null? a) b]
-      [else (let* ([b.fst (head b)] [b.rst (tail b)] [a.hds (map head a)]
-                                    [b.fst.fst (head b.fst)] [b.fst.rst (tail b.fst)])
+      [else (let* ([b.fst (head b)]
+                   [b.rst (tail b)]
+                   [a.hds (map head a)]
+
+                   [b.fst.fst (head b.fst)]
+                   [b.fst.rst (tail b.fst)])
               (select
                [(inlst b.fst.fst a.hds) (alist-merge (subst b.fst.fst b.fst.rst a) b.rst)]
                [else (alist-merge (append a (list b.fst)) b.rst)]))])]
