@@ -171,7 +171,7 @@
                        [pair (index c type-list)]
                        [field (head pair)]
                        [type (head (tail pair))]
-                       [pred? (run (join partial type))])
+                       [pred? (apply partial type)])
                   (if (pred? hd)
                       then
                       (recur (subst (head (index c λl))
