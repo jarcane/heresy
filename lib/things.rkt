@@ -3,6 +3,7 @@
 (require racket/stxparam
          "list.rkt"
          "require-stuff.rkt"
+         "theory.rkt"
          (only-in racket/base
                   define-syntax
                   gensym
@@ -66,7 +67,7 @@
 
 (define-syntax-parser thing #:literals (extends inherit super)
   [(thing (field:id (type?:id arg0:expr ...) value:expr) ...)
-   #'(let ([types `((field (partial type? arg0 ...)) ...)])
+   #'(let ([types `((field ,(partial type? arg0 ...)) ...)])
        (make-thing `([field
                       ,(let ([field
                               (fn (ths)
@@ -95,7 +96,7 @@
             [super-λlst (super λlst-sym)]
             [super-parents (super '__parents)]
             [super-ident (super '__ident)]
-            [types `((field (partial type? arg0 ...)) ...)])
+            [types `((field ,(partial type? arg0 ...)) ...)])
        (make-thing (alist-merge
                     super-λlst
                     `([field
@@ -144,13 +145,15 @@
       (fn args*
         (let ([alst lst]
               [hash (equal-hash-code lst)]
-              [fields (heads lst)])
+              [fields (heads lst)]
+              [type-list types])
           (select
            [(null? args*) alst]
            [(eq? 'fields (head args*)) fields]
            [(eq? '__hash (head args*)) hash]
            [(eq? '__ident (head args*)) ident]
            [(eq? '__parents (head args*)) parents]
+           [(eq? '__types (head args*)) type-list]
            [(eq? λlst-sym (head args*)) λlst]
            [(and (symbol? (head args*))
                  (assoc (head args*) alst)) (alist-ref alst (head args*))]
@@ -219,6 +222,15 @@
   (and (is-a? thing1 thing2)
        (equal? (thing1 '__hash)
                (thing2 '__hash))))
+
+; (list-of? pred? xs)
+; Fn(Any -> Bool) List(Any) -> Bool
+; Returns True of all elements in the list match pred?
+(def fn list-of? (pred? xs)
+    (select
+     ((null? xs) True)
+     ((not (pred? (head xs))) False)
+     (else (list-of? pred? (tail xs)))))
 
 ;; Placeholder values
 ;; These are simple values predefined for common primitive types, to provide more self-documenting default values for newly described things
