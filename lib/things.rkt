@@ -67,7 +67,7 @@
 
 (define-syntax-parser thing #:literals (extends inherit super)
   [(thing (field:id (type?:id arg0:expr ...) value:expr) ...)
-   #'(let ([types `((field ,(partial type? arg0 ...)) ...)])
+   #'(let ([types `((field (type? arg0 ...)) ...)])
        (make-thing `([field
                       ,(let ([field
                               (fn (ths)
@@ -96,7 +96,7 @@
             [super-λlst (super λlst-sym)]
             [super-parents (super '__parents)]
             [super-ident (super '__ident)]
-            [types `((field ,(partial type? arg0 ...)) ...)])
+            [types `((field (type? arg0 ...)) ...)])
        (make-thing (alist-merge
                     super-λlst
                     `([field
