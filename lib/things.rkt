@@ -4,6 +4,7 @@
          "list.rkt"
          "require-stuff.rkt"
          "theory.rkt"
+         "string.rkt"
          (only-in racket/base
                   define-syntax
                   gensym
@@ -138,6 +139,7 @@
 
 (def λlst-sym (gensym 'λlst))
 (struct exn:bad-thing-ref exn:fail ())
+(struct exn:thing-type-err exn:fail ())
 
 (def fn make-thing (λlst (types Null) [parents Null] [ident (gensym 'thing)])
   (let ()
@@ -165,12 +167,22 @@
                [(null? pat) (make-thing λl types parents ident)]
                [(eq? (head pat) '*) (recur λl (tail pat) (+ 1 c))]
                [else
-                (let ([hd (head pat)])
-                  (recur (subst (head (index c λl))
-                                (fn (_) hd)
-                                λl)
-                    (tail pat)
-                    (+ 1 c)))]))]
+                (let* ([hd (head pat)]
+                       [pair (index c type-list)]
+                       [field (head pair)]
+                       [type (head (tail pair))]
+                       [pred? (run (join partial type))])
+                  (if (pred? hd)
+                      then
+                      (recur (subst (head (index c λl))
+                                    (fn (_) hd)
+                                    λl)
+                        (tail pat)
+                        (+ 1 c))
+                      else
+                      (raise (exn:thing-type-err
+                              (format$ "Thing encountered type error in assignment: #_ must be #_" field type)
+                              (current-continuation-marks)))))]))]
            [else (raise (exn:bad-thing-ref
                          "Thing expected a valid symbol or a pattern"
                          (current-continuation-marks)))]))))
