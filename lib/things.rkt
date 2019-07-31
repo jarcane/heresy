@@ -148,7 +148,16 @@
         (let* ([alst lst]
                [hash (equal-hash-code lst)]
                [fields (heads lst)]
-               [type-list (if (null? types) then (map (fn (f) `(,f (any?))) fields) else types)])
+               [type-list (if (null? types) then (map (fn (f) `(,f (any?))) fields) else types)]
+               [validate (for (x in alst)
+                           (let* ([val (head (tail x))]
+                                  [type (alist-ref type-list (head x))]
+                                  [pred? (run (join partial type))])
+                             (if (pred? val)
+                                 then val
+                                 else (raise (exn:thing-type-err
+                                              (format$ "Thing encountered type error in construction: #_ must be #_" (head x) type)
+                                              (current-continuation-marks))))))])
           (select
            [(null? args*) alst]
            [(eq? 'fields (head args*)) fields]
