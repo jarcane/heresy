@@ -145,10 +145,10 @@
   (let ()
     (def this
       (fn args*
-        (let ([alst lst]
-              [hash (equal-hash-code lst)]
-              [fields (heads lst)]
-              [type-list types])
+        (let* ([alst lst]
+               [hash (equal-hash-code lst)]
+               [fields (heads lst)]
+               [type-list (if (null? types) then (map (fn (f) `(,f (any?))) fields) else types)])
           (select
            [(null? args*) alst]
            [(eq? 'fields (head args*)) fields]
@@ -171,7 +171,7 @@
                        [pair (index c type-list)]
                        [field (head pair)]
                        [type (head (tail pair))]
-                       [pred? (apply partial type)])
+                       [pred? (run (join partial type))])
                   (if (pred? hd)
                       then
                       (recur (subst (head (index c λl))
@@ -234,6 +234,11 @@
   (and (is-a? thing1 thing2)
        (equal? (thing1 '__hash)
                (thing2 '__hash))))
+
+; (any? v)
+; Any -> True
+; Always returns True regardless of value
+(def fn any? (v) True)
 
 ; (list-of? pred? xs)
 ; Fn(Any -> Bool) List(Any) -> Bool
