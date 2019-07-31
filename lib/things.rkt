@@ -48,13 +48,34 @@
                   (~optional (~seq super ([super-id1:id super-id2:id] ...))
                              #:defaults ([(super-id1 1) '()] [(super-id2 1) '()])))
              ...
+             (field:id (type?:id arg0:expr ...) value:expr) ...)
+   #'(def name (thing extends super-thing inherit (inherit-id ...) super ([super-id1 super-id2] ...)
+                      (field (type? arg0 ...) value) ...))]
+  [(describe name:id extends super-thing:expr
+             (~or (~optional (~seq inherit (inherit-id:id ...)) #:defaults ([(inherit-id 1) '()]))
+                  (~optional (~seq super ([super-id1:id super-id2:id] ...))
+                             #:defaults ([(super-id1 1) '()] [(super-id2 1) '()])))
+             ...
              (field:id value:expr) ...)
    #'(def name (thing extends super-thing inherit (inherit-id ...) super ([super-id1 super-id2] ...)
                       (field value) ...))]
+  [(describe name:id (field:id (type?:id arg0:expr ...) value:expr) ...)
+   #'(def name (thing (field (type? arg0 ...) value) ...))]
   [(describe name:id (field:id value:expr) ...)
    #'(def name (thing (field value) ...))])
 
 (define-syntax-parser thing #:literals (extends inherit super)
+  [(thing (field:id (type?:id arg0:expr ...) value:expr) ...)
+   #'(let ([types `((field (partial type? arg0 ...)) ...)])
+       (make-thing `([field
+                      ,(let ([field
+                              (fn (ths)
+                                  (syntax-parameterize ([Self (make-rename-transformer #'ths)])
+                                    (def-field-id field ths) ...
+                                    value))])
+                         field)]
+                     ...)
+                   types))]
   [(thing (field:id value:expr) ...)
    #'(make-thing `([field
                     ,(let ([field
@@ -64,6 +85,31 @@
                                 value))])
                        field)]
                    ...))]
+  [(thing extends super-thing:expr
+          (~or (~optional (~seq inherit (inherit-id:id ...)) #:defaults ([(inherit-id 1) '()]))
+               (~optional (~seq super ([super-id1:id super-id2:id] ...))
+                          #:defaults ([(super-id1 1) '()] [(super-id2 1) '()])))
+          ...
+          (field:id (type?:id arg0:expr ...) value:expr) ...)
+   #'(let* ([super super-thing]
+            [super-λlst (super λlst-sym)]
+            [super-parents (super '__parents)]
+            [super-ident (super '__ident)]
+            [types `((field (partial type? arg0 ...)) ...)])
+       (make-thing (alist-merge
+                    super-λlst
+                    `([field
+                       ,(let ([field
+                               (fn (ths)
+                                 (syntax-parameterize ([Self (make-rename-transformer #'ths)])
+                                   (def-field-id field ths) ...
+                                   (def-field-id inherit-id ths) ...
+                                   (def super-id1 ((alist-ref super-λlst 'super-id2) ths)) ...
+                                   value))])
+                          field)]
+                      ...))
+                   types
+                   (join super-ident super-parents)))]
   [(thing extends super-thing:expr
           (~or (~optional (~seq inherit (inherit-id:id ...)) #:defaults ([(inherit-id 1) '()]))
                (~optional (~seq super ([super-id1:id super-id2:id] ...))
@@ -86,12 +132,13 @@
                                    value))])
                           field)]
                       ...))
+                   Null
                    (join super-ident super-parents)))])
 
 (def λlst-sym (gensym 'λlst))
 (struct exn:bad-thing-ref exn:fail ())
 
-(def fn make-thing (λlst [parents Null] [ident (gensym 'thing)])
+(def fn make-thing (λlst (types Null) [parents Null] [ident (gensym 'thing)])
   (let ()
     (def this
       (fn args*
@@ -112,7 +159,7 @@
                         [pat (head args*)]
                         [c 1])
               (select
-               [(null? pat) (make-thing λl parents ident)]
+               [(null? pat) (make-thing λl types parents ident)]
                [(eq? (head pat) '*) (recur λl (tail pat) (+ 1 c))]
                [else
                 (let ([hd (head pat)])
