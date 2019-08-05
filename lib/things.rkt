@@ -42,6 +42,21 @@
 (define-simple-macro (define-syntax-parser name:id opt-or-clause ...)
   (define-syntax name (syntax-parser opt-or-clause ...)))
 
+(define-simple-macro (build-type-list (field (type arg0 ...)) ...)
+  (list
+   `(field (,(partial type arg0 ...) (type arg0 ...))) ...))
+
+(def fn empty-type-list (fields)
+  (for (x in fields with Null)
+    (carry (join `(,x (,any? (any?)))
+                 cry))))
+
+(def fn get-type-pred (name types)
+  (head (alist-ref types name)))
+
+(def fn get-type-name (name types)
+  (head (tail (alist-ref types name))))
+
 ; (describe *thing* (*field* *value*) ...)
 ; Declare a new kind of Thing, with the given fields and default values.
 (define-syntax-parser describe #:literals (extends inherit super)
@@ -68,7 +83,7 @@
 
 (define-syntax-parser thing #:literals (extends inherit super)
   [(thing (field:id (type?:id arg0:expr ...) value:expr) ...)
-   #'(let ([types `((field (type? arg0 ...)) ...)])
+   #'(let ([types (build-type-list (field (type? arg0 ...)) ...)])
        (make-thing `([field
                       ,(let ([field
                               (fn (ths)
@@ -97,7 +112,7 @@
             [super-λlst (super λlst-sym)]
             [super-parents (super '__parents)]
             [super-ident (super '__ident)]
-            [types `((field (type? arg0 ...)) ...)])
+            [types (build-type-list (field (type? arg0 ...)) ...)])
        (make-thing (alist-merge
                     super-λlst
                     `([field
@@ -148,16 +163,7 @@
         (let* ([alst lst]
                [hash (equal-hash-code lst)]
                [fields (heads lst)]
-               [type-list (if (null? types) then (map (fn (f) `(,f (any?))) fields) else types)]
-               [validate (for (x in alst)
-                           (let* ([val (head (tail x))]
-                                  [type (alist-ref type-list (head x))]
-                                  [pred? (run (join partial type))])
-                             (if (pred? val)
-                                 then val
-                                 else (raise (exn:thing-type-err
-                                              (format$ "Thing encountered type error in construction: #_ must be #_" (head x) type)
-                                              (current-continuation-marks))))))])
+               [type-list (if (null? types) then (empty-type-list fields) else types)])
           (select
            [(null? args*) alst]
            [(eq? 'fields (head args*)) fields]
@@ -179,8 +185,8 @@
                 (let* ([hd (head pat)]
                        [pair (index c type-list)]
                        [field (head pair)]
-                       [type (head (tail pair))]
-                       [pred? (run (join partial type))])
+                       [type (get-type-name field type-list)]
+                       [pred? (get-type-pred field type-list)])
                   (if (pred? hd)
                       then
                       (recur (subst (head (index c λl))
@@ -199,7 +205,19 @@
       (map (fn (p)
              (list (index 1 p) ((index 2 p) this)))
            λlst))
-    this))
+    (if (null? types) then this else
+        (do
+          (for (x in lst)
+            (let* ([val (head (tail x))]
+                   [field (head x)]
+                   [type (get-type-name field types)]
+                   [pred? (get-type-pred field types)])
+              (if (pred? val)
+                  then val
+                  else (raise (exn:thing-type-err
+                               (format$ "Thing encountered type error in declaration: #_ must be #_" field type)
+                               (current-continuation-marks))))))
+          this))))
 
 (def (send thing method . args)
   (apply (thing method) args))
