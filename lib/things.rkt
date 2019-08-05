@@ -112,7 +112,8 @@
             [super-λlst (super λlst-sym)]
             [super-parents (super '__parents)]
             [super-ident (super '__ident)]
-            [types (build-type-list (field (type? arg0 ...)) ...)])
+            [super-types (super '__types)]
+            [types (alist-merge super-types (build-type-list (field (type? arg0 ...)) ...))])
        (make-thing (alist-merge
                     super-λlst
                     `([field
@@ -136,7 +137,11 @@
    #'(let* ([super super-thing]
             [super-λlst (super λlst-sym)]
             [super-parents (super '__parents)]
-            [super-ident (super '__ident)])
+            [super-ident (super '__ident)]
+            [super-fields (super 'fields)]
+            [super-types (super '__types)]
+            [types (alist-merge super-types
+                                (build-type-list (field (any?)) ...))])
        (make-thing (alist-merge
                     super-λlst
                     `([field
@@ -149,7 +154,7 @@
                                    value))])
                           field)]
                       ...))
-                   Null
+                   types
                    (join super-ident super-parents)))])
 
 (def λlst-sym (gensym 'λlst))
