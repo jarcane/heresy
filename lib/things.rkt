@@ -310,7 +310,7 @@
                    [b.fst.fst (head b.fst)]
                    [b.fst.rst (tail b.fst)])
               (select
-               [(inlst b.fst.fst a.hds) (alist-merge (subst b.fst.fst b.fst.rst a) b.rst)]
+               [(inlst b.fst.fst a.hds) (alist-merge (subst* b.fst.fst b.fst.rst a) b.rst)]
                [else (alist-merge (append a (list b.fst)) b.rst)]))])]
     [(a b . rst) (apply alist-merge (alist-merge a b) rst)]))
 

@@ -102,6 +102,14 @@
    ((eq? tgt (head (head lst))) (join (join tgt (join new Null)) (tail lst)))
    (else (join (head lst) (subst tgt new (tail lst))))))
 
+; (subst* *tgt* *new* *lst*)
+; like subst, but doesn't coerce new to a list
+(def fn subst* (tgt new lst)
+  (select 
+   ((null? lst) False)
+   ((eq? tgt (head (head lst))) (join (join tgt new) (tail lst)))
+   (else (join (head lst) (subst* tgt new (tail lst))))))
+
 ; (heads *lst*)
 ; Returns the heads of a list of lists
 (def fn heads (lst)
