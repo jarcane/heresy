@@ -267,6 +267,10 @@ the next iteration.
 Returns True if @racket[v] is a list.
 }
 
+@defproc[(list-of? [pred? fn?] [xs list?]) boolean?]{
+Returns True if @racket[pred?] is true for all elements in @racket[xs].
+}
+
 @defproc[(null? [v any]) boolean?]{
 Returns True if @racket[v] is @racket[Null], where Null is defined as the empty list
 @racket['()].
@@ -312,6 +316,10 @@ rather than a list or Null.
 
 @defproc[(lat? [l any]) boolean?]{
 Returns True if @racket[l] is a list composed solely of atoms.
+}
+
+@defproc[(any? [v any]) boolean?]{
+Always returns True regardless of value of @racket[v].
 }
 
 @defform[(and expr ...)]{
