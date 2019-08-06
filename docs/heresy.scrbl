@@ -805,28 +805,79 @@ other data, but can also be passed arguments to either return the values of
 their fields, return a new Thing, or to employ any functions contained within
 the thing.
 
+Things can also optionally be given
+@italic{@hyperlink["http://wiki.c2.com/?PredicateTypes"]{predicate types}}. Predicate typing is
+a form of typing in which types are defined by a predicate function, in other words
+a function which given a value, will return either true or false. In this way,
+any kind of type validation can be specified so long as it can be programmed as a
+function which returns a Boolean value. Things check their values against these types
+at both declaration, when the object is first described or instantiated, and at
+assignment of new values, ie. when the copy syntax is used to generate a new thing
+from the old one. If you attempt to describe or copy a thing whose values do not match
+its predicate types, the program will throw an error and indicate what field did not
+match its type.
+
 @defform*[#:literals (extends inherit)
           [(describe Name)
-		   (describe Name (field value) ...)
-           (describe Name extends super-thing (field value) ...)
-           (describe Name extends super-thing inherit (id ...) (field value) ...)]]{
+           (describe Name (field [(type? args ...)] value) ...)
+           (describe Name
+                     extends super-thing
+                     (field [(type? args ...)] value) ...)
+           (describe Name
+                     extends super-thing
+                     inherit (id ...)
+                     (field [(type? args ...)] value) ...)]]{
 Defines a new type of Thing, given @racket[Name]. By convention, Things are
 generally named in uppercase, though this is not required by the syntax. Each
 field is an internal name and external symbol, which is mapped to the given
 value. Anonymous functions (@racket[fn]) can be assigned as values to Thing
 fields, and those functions can access the fields of the Thing by name.
 
+Optionally, after the field name, a type predicate can be provided. Type
+predicates are automatically "curried", ie. treated as a partial function
+with the initial arguments following the given @racket[type?], and expecting
+the result to be a single argument function that returns @racket[True] or
+@racket[False]. Things which are not given a type are automatically given
+the type @racket[any?], which returns @racket[True] for any value. 
+
 If the @racket[extends] option is provided, the new Thing extends
 @racket[super-thing], inheriting it's fields and methods (unless they are
 overridden).  If the @racket[inherit] option is provided with it, then the
-@racket[id]s are available as bindings within the method expressions.
+@racket[id]s are available as bindings within the method expressions. Typed
+things can be extended from untyped things and vice versa; the fields from
+the parent will inherit their types from the parent, unless overridden by
+creating a new field with the same name and a new type signature (or no
+signature, as the case may be). Note that parent things are @italic{never}
+modified by their children.
+
+@myexamples[
+ (describe Project
+           (name   "Destroy the world")
+           (id     90)
+           (budget 432000000))
+ (Project 'budget)
+ (describe Employee
+           (name     (string?) "Dave")
+           (id       (number?) 42)
+           (dept     (symbol?) 'it)
+           (projects (list-of? number?) '(23 90 45)))
+ (Employee 'name)
+ (Employee '(* * "sales" *))
+ (def fn age-req? (age) (and (< 17 age) (> 45 age)))
+ (describe Henchman extends Employee
+           (weapon (symbol?)  'AK-47)
+           (age    (age-req?) 64))
+]
 }
 
 @defform*[#:literals (extends inherit)
           [(thing)
-		   (thing (field value) ...)
-           (thing extends super-thing (field value) ...)
-           (thing extends super-thing inherit (id ...) (field value) ...)]]{
+           (thing (field [(type? args ...)] value) ...)
+           (thing extends super-thing
+                  (field [(type? args ...)] value) ...)
+           (thing extends super-thing
+                  inherit (id ...)
+                  (field [(type? args ...)] value) ...)]]{
 Just like @racket[fn] produces an anonymous function, @racket[thing] produces an
 anonymous Thing.
 }
