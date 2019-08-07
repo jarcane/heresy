@@ -572,8 +572,23 @@ list or @racket[False].
 
 @defproc[(subst [tgt any] [new any] [l list?]) list-or-false?]{
 Searches the heads of a list of lists @racket[l], and if it finds @racket[tgt],
-returns a new list with the tail of tgt substituted for @racket[new]. Otherwise,
+returns a new list with the tail of tgt substituted for a new list containing @racket[new]. Otherwise,
 returns @racket[False].
+}
+
+@defproc[(subst* [tgt any] [new any] [l list?]) list-or-false?]{
+Searches the heads of a list of lists @racket[l], and if it finds @racket[tgt],
+returns a new list with the tail of tgt substituted for @racket[new]. Otherwise,
+returns @racket[False]. For clarity's sake, the following examples may be more illustrative of the
+difference between @racket[subst] and @racket[subst*].
+
+@myexamples[
+ (def alst '((foo 1) (bar 2)))
+ (subst 'foo 3 alst)
+ (subst 'foo '(3) alst)
+ (subst* 'foo 3 alst)
+ (subst* 'foo '(3) alst)
+ ]
 }
 
 @defproc[(heads [l list?]) list?]{
