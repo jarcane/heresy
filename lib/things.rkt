@@ -181,7 +181,15 @@
                  (assoc (head args*) alst)) (alist-ref alst (head args*))]
            [(list-of? list? (head args*))
             (let ([new-lst (for (x in (head args*) with λlst)
-                             (carry (subst (head x) (fn (_) (head (tail x))) cry)))])
+                             (let ([pred? (get-type-pred (head x) type-list)]
+                                   [type (get-type-name (head x) type-list)])
+                               (if (pred? (head (tail x)))
+                                   then
+                                   (carry (subst (head x) (fn (_) (head (tail x))) cry))
+                                   else
+                                   (raise (exn:thing-type-err
+                                           (format$ "Thing encountered type error in assignment: #_ must be #_" (head x) type)
+                                           (current-continuation-marks))))))])
               (make-thing new-lst types parents ident))]
            [(list? (head args*)) 
             (let recur ([λl λlst]
