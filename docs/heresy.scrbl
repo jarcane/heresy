@@ -910,6 +910,7 @@ If there is a Thing defined as @defidentifier[#'Name]:
           [(Name)
            (Name symbol)
            (Name @#,racket['fields])
+           (Name alist)
            (Name pattern)]]{
 Once a Thing has been described or bound to a name by other means, that Name is
 bound locally as a function, and can thus be called with special syntax to
@@ -937,6 +938,20 @@ a further expression like so:
   (describe Lord-Cthulhu (eat (fn (x) (print (& "Devours " x)))))
   ((Lord-Cthulhu 'eat) "Dave")
 ]}
+
+@defform[#:kind "" #:link-target? #f (Name alist)
+         #:grammar ([alist @#,racket[`(@#,racketvarfont{pair} ...)]]
+                    [pair @#,racket[`(@#,racketvarfont{field} @#,racketvarfont{value})]])]{
+Returns a copy of the Thing, with new values assigned to the fields as indicated by
+the provided associative list. All values not listed will copy over their values intact.
+The copy will type-check the values of each field assigned.
+
+@myexamples[
+ (describe Beeb (model (symbol?) 'B) (ram (number?) 32) (cpu (string?) "m6502"))
+ (def BeebPlus (Beeb '((model B+) (ram 64))))
+ (BeebPlus)
+ ]
+ }
 
 @defform[#:kind "" #:link-target? #f (Name pattern)
                 #:grammar ([pattern @#,racket[`(@#,racketvarfont{sub-pat} ...)]]
