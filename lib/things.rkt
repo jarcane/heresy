@@ -179,6 +179,10 @@
            [(eq? λlst-sym (head args*)) λlst]
            [(and (symbol? (head args*))
                  (assoc (head args*) alst)) (alist-ref alst (head args*))]
+           [(list-of? list? (head args*))
+            (let ([new-lst (for (x in (head args*) with λlst)
+                             (carry (subst (head x) (fn (_) (head (tail x))) cry)))])
+              (make-thing new-lst types parents ident))]
            [(list? (head args*)) 
             (let recur ([λl λlst]
                         [pat (head args*)]
