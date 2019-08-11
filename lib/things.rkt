@@ -237,7 +237,7 @@
       (map (fn (p)
              (list (index 1 p) ((index 2 p) this)))
            λlst))
-    (if (null? types) then this else
+    (if (null? types) then (thing-s this) else
         (do
           (for (x in lst)
             (let* ([val (head (tail x))]
@@ -249,7 +249,7 @@
                   else (raise (exn:thing-type-err
                                (format$ "Thing encountered type error in declaration: #_ must be #_" field type)
                                (current-continuation-marks))))))
-          this))))
+          (thing-s this)))))
 
 (def (send thing method . args)
   (apply (thing method) args))
