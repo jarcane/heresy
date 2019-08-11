@@ -17,13 +17,12 @@
                   exn:fail
                   exn:fail?
                   gen:custom-write
+                  write-string
                   prop:procedure
                   struct-field-index
                   raise
                   current-continuation-marks
                   equal-hash-code)
-         (only-in racket/struct                  
-                  make-constructor-style-printer)
          syntax/parse/define
          (for-syntax racket/base syntax/parse unstable/syntax))
 
@@ -167,12 +166,15 @@
 (struct exn:thing-type-err exn:fail ())
 
 ;; Wrapper struct for things. Provides custom printing while still behaving as procedure.
+(def fn thing-print (obj port mode)
+  (let* ([thng (thing-s-proc obj)]
+         [as-str (str$ (join 'thing (thng)))])
+    (write-string as-str port)))
+
 (struct thing-s (proc)
   #:methods gen:custom-write
   [(def write-proc
-     (make-constructor-style-printer
-      (fn (obj) 'thing)
-      (fn (obj) ((thing-s-proc obj)))))]
+     thing-print)]
   #:property prop:procedure
   (struct-field-index proc))
 
