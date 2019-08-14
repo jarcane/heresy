@@ -86,7 +86,7 @@
    #'(def name (thing name (field value) ...))])
 
 (define-syntax-parser thing #:literals (extends inherit super)
-  [(thing (~optional name:id #:defaults ([name #' ' thing])) (field:id (type?:id arg0:expr ...) value:expr) ...)
+  [(thing (~optional name:id #:defaults ([name #'thing])) (field:id (type?:id arg0:expr ...) value:expr) ...)
    #'(let ([types (build-type-list (field (type? arg0 ...)) ...)])
        (make-thing `([field
                       ,(let ([field
@@ -98,7 +98,7 @@
                      ...)
                    'name
                    types))]
-  [(thing (~optional name:id #:defaults ([name #' ' thing])) (field:id value:expr) ...)
+  [(thing (~optional name:id #:defaults ([name #'thing])) (field:id value:expr) ...)
    #'(make-thing `([field
                     ,(let ([field
                             (fn (ths)
@@ -108,7 +108,7 @@
                        field)]
                    ...)
                  'name)]
-  [(thing (~optional name:id #:defaults ([name #' ' thing])) extends super-thing:expr
+  [(thing (~optional name:id #:defaults ([name #'thing])) extends super-thing:expr
           (~or (~optional (~seq inherit (inherit-id:id ...)) #:defaults ([(inherit-id 1) '()]))
                (~optional (~seq super ([super-id1:id super-id2:id] ...))
                           #:defaults ([(super-id1 1) '()] [(super-id2 1) '()])))
@@ -135,7 +135,7 @@
                    'name
                    types
                    (join super-ident super-parents)))]
-  [(thing (~optional name:id #:defaults ([name #' ' thing])) extends super-thing:expr
+  [(thing (~optional name:id #:defaults ([name #'thing])) extends super-thing:expr
           (~or (~optional (~seq inherit (inherit-id:id ...)) #:defaults ([(inherit-id 1) '()]))
                (~optional (~seq super ([super-id1:id super-id2:id] ...))
                           #:defaults ([(super-id1 1) '()] [(super-id2 1) '()])))
@@ -172,7 +172,7 @@
 ;; Wrapper struct for things. Provides custom printing while still behaving as procedure.
 (def fn thing-print (obj port mode)
   (let* ([thng (thing-s-proc obj)]
-         [as-str (str$ (join (thing-s-name obj) (thng)))])
+         [as-str (str$ (join 'thing (thng)))])
     (write-string as-str port)))
 
 (struct thing-s (name proc)
@@ -182,7 +182,7 @@
   #:property prop:procedure
   (struct-field-index proc))
 
-(def fn make-thing (λlst [name 'thing] [types Null] [parents Null] [ident (gensym 'thing)])
+(def fn make-thing (λlst name [types Null] [parents Null] [ident (gensym 'thing)])
   (let ()
     (def this
       (fn args*
