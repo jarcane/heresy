@@ -211,13 +211,13 @@
                                    (raise (exn:thing-type-err
                                            (format$ "Thing encountered type error in assignment: #_ must be #_" (head x) type)
                                            (current-continuation-marks))))))])
-              (make-thing new-lst types parents ident))]
+              (make-thing new-lst name types parents ident))]
            [(list? (head args*)) 
             (let recur ([λl λlst]
                         [pat (head args*)]
                         [c 1])
               (select
-               [(null? pat) (make-thing λl types parents ident)]
+               [(null? pat) (make-thing λl name types parents ident)]
                [(eq? (head pat) '*) (recur λl (tail pat) (+ 1 c))]
                [else
                 (let* ([hd (head pat)]
