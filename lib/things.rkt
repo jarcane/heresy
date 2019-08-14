@@ -172,7 +172,7 @@
 ;; Wrapper struct for things. Provides custom printing while still behaving as procedure.
 (def fn thing-print (obj port mode)
   (let* ([thng (thing-s-proc obj)]
-         [as-str (str$ (join 'thing (thng)))])
+         [as-str (str$ (join (thing-s-name obj) (thng)))])
     (write-string as-str port)))
 
 (struct thing-s (name proc)
