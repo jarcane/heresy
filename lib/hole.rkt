@@ -52,7 +52,7 @@
 ; Expects a Thing stored in hol, and resets the value in the thing field defined by sym to val
 (def macro reset-thing (hol (field val) ...)
   (update hol (fn (t)
-                (thing extends t (field val) ...))))
+                (t `((field ,val) ...)))))
 
 ; (hole-bind *hol* *fn*)
 ; Hole Fn -> Hole

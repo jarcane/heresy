@@ -5,8 +5,8 @@
 (describe List)
 (describe Nil extends List)
 (describe Cons extends List
-          (car Nil)
-          (cdr Nil))
+          (car (any?) Nil)
+          (cdr (is-a? List) Nil))
 
 (def fn cons (a b)
   (Cons (list a b)))

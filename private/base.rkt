@@ -324,8 +324,8 @@
 (define (gen-range x y (step 1) (lst '()))
   (cond
     [(= step 0) (error 'range "infinite loop detected")]
-    [(or (and (> x y) (> step -1))
-         (and (< x y) (< step 1))) lst]
+    [(or (and (> x y) (= 1 (sgn step)))
+         (and (< x y) (= -1 (sgn step)))) (error 'range "Step does not iterate towards target")]
     [(= x y) (cons x lst)]
     [else (cons x (gen-range (+ x step) y step lst))]))
 
