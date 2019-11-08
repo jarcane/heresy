@@ -65,7 +65,7 @@ functions for the language. These are as follows:
         written in as clear a manner as possible, as they are intended to be
         self-teaching.}
   @item{@bold{Heresy is an experiment} - Heresy is an experimental language.
-        It’s very DNA is as a mad idea that came to life, and it’s development
+        Its very DNA is as a mad idea that came to life, and its development
         should be ready and willing to embrace new mad ideas and run with them.
         This is where carry came from, and I hope to have more mad ideas in the
         future.}
