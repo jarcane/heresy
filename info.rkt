@@ -1,7 +1,7 @@
 #lang info
 (define name "Heresy")
 (define collection "heresy")
-(define version "0.4.0")
+(define version "0.4")
 (define blurb
   "A BASIC-Flavored Lisp dialect")
 (define scribblings '(["docs/heresy.scrbl" (multi-page) (language)]))
